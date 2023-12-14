@@ -10,7 +10,7 @@ const useUserStore = defineStore(
     const routeStore = useRouteStore()
     const menuStore = useMenuStore()
 
-    const account = ref(localStorage.account ?? '')
+    const userName = ref(localStorage.userName ?? '')
     const token = ref(localStorage.token ?? '')
     const failure_time = ref(localStorage.failure_time ?? '')
     const avatar = ref(localStorage.avatar ?? '')
@@ -27,26 +27,26 @@ const useUserStore = defineStore(
 
     // 登录
     async function login(data: {
-      account: string
+      userName: string
       password: string
     }) {
       const res = await apiUser.login(data)
-      localStorage.setItem('account', res.data.account)
+      localStorage.setItem('userName', res.data.userName)
       localStorage.setItem('token', res.data.token)
       localStorage.setItem('failure_time', res.data.failure_time)
       localStorage.setItem('avatar', res.data.avatar)
-      account.value = res.data.account
+      userName.value = res.data.userName
       token.value = res.data.token
       failure_time.value = res.data.failure_time
       avatar.value = res.data.avatar
     }
     // 登出
     async function logout(redirect = router.currentRoute.value.fullPath) {
-      localStorage.removeItem('account')
+      localStorage.removeItem('userName')
       localStorage.removeItem('token')
       localStorage.removeItem('failure_time')
       localStorage.removeItem('avatar')
-      account.value = ''
+      userName.value = ''
       token.value = ''
       failure_time.value = ''
       avatar.value = ''
@@ -75,7 +75,7 @@ const useUserStore = defineStore(
     }
 
     return {
-      account,
+      userName,
       token,
       avatar,
       permissions,

@@ -7,8 +7,8 @@ export default [
         error: '',
         status: 1,
         data: {
-          account: body.account,
-          token: `${body.account}_@string`,
+          userName: body.userName,
+          token: `${body.userName}_@string`,
           failure_time: Math.ceil(new Date().getTime() / 1000) + 24 * 60 * 60,
           avatar: '',
         },

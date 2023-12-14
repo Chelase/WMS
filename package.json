@@ -2,7 +2,7 @@
   "type": "module",
   "version": "4.1.0",
   "scripts": {
-    "dev": "vite",
+    "dev": "vite --host 0.0.0.0",
     "build": "vue-tsc && vite build",
     "build:test": "vue-tsc && vite build --mode test",
     "serve": "http-server ./dist -o",

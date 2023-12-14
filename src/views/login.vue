@@ -32,12 +32,12 @@ const redirect = ref(route.query.redirect?.toString() ?? '/')
 // 登录
 const loginFormRef = ref<FormInstance>()
 const loginForm = ref({
-  account: localStorage.login_account || '',
+  userName: localStorage.login_userName || '',
   password: '',
-  remember: !!localStorage.login_account,
+  remember: !!localStorage.login_userName,
 })
 const loginRules = ref<FormRules>({
-  account: [
+  userName: [
     { required: true, trigger: 'blur', message: '请输入用户名' },
   ],
   password: [
@@ -52,10 +52,10 @@ function handleLogin() {
       userStore.login(loginForm.value).then(() => {
         loading.value = false
         if (loginForm.value.remember) {
-          localStorage.setItem('login_account', loginForm.value.account)
+          localStorage.setItem('login_userName', loginForm.value.userName)
         }
         else {
-          localStorage.removeItem('login_account')
+          localStorage.removeItem('login_userName')
         }
         router.push(redirect.value)
       }).catch(() => {
@@ -68,13 +68,13 @@ function handleLogin() {
 // 注册
 const registerFormRef = ref<FormInstance>()
 const registerForm = ref({
-  account: '',
+  userName: '',
   captcha: '',
   password: '',
   checkPassword: '',
 })
 const registerRules = ref<FormRules>({
-  account: [
+  userName: [
     { required: true, trigger: 'blur', message: '请输入用户名' },
   ],
   captcha: [
@@ -113,12 +113,12 @@ function handleRegister() {
 // 重置密码
 const resetFormRef = ref<FormInstance>()
 const resetForm = ref({
-  account: localStorage.login_account,
+  userName: localStorage.login_userName,
   captcha: '',
   newPassword: '',
 })
 const resetRules = ref<FormRules>({
-  account: [
+  userName: [
     { required: true, trigger: 'blur', message: '请输入用户名' },
   ],
   captcha: [
@@ -141,8 +141,8 @@ function handleReset() {
   })
 }
 
-function testAccount(account: string) {
-  loginForm.value.account = account
+function testUserName(userName: string) {
+  loginForm.value.userName = userName
   loginForm.value.password = '123456'
   handleLogin()
 }
@@ -163,8 +163,8 @@ function testAccount(account: string) {
           </h3>
         </div>
         <div>
-          <ElFormItem prop="account">
-            <ElInput v-model="loginForm.account" placeholder="用户名" type="text" tabindex="1">
+          <ElFormItem prop="userName">
+            <ElInput v-model="loginForm.userName" placeholder="用户名" type="text" tabindex="1">
               <template #prefix>
                 <SvgIcon name="ri:user-3-fill" />
               </template>
@@ -197,10 +197,10 @@ function testAccount(account: string) {
         </div>
         <div style="margin-top: 20px; margin-bottom: -20px; text-align: center;">
           <ElDivider>演示账号一键登录</ElDivider>
-          <ElButton type="primary" size="small" plain @click="testAccount('admin')">
+          <ElButton type="primary" size="small" plain @click="testUserName('admin')">
             admin
           </ElButton>
-          <ElButton size="small" plain @click="testAccount('test')">
+          <ElButton size="small" plain @click="testUserName('test')">
             test
           </ElButton>
         </div>
@@ -212,8 +212,8 @@ function testAccount(account: string) {
           </h3>
         </div>
         <div>
-          <ElFormItem prop="account">
-            <ElInput v-model="registerForm.account" placeholder="用户名" tabindex="1">
+          <ElFormItem prop="userName">
+            <ElInput v-model="registerForm.userName" placeholder="用户名" tabindex="1">
               <template #prefix>
                 <SvgIcon name="ri:user-3-fill" />
               </template>
@@ -261,8 +261,8 @@ function testAccount(account: string) {
           </h3>
         </div>
         <div>
-          <ElFormItem prop="account">
-            <ElInput v-model="resetForm.account" placeholder="用户名" type="text" tabindex="1">
+          <ElFormItem prop="userName">
+            <ElInput v-model="resetForm.userName" placeholder="用户名" type="text" tabindex="1">
               <template #prefix>
                 <SvgIcon name="ri:user-3-fill" />
               </template>
