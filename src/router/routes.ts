@@ -1,7 +1,12 @@
 import { setupLayouts } from 'virtual:meta-layouts'
 import generatedRoutes from 'virtual:generated-pages'
 import type { RouteRecordRaw } from 'vue-router'
-import MultilevelMenuExample from './modules/multilevel.menu.example'
+import information from './modules/information.ts'
+import DashboardMenu from './modules/dashboard.menu.ts'
+import Operations from '@/router/modules/operations.ts'
+import Business from '@/router/modules/business.ts'
+import System from '@/router/modules/system.ts'
+import ReportForms from '@/router/modules/ReportForms.ts'
 import type { Route } from '#/global'
 import useSettingsStore from '@/store/modules/settings'
 
@@ -66,7 +71,12 @@ const asyncRoutes: Route.recordMainRaw[] = [
       icon: 'uim:box',
     },
     children: [
-      MultilevelMenuExample,
+      DashboardMenu,
+      information,
+      Operations,
+      Business,
+      System,
+      ReportForms,
     ],
   },
 ]

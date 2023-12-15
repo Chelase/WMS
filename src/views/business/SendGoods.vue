@@ -1,12 +1,12 @@
 <route lang="yaml">
 meta:
-  title: 导航1
+  title: 发货管理
 </route>
 
 <template>
   <div>
     <PageMain>
-      多级导航1
+      发货管理
     </PageMain>
   </div>
 </template>

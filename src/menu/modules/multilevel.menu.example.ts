@@ -7,7 +7,7 @@ const menus: Menu.recordRaw = {
   },
   children: [
     {
-      path: '/multilevel_menu_example/page',
+      path: '/information/page',
       meta: {
         title: '导航1',
       },
@@ -18,7 +18,7 @@ const menus: Menu.recordRaw = {
       },
       children: [
         {
-          path: '/multilevel_menu_example/level2/page',
+          path: '/information/level2/page',
           meta: {
             title: '导航2-1',
           },
@@ -29,13 +29,13 @@ const menus: Menu.recordRaw = {
           },
           children: [
             {
-              path: '/multilevel_menu_example/level2/level3/page1',
+              path: '/information/level2/level3/page1',
               meta: {
                 title: '导航2-2-1',
               },
             },
             {
-              path: '/multilevel_menu_example/level2/level3/page2',
+              path: '/information/level2/level3/page2',
               meta: {
                 title: '导航2-2-2',
               },

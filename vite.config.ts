@@ -34,7 +34,7 @@ export default async ({ mode, command }) => {
     build: {
       outDir: mode === 'production' ? 'dist' : `dist-${mode}`,
       sourcemap: env.VITE_BUILD_SOURCEMAP === 'true',
-      host: '0.0.0.0'
+      host: '0.0.0.0',
     },
     define: {
       __SYSTEM_INFO__: JSON.stringify({

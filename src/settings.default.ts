@@ -12,19 +12,19 @@ const globalSettingsDefault: RecursiveRequired<Settings.all> = {
     enableAppSetting: false,
   },
   home: {
-    enable: true,
-    title: '主页',
+    enable: false,
   },
   layout: {
-    enableMobileAdaptation: false,
+    enableMobileAdaptation: true, // 兼容移动端
+    widthMode: 'adaption', // 自适应
   },
   menu: {
     baseOn: 'frontend',
-    menuMode: 'side',
+    menuMode: 'single', // 侧边栏模式（无主导航）
     switchMainMenuAndPageJump: false,
     subMenuUniqueOpened: true,
     subMenuCollapse: false,
-    enableSubMenuCollapseButton: false,
+    enableSubMenuCollapseButton: true,
     enableHotkeys: false,
   },
   topbar: {

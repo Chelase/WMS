@@ -1,12 +1,12 @@
 <route lang="yaml">
 meta:
-  title: 导航2-1
+  title: 系统参数
 </route>
 
 <template>
   <div>
     <PageMain>
-      多级导航2-1
+      系统参数
     </PageMain>
   </div>
 </template>

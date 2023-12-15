@@ -14,9 +14,9 @@ export default [
             },
             children: [
               {
-                path: '/multilevel_menu_example',
+                path: '/information',
                 component: 'Layout',
-                redirect: '/multilevel_menu_example/page',
+                redirect: '/information/page',
                 name: 'multilevelMenuExample',
                 meta: {
                   title: '多级导航',
@@ -26,7 +26,7 @@ export default [
                   {
                     path: 'page',
                     name: 'multilevelMenuExample1',
-                    component: 'multilevel_menu_example/page.vue',
+                    component: 'information/CargoArea.vue',
                     meta: {
                       title: '导航1',
                     },
@@ -34,7 +34,7 @@ export default [
                   {
                     path: 'level2',
                     name: 'multilevelMenuExample2',
-                    redirect: '/multilevel_menu_example/level2/page',
+                    redirect: '/information/level2/page',
                     meta: {
                       title: '导航2',
                     },
@@ -42,7 +42,7 @@ export default [
                       {
                         path: 'page',
                         name: 'multilevelMenuExample2-1',
-                        component: 'multilevel_menu_example/level2/page.vue',
+                        component: 'information/level2/CargoArea.vue',
                         meta: {
                           title: '导航2-1',
                         },
@@ -50,7 +50,7 @@ export default [
                       {
                         path: 'level3',
                         name: 'multilevelMenuExample2-2',
-                        redirect: '/multilevel_menu_example/level2/level3/page1',
+                        redirect: '/information/level2/level3/page1',
                         meta: {
                           title: '导航2-2',
                         },
@@ -58,7 +58,7 @@ export default [
                           {
                             path: 'page1',
                             name: 'multilevelMenuExample2-2-1',
-                            component: 'multilevel_menu_example/level2/level3/page1.vue',
+                            component: 'information/level2/level3/page1.vue',
                             meta: {
                               title: '导航2-2-1',
                             },
@@ -66,7 +66,7 @@ export default [
                           {
                             path: 'page2',
                             name: 'multilevelMenuExample2-2-2',
-                            component: 'multilevel_menu_example/level2/level3/page2.vue',
+                            component: 'information/level2/level3/page2.vue',
                             meta: {
                               title: '导航2-2-2',
                             },
@@ -104,7 +104,7 @@ export default [
                 },
                 children: [
                   {
-                    path: '/multilevel_menu_example/page',
+                    path: '/information/page',
                     meta: {
                       title: '导航1',
                     },
@@ -115,7 +115,7 @@ export default [
                     },
                     children: [
                       {
-                        path: '/multilevel_menu_example/level2/page',
+                        path: '/information/level2/page',
                         meta: {
                           title: '导航2-1',
                         },
@@ -126,13 +126,13 @@ export default [
                         },
                         children: [
                           {
-                            path: '/multilevel_menu_example/level2/level3/page1',
+                            path: '/information/level2/level3/page1',
                             meta: {
                               title: '导航2-2-1',
                             },
                           },
                           {
-                            path: '/multilevel_menu_example/level2/level3/page2',
+                            path: '/information/level2/level3/page2',
                             meta: {
                               title: '导航2-2-2',
                             },

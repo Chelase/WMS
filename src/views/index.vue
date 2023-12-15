@@ -1,208 +1,472 @@
 <route lang="yaml">
-name: home
 meta:
-  title: 主页
-  icon: ant-design:home-twotone
+title: 登录
+constant: true
+layout: false
 </route>
 
 <script setup lang="ts">
-const fantasticStartkitInfo = ref({
-  feature: [
-    '支持 TypeScript',
-    '默认集成 vue-router 和 pinia',
-    '支持基于文件系统的路由',
-    '全局组件自动引入',
-    '全局 SCSS 资源引入',
-    '支持 Unocss',
-    '支持 SVG 文件图标、Iconify 图标、UnoCSS 图标',
-    '支持 mock 数据，可脱离后端束缚独立开发',
-    '支持 gzip / brotli 优化项目体积，提高加载速度',
-    '结合 IDE 插件、ESlint 、stylelint 、Git 钩子，轻松实现团队代码规范',
-  ],
+import type { FormInstance, FormRules } from 'element-plus'
+import { ElMessage } from 'element-plus'
+import Copyright from '@/layouts/components/Copyright/index.vue'
+import useUserStore from '@/store/modules/user'
+
+defineOptions({
+  name: 'Login',
 })
 
-const fantasticAdminInfo = ref({
-  imageVisible: false,
-  index: 0,
-  data: [
-    'https://fantastic-admin.gitee.io/preview1.png',
-    'https://fantastic-admin.gitee.io/preview2.png',
-    'https://fantastic-admin.gitee.io/preview3.png',
-    'https://fantastic-admin.gitee.io/preview4.png',
-    'https://fantastic-admin.gitee.io/preview5.png',
-    'https://fantastic-admin.gitee.io/preview6.png',
+const route = useRoute()
+const router = useRouter()
+
+const userStore = useUserStore()
+
+const banner = new URL('../assets/images/login-banner.png', import.meta.url).href
+const logo = new URL('../assets/images/logo.png', import.meta.url).href
+const title = import.meta.env.VITE_APP_TITLE
+
+// 表单类型，login 登录，register 注册，reset 重置密码
+const formType = ref('login')
+const loading = ref(false)
+const redirect = ref(route.query.redirect?.toString() ?? '/')
+
+// 登录
+const loginFormRef = ref<FormInstance>()
+const loginForm = ref({
+  userName: localStorage.login_userName || '',
+  password: '',
+  remember: !!localStorage.login_userName,
+})
+const loginRules = ref<FormRules>({
+  userName: [
+    { required: true, trigger: 'blur', message: '请输入用户名' },
+  ],
+  password: [
+    { required: true, trigger: 'blur', message: '请输入密码' },
+    { min: 6, max: 18, trigger: 'blur', message: '密码长度为6到18位' },
   ],
 })
+function handleLogin() {
+  loginFormRef.value && loginFormRef.value.validate((valid) => {
+    if (valid) {
+      loading.value = true
+      userStore.login(loginForm.value).then(() => {
+        loading.value = false
+        if (loginForm.value.remember) {
+          localStorage.setItem('login_userName', loginForm.value.userName)
+        }
+        else {
+          localStorage.removeItem('login_userName')
+        }
+        router.push(redirect.value)
+      }).catch(() => {
+        loading.value = false
+      })
+    }
+  })
+}
 
-const oneStepAdminInfo = ref({
-  imageVisible: false,
-  index: 0,
-  data: [
-    'https://one-step-admin.gitee.io/preview1.png',
-    'https://one-step-admin.gitee.io/preview2.png',
-    'https://one-step-admin.gitee.io/preview3.png',
-    'https://one-step-admin.gitee.io/preview4.png',
-    'https://one-step-admin.gitee.io/preview5.png',
-    'https://one-step-admin.gitee.io/preview6.png',
+// 注册
+const registerFormRef = ref<FormInstance>()
+const registerForm = ref({
+  userName: '',
+  captcha: '',
+  password: '',
+  checkPassword: '',
+})
+const registerRules = ref<FormRules>({
+  userName: [
+    { required: true, trigger: 'blur', message: '请输入用户名' },
+  ],
+  captcha: [
+    { required: true, trigger: 'blur', message: '请输入验证码' },
+  ],
+  password: [
+    { required: true, trigger: 'blur', message: '请输入密码' },
+    { min: 6, max: 18, trigger: 'blur', message: '密码长度为6到18位' },
+  ],
+  checkPassword: [
+    { required: true, trigger: 'blur', message: '请再次输入密码' },
+    {
+      validator: (rule, value, callback) => {
+        if (value !== registerForm.value.password) {
+          callback(new Error('两次输入的密码不一致'))
+        }
+        else {
+          callback()
+        }
+      },
+    },
   ],
 })
+function handleRegister() {
+  ElMessage({
+    message: '注册模块仅提供界面演示，无实际功能，需开发者自行扩展',
+    type: 'warning',
+  })
+  registerFormRef.value && registerFormRef.value.validate((valid) => {
+    if (valid) {
+      // 这里编写业务代码
+    }
+  })
+}
 
-function open(url: string) {
-  window.open(url, '_blank')
+// 重置密码
+const resetFormRef = ref<FormInstance>()
+const resetForm = ref({
+  userName: localStorage.login_userName,
+  captcha: '',
+  newPassword: '',
+})
+const resetRules = ref<FormRules>({
+  userName: [
+    { required: true, trigger: 'blur', message: '请输入用户名' },
+  ],
+  captcha: [
+    { required: true, trigger: 'blur', message: '请输入验证码' },
+  ],
+  newPassword: [
+    { required: true, trigger: 'blur', message: '请输入新密码' },
+    { min: 6, max: 18, trigger: 'blur', message: '密码长度为6到18位' },
+  ],
+})
+function handleReset() {
+  ElMessage({
+    message: '重置密码仅提供界面演示，无实际功能，需开发者自行扩展',
+    type: 'info',
+  })
+  resetFormRef.value && resetFormRef.value.validate((valid) => {
+    if (valid) {
+      // 这里编写业务代码
+    }
+  })
+}
+
+function testUserName(userName: string) {
+  loginForm.value.userName = userName
+  loginForm.value.password = '123456'
+  handleLogin()
 }
 </script>
 
 <template>
   <div>
-    <PageHeader>
-      <template #title>
-        <div class="flex items-center gap-4">
-          欢迎使用 Fantastic-admin
+    <div class="bg-banner" />
+    <div id="login-box">
+      <div class="login-banner">
+        <img :src="logo" class="logo">
+        <img :src="banner" class="banner">
+      </div>
+      <ElForm v-show="formType === 'login'" ref="loginFormRef" :model="loginForm" :rules="loginRules" class="login-form">
+        <div class="title-container">
+          <h3 class="title">
+            欢迎来到 {{ title }} ! 👋🏻
+          </h3>
         </div>
-      </template>
-      <template #content>
-        <div class="text-sm/6">
-          <div>
-            这是一款<b class="text-emphasis">开箱即用</b>的中后台框架，同时它也经历过数十个真实项目的技术沉淀，确保框架在开发中可落地、可使用、可维护
-          </div>
-          <div>
-            注：在作者就职过的公司，本框架已在电商、直播、OA、ERP等多个不同领域的中后台系统中应用并稳定运行
-          </div>
+        <div>
+          <ElFormItem prop="userName">
+            <ElInput v-model="loginForm.userName" placeholder="用户名" type="text" tabindex="1">
+              <template #prefix>
+                <SvgIcon name="ri:user-3-fill" />
+              </template>
+            </ElInput>
+          </ElFormItem>
+          <ElFormItem prop="password">
+            <ElInput v-model="loginForm.password" type="password" placeholder="密码" tabindex="2" autocomplete="new-password" show-password @keyup.enter="handleLogin">
+              <template #prefix>
+                <SvgIcon name="ri:lock-2-fill" />
+              </template>
+            </ElInput>
+          </ElFormItem>
         </div>
-      </template>
-      <HButton outline @click="open('https://fantastic-admin.gitee.io')">
-        <SvgIcon name="ri:file-text-line" />
-        开发文档
-      </HButton>
-      <HDropdownMenu
-        :items="[
-          [
-            { label: 'Gitee', handle: () => open('https://gitee.com/fantastic-admin/basic') },
-            { label: 'Github', handle: () => open('https://github.com/fantastic-admin/basic') },
-          ],
-        ]"
-      >
-        <HButton class="ml-2">
-          <SvgIcon name="ri:code-s-slash-line" />
-          代码仓库
-          <SvgIcon name="ep:arrow-down" />
-        </HButton>
-      </HDropdownMenu>
-    </PageHeader>
-    <PageMain class="rounded-lg text-white" style="background: linear-gradient(50deg, rgb(14 76 253), rgb(106 142 255));">
-      全新版本 V4.0 正式发布，支持替换 UI 组件库，点击查看<span class="cursor-pointer px-1 text-yellow font-bold hover:op-70" @click="open('https://fantastic-admin.gitee.io/guide/v4.html')">V4.0 更新介绍</span>。
-    </PageMain>
-    <div class="w-full flex flex-col gap-[20px] px-[20px] xl:flex-row">
-      <PageMain class="ecology">
-        <template #title>
-          <div class="title-info">
-            <img src="https://cn.vuejs.org/logo.svg">
-            <div>
-              <h1 class="c-[#41b883]">
-                Fantastic-startkit
-              </h1>
-              <h2>一款简单好用的 Vue3 项目启动套件</h2>
-            </div>
-          </div>
-          <div class="ml-auto">
-            <HButton @click="open('https://hooray.gitee.io/fantastic-startkit')">
-              访问官网
-            </HButton>
-            <HButton outline class="ml-2" @click="open('https://hooray.github.io/fantastic-startkit')">
-              备用地址
-            </HButton>
-          </div>
-        </template>
-        <ul class="m-0 pr-8 text-size-sm leading-6">
-          <li v-for="item in fantasticStartkitInfo.feature" :key="item">
-            {{ item }}
-          </li>
-        </ul>
-      </PageMain>
-      <PageMain class="ecology">
-        <template #title>
-          <div class="title-info">
-            <img src="https://fantastic-admin.gitee.io/logo.png">
-            <div>
-              <h1 class="c-[#e60000]">
-                Fantastic-admin
-              </h1>
-              <h2>一款开箱即用的 Vue 中后台管理系统框架</h2>
-            </div>
-          </div>
-          <div class="ml-auto">
-            <HButton @click="open('https://fantastic-admin.gitee.io')">
-              访问官网
-            </HButton>
-            <HButton outline class="ml-2" @click="open('https://fantastic-admin.github.io')">
-              备用地址
-            </HButton>
-          </div>
-        </template>
-        <ElCarousel trigger="click" indicator-position="none" :interval="5000" height="250px">
-          <ElCarouselItem v-for="(item, index) in fantasticAdminInfo.data" :key="item">
-            <ElImage :src="item" fit="cover" style="cursor: pointer; width: 100%; height: 250px; margin: auto;" @click="fantasticAdminInfo.imageVisible = true; fantasticAdminInfo.index = index" />
-          </ElCarouselItem>
-        </ElCarousel>
-        <ElImageViewer v-if="fantasticAdminInfo.imageVisible" :url-list="fantasticAdminInfo.data" :initial-index="fantasticAdminInfo.index" @close="fantasticAdminInfo.imageVisible = false" />
-      </PageMain>
-      <PageMain class="ecology">
-        <template #title>
-          <div class="title-info">
-            <img src="https://one-step-admin.gitee.io/logo.png">
-            <div>
-              <h1 class="c-[#67c23a]">
-                One-step-admin
-              </h1>
-              <h2>一款干啥都快人一步的 Vue 中后台系统框架</h2>
-            </div>
-          </div>
-          <div class="ml-auto">
-            <HButton @click="open('https://one-step-admin.gitee.io')">
-              访问官网
-            </HButton>
-            <HButton outline class="ml-2" @click="open('https://one-step-admin.github.io')">
-              备用地址
-            </HButton>
-          </div>
-        </template>
-        <ElCarousel trigger="click" indicator-position="none" :interval="5000" height="250px">
-          <ElCarouselItem v-for="(item, index) in oneStepAdminInfo.data" :key="item">
-            <ElImage :src="item" fit="cover" style="cursor: pointer; width: 100%; height: 250px; margin: auto;" @click="oneStepAdminInfo.imageVisible = true; oneStepAdminInfo.index = index" />
-          </ElCarouselItem>
-        </ElCarousel>
-        <ElImageViewer v-if="oneStepAdminInfo.imageVisible" :url-list="oneStepAdminInfo.data" :initial-index="oneStepAdminInfo.index" @close="oneStepAdminInfo.imageVisible = false" />
-      </PageMain>
+        <div class="flex-bar">
+          <ElCheckbox v-model="loginForm.remember">
+            记住我
+          </ElCheckbox>
+          <ElLink type="primary" :underline="false" @click="formType = 'reset'">
+            忘记密码了?
+          </ElLink>
+        </div>
+        <ElButton :loading="loading" type="primary" size="large" style="width: 100%;" @click.prevent="handleLogin">
+          登录
+        </ElButton>
+        <div class="sub-link">
+          <span class="text">还没有帐号?</span>
+          <ElLink type="primary" :underline="false" @click="formType = 'register'">
+            创建新帐号
+          </ElLink>
+        </div>
+        <div style="margin-top: 20px; margin-bottom: -20px; text-align: center;">
+          <ElDivider>演示账号一键登录</ElDivider>
+          <ElButton type="primary" size="small" plain @click="testUserName('admin')">
+            admin
+          </ElButton>
+          <ElButton size="small" plain @click="testUserName('test')">
+            test
+          </ElButton>
+        </div>
+      </ElForm>
+      <ElForm v-show="formType === 'register'" ref="registerFormRef" :model="registerForm" :rules="registerRules" class="login-form" auto-complete="on">
+        <div class="title-container">
+          <h3 class="title">
+            探索从这里开始! 🚀
+          </h3>
+        </div>
+        <div>
+          <ElFormItem prop="userName">
+            <ElInput v-model="registerForm.userName" placeholder="用户名" tabindex="1">
+              <template #prefix>
+                <SvgIcon name="ri:user-3-fill" />
+              </template>
+            </ElInput>
+          </ElFormItem>
+          <ElFormItem prop="captcha">
+            <ElInput v-model="registerForm.captcha" placeholder="验证码" tabindex="2">
+              <template #prefix>
+                <SvgIcon name="ic:baseline-verified-user" />
+              </template>
+              <template #append>
+                <ElButton>发送验证码</ElButton>
+              </template>
+            </ElInput>
+          </ElFormItem>
+          <ElFormItem prop="password">
+            <ElInput v-model="registerForm.password" type="password" placeholder="密码" tabindex="3" show-password>
+              <template #prefix>
+                <SvgIcon name="ri:lock-2-fill" />
+              </template>
+            </ElInput>
+          </ElFormItem>
+          <ElFormItem prop="checkPassword">
+            <ElInput v-model="registerForm.checkPassword" type="password" placeholder="确认密码" tabindex="4" show-password>
+              <template #prefix>
+                <SvgIcon name="ri:lock-2-fill" />
+              </template>
+            </ElInput>
+          </ElFormItem>
+        </div>
+        <ElButton :loading="loading" type="primary" size="large" style="width: 100%; margin-top: 20px;" @click.prevent="handleRegister">
+          注册
+        </ElButton>
+        <div class="sub-link">
+          <span class="text">已经有帐号?</span>
+          <ElLink type="primary" :underline="false" @click="formType = 'login'">
+            去登录
+          </ElLink>
+        </div>
+      </ElForm>
+      <ElForm v-show="formType === 'reset'" ref="resetFormRef" :model="resetForm" :rules="resetRules" class="login-form">
+        <div class="title-container">
+          <h3 class="title">
+            忘记密码了? 🔒
+          </h3>
+        </div>
+        <div>
+          <ElFormItem prop="userName">
+            <ElInput v-model="resetForm.userName" placeholder="用户名" type="text" tabindex="1">
+              <template #prefix>
+                <SvgIcon name="ri:user-3-fill" />
+              </template>
+            </ElInput>
+          </ElFormItem>
+          <ElFormItem prop="captcha">
+            <ElInput v-model="resetForm.captcha" placeholder="验证码" type="text" tabindex="2">
+              <template #prefix>
+                <SvgIcon name="ic:baseline-verified-user" />
+              </template>
+              <template #append>
+                <ElButton>发送验证码</ElButton>
+              </template>
+            </ElInput>
+          </ElFormItem>
+          <ElFormItem prop="newPassword">
+            <ElInput v-model="resetForm.newPassword" type="password" placeholder="新密码" tabindex="3" show-password>
+              <template #prefix>
+                <SvgIcon name="ri:lock-2-fill" />
+              </template>
+            </ElInput>
+          </ElFormItem>
+        </div>
+        <ElButton :loading="loading" type="primary" size="large" style="width: 100%; margin-top: 20px;" @click.prevent="handleReset">
+          确认
+        </ElButton>
+        <div class="sub-link">
+          <ElLink type="primary" :underline="false" @click="formType = 'login'">
+            去登录
+          </ElLink>
+        </div>
+      </ElForm>
     </div>
+    <Copyright />
   </div>
 </template>
 
 <style lang="scss" scoped>
-.text-emphasis {
-  text-emphasis-style: "❤";
+[data-mode="mobile"] {
+  #login-box {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    top: inherit;
+    left: inherit;
+    transform: translateX(0) translateY(0);
+    flex-direction: column;
+    justify-content: start;
+    border-radius: 0;
+    box-shadow: none;
+
+    .login-banner {
+      width: 100%;
+      padding: 20px 0;
+
+      .banner {
+        position: relative;
+        right: inherit;
+        width: 100%;
+        max-width: 375px;
+        margin: 0 auto;
+        display: inherit;
+        top: inherit;
+        transform: translateY(0);
+      }
+    }
+
+    .login-form {
+      width: 100%;
+      min-height: auto;
+      padding: 30px;
+    }
+  }
+
+  .copyright {
+    position: relative;
+  }
 }
 
-.ecology {
-  --at-apply: flex-1 m-0;
+:deep(input[type="password"]::-ms-reveal) {
+  display: none;
+}
 
-  :deep(.title-container) {
-    --at-apply: flex items-center justify-between flex-wrap gap-4;
+.bg-banner {
+  position: fixed;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle at center, var(--g-container-bg), var(--g-bg));
+}
 
-    .title-info {
-      --at-apply: flex items-center gap-4;
+#login-box {
+  display: flex;
+  justify-content: space-between;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translateX(-50%) translateY(-50%);
+  background-color: var(--g-container-bg);
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: var(--el-box-shadow);
 
-      img {
-        --at-apply: block w-12 h-12;
-      }
+  .login-banner {
+    position: relative;
+    width: 450px;
+    background-color: var(--g-bg);
+    overflow: hidden;
 
-      h1 {
-        --at-apply: m-0 text-2xl;
-      }
+    .banner {
+      width: 100%;
 
-      h2 {
-        --at-apply: m-0 text-base text-stone-5 font-normal;
+      @include position-center(y);
+    }
+
+    .logo {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      height: 30px;
+      border-radius: 4px;
+      box-shadow: var(--el-box-shadow-light);
+    }
+  }
+
+  .login-form {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: 500px;
+    width: 500px;
+    padding: 50px;
+    overflow: hidden;
+
+    .title-container {
+      position: relative;
+
+      .title {
+        font-size: 1.3em;
+        color: var(--el-text-color-primary);
+        margin: 0 auto 30px;
+        font-weight: bold;
       }
     }
   }
+
+  .el-form-item {
+    margin-bottom: 24px;
+
+    :deep(.el-input) {
+      height: 48px;
+      line-height: inherit;
+      width: 100%;
+
+      input {
+        height: 48px;
+      }
+
+      .el-input__prefix,
+      .el-input__suffix {
+        display: flex;
+        align-items: center;
+      }
+
+      .el-input__prefix {
+        left: 10px;
+      }
+
+      .el-input__suffix {
+        right: 10px;
+      }
+    }
+  }
+
+  :deep(.el-divider__text) {
+    background-color: var(--g-container-bg);
+  }
+
+  .flex-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+  }
+
+  .sub-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 20px;
+    font-size: 14px;
+    color: var(--el-text-color-secondary);
+
+    .text {
+      margin-right: 10px;
+    }
+  }
+}
+
+.copyright {
+  position: absolute;
+  bottom: 0;
+  padding: 20px;
+  margin: 0;
+  width: 100%;
 }
 </style>

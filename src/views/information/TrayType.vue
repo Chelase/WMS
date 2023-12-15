@@ -1,0 +1,20 @@
+<route lang="yaml">
+meta:
+title: 货区管理
+</route>
+
+<script setup lang="ts">
+
+</script>
+
+<template>
+  <div>
+    <PageMain>
+      托盘类型
+    </PageMain>
+  </div>
+</template>
+
+<style scoped lang="scss">
+
+</style>
