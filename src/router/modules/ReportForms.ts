@@ -32,7 +32,7 @@ const routes: RouteRecordRaw = {
     },
     {
       path: 'InventoryLedger',
-      nae: 'InventoryLedger',
+      name: 'InventoryLedger',
       component: () => import('@/views/ReportForms/InventoryLedger.vue'),
       meta: {
         title: '库存台账',
