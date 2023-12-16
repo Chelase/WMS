@@ -1,8 +1,3 @@
-<route lang="yaml">
-meta:
-title: 托盘管理
-</route>
-
 <script setup lang="ts">
 
 </script>

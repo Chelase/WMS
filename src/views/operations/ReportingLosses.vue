@@ -1,8 +1,3 @@
-<route lang="yaml">
-meta:
-title: 报损管理
-</route>
-
 <script setup lang="ts">
 
 </script>

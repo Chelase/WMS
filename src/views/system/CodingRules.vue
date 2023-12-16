@@ -1,8 +1,3 @@
-<route lang="yaml">
-meta:
-title: 编码规则
-</route>
-
 <script setup lang="ts">
 
 </script>

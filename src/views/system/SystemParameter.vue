@@ -1,8 +1,3 @@
-<route lang="yaml">
-meta:
-  title: 系统参数
-</route>
-
 <template>
   <div>
     <PageMain>

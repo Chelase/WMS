@@ -3,7 +3,7 @@ import { hex2rgba } from '@unocss/preset-mini/utils'
 export const lightTheme = {
   'color-scheme': 'light',
   // 内置 UI
-  '--ui-primary': hex2rgba('#0f0f0f')!.join(' '),
+  '--ui-primary': hex2rgba('#132eda')!.join(' '),
   '--ui-text': hex2rgba('#fcfcfc')!.join(' '),
   // 主体
   '--g-bg': '#f2f2f2',

@@ -11,7 +11,7 @@ const routes: RouteRecordRaw = {
   name: 'information',
   meta: {
     title: '基本资料',
-    icon: 'heroicons-solid:menu-alt-3',
+    icon: 'ep:reading',
   },
   children: [
     {
@@ -20,6 +20,7 @@ const routes: RouteRecordRaw = {
       component: () => import('@/views/information/warehouse.vue'),
       meta: {
         title: '仓库管理',
+        icon: 'carbon:bare-metal-server',
       },
     },
     {
@@ -32,7 +33,7 @@ const routes: RouteRecordRaw = {
     },
     {
       path: 'location',
-      nae: 'location',
+      name: 'location',
       component: () => import('@/views/information/location.vue'),
       meta: {
         title: '货位管理',

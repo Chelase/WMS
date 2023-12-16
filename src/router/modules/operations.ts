@@ -11,7 +11,7 @@ const routes: RouteRecordRaw = {
   name: 'operation',
   meta: {
     title: '仓库作业',
-    icon: 'heroicons-solid:menu-alt-3',
+    icon: 'icon-park-outline:all-application',
   },
   children: [
     {
@@ -32,7 +32,7 @@ const routes: RouteRecordRaw = {
     },
     {
       path: 'Relocation',
-      nae: 'Relocation',
+      name: 'Relocation',
       component: () => import('@/views/operations/Relocation.vue'),
       meta: {
         title: '移库管理',

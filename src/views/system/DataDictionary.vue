@@ -1,8 +1,3 @@
-<route lang="yaml">
-meta:
-title: 数据字典
-</route>
-
 <script setup lang="ts">
 
 </script>
