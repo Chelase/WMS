@@ -11,7 +11,7 @@ const routes: RouteRecordRaw = {
   name: 'system',
   meta: {
     title: '系统管理',
-    icon: 'heroicons-solid:menu-alt-3',
+    icon: 'ep:setting',
   },
   children: [
     {
@@ -32,7 +32,7 @@ const routes: RouteRecordRaw = {
     },
     {
       path: 'WarehousePermissions',
-      nae: 'WarehousePermissions',
+      name: 'WarehousePermissions',
       component: () => import('@/views/system/WarehousePermissions.vue'),
       meta: {
         title: '仓库权限',

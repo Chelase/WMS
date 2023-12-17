@@ -11,7 +11,7 @@ const routes: RouteRecordRaw = {
   name: 'business',
   meta: {
     title: '业务操作',
-    icon: 'heroicons-solid:menu-alt-3',
+    icon: 'ep:edit',
   },
   children: [
     {
