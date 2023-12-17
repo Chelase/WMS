@@ -18,9 +18,7 @@ const useUserStore = defineStore(
     const isLogin = computed(() => {
       let retn = false
       if (token.value) {
-        if (new Date().getTime() < Number.parseInt(failure_time.value) * 1000) {
-          retn = true
-        }
+        retn = true
       }
       return retn
     })
@@ -31,14 +29,14 @@ const useUserStore = defineStore(
       password: string
     }) {
       const res = await apiUser.login(data)
-      localStorage.setItem('userName', res.data.userName)
-      localStorage.setItem('token', res.data.token)
-      localStorage.setItem('failure_time', res.data.failure_time)
-      localStorage.setItem('avatar', res.data.avatar)
-      userName.value = res.data.userName
-      token.value = res.data.token
-      failure_time.value = res.data.failure_time
-      avatar.value = res.data.avatar
+      token.value = res.Data
+      const userInfo = await apiUser.userInfo()
+      console.log('userInfo', userInfo)
+      // localStorage.setItem('userName', res.data.userName)
+      localStorage.setItem('token', res.Data)
+      // userName.value = res.data.userName
+      // failure_time.value = res.data.failure_time
+      // avatar.value = res.data.avatar
     }
     // 登出
     async function logout(redirect = router.currentRoute.value.fullPath) {

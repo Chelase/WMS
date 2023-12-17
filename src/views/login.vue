@@ -34,8 +34,8 @@ const redirect = ref(route.query.redirect?.toString() ?? '/')
 // 登录
 const loginFormRef = ref<FormInstance>()
 const loginForm = ref({
-  userName: localStorage.login_userName || '',
-  password: '',
+  userName: localStorage.login_userName || 'admin',
+  password: 'admin',
   remember: !!localStorage.login_userName,
 })
 const loginRules = ref<FormRules>({
@@ -44,7 +44,7 @@ const loginRules = ref<FormRules>({
   ],
   password: [
     { required: true, trigger: 'blur', message: '请输入密码' },
-    { min: 6, max: 18, trigger: 'blur', message: '密码长度为6到18位' },
+    { min: 4, max: 8, trigger: 'blur', message: '密码长度为4到8位' },
   ],
 })
 function handleLogin() {
