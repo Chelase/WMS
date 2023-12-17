@@ -28,15 +28,15 @@ const useUserStore = defineStore(
       userName: string
       password: string
     }) {
-      const res = await apiUser.login(data)
+      const res = await apiUser.login(data) // 登录
       token.value = res.Data
-      const userInfo = await apiUser.userInfo()
-      console.log('userInfo', userInfo)
-      // localStorage.setItem('userName', res.data.userName)
-      localStorage.setItem('token', res.Data)
-      // userName.value = res.data.userName
-      // failure_time.value = res.data.failure_time
-      // avatar.value = res.data.avatar
+      localStorage.setItem('token', token.value)
+      const userInfo = await apiUser.userInfo() // 用户信息
+      console.log(userInfo)
+      userName.value = userInfo.Data.UserInfo.UserName
+      localStorage.setItem('userName', userName.value)
+      permissions.value = userInfo.Data.Permissions
+      localStorage.setItem('permissions', userInfo.Data.Permissions)
     }
     // 登出
     async function logout(redirect = router.currentRoute.value.fullPath) {

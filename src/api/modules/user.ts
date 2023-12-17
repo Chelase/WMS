@@ -7,7 +7,7 @@ export default {
     password: string
   }) => api.post('/Base_Manage/Home/SubmitLogin', data),
 
-  userInfo: () => api.post('/Base_Manage/Base_User/GetDataList'),
+  userInfo: () => api.post('/Base_Manage/Home/GetOperatorInfo'),
 
   // 获取权限
   permission: () => api.get('user/permission', {
