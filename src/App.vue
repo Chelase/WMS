@@ -9,7 +9,7 @@ import useSettingsStore from '@/store/modules/settings'
 const settingsStore = useSettingsStore()
 const { auth } = useAuth()
 
-// 侧边栏主导航当前实际宽度123123
+// 侧边栏主导航当前实际宽度1231231
 const mainSidebarActualWidth = computed(() => {
   let actualWidth = Number.parseInt(getComputedStyle(document.documentElement).getPropertyValue('--g-main-sidebar-width'))
   if (settingsStore.settings.menu.menuMode === 'single' || (settingsStore.settings.menu.menuMode === 'head' && settingsStore.mode !== 'mobile')) {
