@@ -59,11 +59,11 @@
         <el-button type="info" plain>- &nbsp;&nbsp; 删除</el-button>
         <el-button type="primary"> &nbsp;&nbsp;刷新</el-button>
         <el-button type="primary">全部</el-button>
-        <el-button type="Default">编制中</el-button>
-        <el-button type="Default">已确认</el-button>
-        <el-button type="Default">审核通过</el-button>
-        <el-button type="Default">部分入库</el-button>
-        <el-button type="Default">全部入库</el-button>
+        <el-button type="default">编制中</el-button>
+        <el-button type="default">已确认</el-button>
+        <el-button type="default">审核通过</el-button>
+        <el-button type="default">部分入库</el-button>
+        <el-button type="default">全部入库</el-button>
       </el-row>
       <el-row class="marleft" style="margin-top: 10px;">
         <el-input v-model="oddnumbers" class="w-50 m-2" placeholder="单号/供应商" />
@@ -71,7 +71,7 @@
           <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
         </el-select>
         <el-button type="primary" class="martop">查询</el-button>
-        <el-button type="Default" class="martop">重置</el-button>
+        <el-button type="default" class="martop">重置</el-button>
       </el-row>
 
       <el-table :data="tableData" border style="width: 100%">

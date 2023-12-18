@@ -17,7 +17,7 @@ const routes: RouteRecordRaw = {
     {
       path: 'TakeOver',
       name: 'TakeOver',
-      component: () => import('@/views/business/TakeOver.vue'),
+      component: () => import('@/views/business/TakeOver/index.vue'),
       meta: {
         title: '收货管理',
       },
@@ -25,7 +25,7 @@ const routes: RouteRecordRaw = {
     {
       path: 'SendGoods',
       name: 'SendGoods',
-      component: () => import('@/views/business/SendGoods.vue'),
+      component: () => import('@/views/business/SendGoods/index.vue'),
       meta: {
         title: '发货管理',
       },
