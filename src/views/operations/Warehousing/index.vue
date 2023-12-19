@@ -10,7 +10,7 @@ const valuetimetwo = ref('')
 const value = ref('')
 const currentDate = new Date()
 const year = currentDate.getFullYear()
-const month = currentDate.getMonth() + 1 // 月份从0开始，需要加1
+const month = currentDate.getMonth()
 const day = currentDate.getDate()
 
 const slideover = ref(false)
@@ -49,12 +49,15 @@ function tapReset() {
   valuetimetwo.value = ''
   input.value = ''
 }
+function close(e) {
+  slideover.value = e
+}
 </script>
 
 <template>
   <div>
     <el-drawer v-model="slideover" size="80%" title="入库">
-      <drawer />
+      <drawer @close="close" />
     </el-drawer>
     <PageMain>
       <div class="button-top">
