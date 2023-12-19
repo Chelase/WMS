@@ -54,6 +54,24 @@
             <ElInput v-model="input" style="width: 260px;height: 32px;" />
           </el-col>
         </el-row>
+        <el-row style="margin-top: 20px;">
+            <el-button type="primary">+ 添加</el-button>
+            <el-button type="info" plain disabled>- 删除</el-button>
+        </el-row>
+        <el-row style="margin-top: 20px;"> 
+            <el-table :data="tableData" border style="width: 100%" text-align="center">
+                <el-table-column type="selection" width="80" />
+                <el-table-column prop="收货单号" label="收货单号" width="180" />
+                <el-table-column prop="订单日期" label="订单日期" />
+                <el-table-column prop="收货类型" label="收货类型" />
+                <el-table-column prop="关联单号" label="关联单号" />
+                <el-table-column prop="状态" label="状态" />
+                <el-table-column prop="供应商" label="供应商" />
+                <el-table-column prop="收货数量" label="收货数量" />
+                <el-table-column prop="入库数量" label="入库数量" />
+                <el-table-column prop="操作" label="操作" />
+              </el-table>
+        </el-row>
       </div>
     </template>
     

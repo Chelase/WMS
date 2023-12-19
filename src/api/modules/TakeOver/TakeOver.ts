@@ -7,7 +7,7 @@ export const  getTakeOverList = () => {
         method:'post',
         data:{
             pageIndex: 1,
-            pageRows: 10,
+            pageRows: 50,
             sortField: 'CreateTime',
             SortType: 'desc'
         }
