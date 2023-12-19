@@ -23,7 +23,7 @@
             address: 'No. 189, Grove St, Los Angeles',
         },
     ]
-    const tableData = props
+  
     //存储表格多选选中数据
     const multipleSelection = ref < User[] > ([])
     // 监听选择多选
