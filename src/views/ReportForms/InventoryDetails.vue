@@ -1,8 +1,3 @@
-<route lang="yaml">
-meta:
-  title: 库存明细
-</route>
-
 <template>
   <div>
     <PageMain>

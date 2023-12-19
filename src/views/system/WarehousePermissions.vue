@@ -1,8 +1,3 @@
-<route lang="yaml">
-meta:
-title: 仓库权限
-</route>
-
 <script setup lang="ts">
 
 </script>

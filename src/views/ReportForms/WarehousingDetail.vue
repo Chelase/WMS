@@ -1,8 +1,3 @@
-<route lang="yaml">
-meta:
-title: 入库明细
-</route>
-
 <script setup lang="ts">
 
 </script>

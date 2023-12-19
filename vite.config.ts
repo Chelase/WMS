@@ -21,7 +21,7 @@ export default async ({ mode, command }) => {
     // 开发服务器选项 https://cn.vitejs.dev/config/#server-options
     server: {
       open: true,
-      port: 8080,
+      port: 8081,
       proxy: {
         '/proxy': {
           target: env.VITE_APP_API_BASEURL,
@@ -34,7 +34,6 @@ export default async ({ mode, command }) => {
     build: {
       outDir: mode === 'production' ? 'dist' : `dist-${mode}`,
       sourcemap: env.VITE_BUILD_SOURCEMAP === 'true',
-      host: '0.0.0.0',
     },
     define: {
       __SYSTEM_INFO__: JSON.stringify({

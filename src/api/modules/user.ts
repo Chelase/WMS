@@ -1,13 +1,13 @@
 import api from '../index'
 
 export default {
-  // 登录
+  // 登录获取token
   login: (data: {
     userName: string
     password: string
-  }) => api.post('user/login', data, {
-    baseURL: '/mock/',
-  }),
+  }) => api.post('/Base_Manage/Home/SubmitLogin', data),
+
+  userInfo: () => api.post('/Base_Manage/Home/GetOperatorInfo'),
 
   // 获取权限
   permission: () => api.get('user/permission', {

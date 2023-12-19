@@ -1,8 +1,3 @@
-<route lang="yaml">
-meta:
-title: 操作日志
-</route>
-
 <script setup lang="ts">
 
 </script>

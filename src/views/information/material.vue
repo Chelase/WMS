@@ -1,8 +1,3 @@
-<route lang="yaml">
-meta:
-title: 物料类型
-</route>
-
 <script setup lang="ts">
 
 </script>

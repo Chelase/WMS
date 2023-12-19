@@ -16,7 +16,6 @@ const globalSettingsDefault: RecursiveRequired<Settings.all> = {
   },
   layout: {
     enableMobileAdaptation: true, // 兼容移动端
-    widthMode: 'adaption', // 自适应
   },
   menu: {
     baseOn: 'frontend',
