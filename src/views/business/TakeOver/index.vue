@@ -49,6 +49,13 @@
     gettableData()
   })
 
+  //存储表格多选选中数据
+  const multipleSelection = ref < User[] > ([])
+  // 监听选择多选
+  const handleSelectionChange = (val: User[]) => {
+    multipleSelection.value = val
+    console.log(multipleSelection.value)
+  }
 </script>
 
 <template>
@@ -58,7 +65,7 @@
       <el-row>
         <el-button type="primary" @click="showhidd = true">+ &nbsp;&nbsp; 新建</el-button>
         <el-button type="info" plain>- &nbsp;&nbsp; 删除</el-button>
-        <el-button type="primary" @click="gettableData()">刷新</el-button>
+        <el-button type="primary" @click="gettableData()"> <svg-icon name="ep:refresh-right"></svg-icon> 刷新</el-button>
         <el-button type="primary">全部</el-button>
         <el-button type="default">编制中</el-button>
         <el-button type="default">已确认</el-button>
@@ -77,7 +84,7 @@
         <el-button type="default" class="martop">重置</el-button>
       </el-row>
 
-      <el-table :data="tableData" border style="width: 100%" text-align="center">
+      <el-table :data="tableData" border style="width: 100%" text-align="center" @selection-change="handleSelectionChange">
         <el-table-column type="selection" width="80" />
         <el-table-column prop="收货单号" label="收货单号" width="180" />
         <el-table-column prop="auditeTime" label="订单日期" />
@@ -85,7 +92,8 @@
         <el-table-column prop="关联单号" label="关联单号" />
         <el-table-column prop="deleted" label="状态">
           <template #default="scope">
-            <el-tag :type="scope.row.tag === 'Home' ? '' : 'success'" disable-transitions> {{scope.row.deleted?'正常':'停用'}} </el-tag>
+            <el-tag :type="scope.row.tag === 'Home' ? '' : 'success'" disable-transitions>
+              {{scope.row.deleted?'正常':'停用'}} </el-tag>
           </template>
         </el-table-column>
         <el-table-column prop="supplier.contactName" label="供应商" />

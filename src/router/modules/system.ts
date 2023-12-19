@@ -17,7 +17,7 @@ const routes: RouteRecordRaw = {
     {
       path: 'DataDictionary',
       name: 'DataDictionary',
-      component: () => import('@/views/system/DataDictionary.vue'),
+      component: () => import('@/views/system/DataDictionary/index.vue'),
       meta: {
         title: '数据字典',
       },
