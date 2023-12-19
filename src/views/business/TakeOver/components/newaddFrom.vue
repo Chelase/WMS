@@ -1,6 +1,7 @@
+
+<script setup lang="ts">
+    import { ref, defineProps, defineEmits } from 'vue'
+</script>
 <template>
-    <PageMain v-show="true">
-        新建数据
-        <el-input />
-    </PageMain>
+    <el-input placeholder="" />
 </template>

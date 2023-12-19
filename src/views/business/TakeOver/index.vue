@@ -7,7 +7,12 @@
   //新建弹框组件
   import newaddFrom from './components/newaddFrom.vue'
   import { ref, onMounted } from 'vue'
+  //表格初始值  
   import { getTakeOverList } from '@/api/modules/TakeOver/TakeOver.ts'
+
+  //控制组件显示隐藏
+  const showhidd = ref(false)
+
   //单号输入框
   const oddnumbers = ref()
   //收货类型选择器 v-model
@@ -36,8 +41,9 @@
     //表格数据
   const tableData = ref([])
   const gettableData = async() => {
-    const res = getTakeOverList()
-    console.log(res)
+    const { data } = await getTakeOverList()
+    console.log(data)
+    tableData.value = data
   }
   onMounted(() => {
     gettableData()
@@ -50,7 +56,7 @@
     <PageMain>
       收货管理
       <el-row>
-        <el-button type="primary">+ &nbsp;&nbsp; 新建</el-button>
+        <el-button type="primary" @click="showhidd = true">+ &nbsp;&nbsp; 新建</el-button>
         <el-button type="info" plain>- &nbsp;&nbsp; 删除</el-button>
         <el-button type="primary"> &nbsp;&nbsp;刷新</el-button>
         <el-button type="primary">全部</el-button>
@@ -84,7 +90,9 @@
         <el-table-column prop="操作" label="操作" />
       </el-table>
     </PageMain>
-    <newaddFrom></newaddFrom>
+    <HDialog v-model="showhidd" title="新建">
+      <newaddFrom></newaddFrom>
+    </HDialog>
   </div>
 </template>
 
