@@ -6,13 +6,11 @@ import drawer from '@/components/drawer/index.vue'
 const radio = ref('全部')
 const input = ref('')
 const valuetimetwo = ref('')
-
 const value = ref('')
 const currentDate = new Date()
 const year = currentDate.getFullYear()
 const month = currentDate.getMonth()
 const day = currentDate.getDate()
-
 const slideover = ref(false)
 
 const options = [
@@ -116,6 +114,7 @@ function close(e) {
         </ElButton>
       </div>
       <el-table
+        border
         style="width: 100%;"
       >
         <el-table-column type="selection" width="55" />

@@ -34,6 +34,7 @@ declare module 'vue' {
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     SearchBar: typeof import('./../components/SearchBar/index.vue')['default']
+    Sonindex: typeof import('./../components/drawer/sonindex.vue')['default']
     SvgIcon: typeof import('./../components/SvgIcon/index.vue')['default']
     SystemInfo: typeof import('./../components/SystemInfo/index.vue')['default']
     Trend: typeof import('./../components/Trend/index.vue')['default']

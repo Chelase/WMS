@@ -7,3 +7,9 @@ export function getdataListAPI(data) {
     data,
   })
 }
+export function GetTreeDataListAPI() {
+  return api({
+    url: '/PB/PB_MaterialType/GetTreeDataList',
+    method: 'post',
+  })
+}
