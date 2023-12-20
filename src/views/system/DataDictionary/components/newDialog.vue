@@ -1,22 +1,45 @@
 <script setup lang="ts">
     import { ref, defineEmits, inject } from 'vue'
-    import  storeCallInterface from '@/store/modules/DataDictionary/index.ts'
+    import storeCallInterface from '@/store/modules/DataDictionary/index.ts'
+    import { ElMessage } from 'element-plus'
     const emit = defineEmits('Refresh')
     const outerVisible = inject('newdialogShow')
 
     const storeCallInterfaces = storeCallInterface()
     const saveNewData = async () => {
+        if (newDialoginputdata.value.Code === ''
+            || newDialoginputdata.value.Name === ''
+            || newDialoginputdata.value.Remarks === '') {
+            ElMessage({
+                message: '输入值不能为空',
+                type: 'error',
+            })
+            return  
+        }
         console.log(newDialoginputdata.value)
         // console.log(storeCallInterfaces.DictionaryAdd)
         await storeCallInterfaces.DictionaryAdd(newDialoginputdata.value)
         console.log(storeCallInterfaces.addDictionaryres)
+        emit('Refresh')
+        if (storeCallInterfaces.addDictionaryres.Msg == '请求成功') {
+            ElMessage({
+                message: 'Congrats, this is a success message.',
+                type: 'success',
+            })
+        }
     }
 
     // 对话框值
     const newDialoginputdata = ref({
-        serNumber: '',
+        Code: '',
         Name: '',
-        notes: ''
+        Remarks: ''
+    })
+    //对话框表单验证
+    const newfromverify = ref({
+        verifyCode: [{
+            required: true, trigger: 'blur', message: '请输入编号'
+        }]
     })
 </script>
 <template>
@@ -24,7 +47,7 @@
         <el-col :span="16" class="colauto">
             <el-row class="rowtop">
                 <span>编号:</span>
-                <el-input class="w-180 m-2" v-model="newDialoginputdata.serNumber" />
+                <el-input class="w-180 m-2" v-model="newDialoginputdata.Code" />
             </el-row>
             <el-row class="rowtop">
                 <span>名称:</span>
@@ -32,7 +55,7 @@
             </el-row>
             <el-row class="rowtop">
                 <span>备注:</span>
-                <el-input class="w-180 m-2" v-model="newDialoginputdata.notes" />
+                <el-input class="w-180 m-2" v-model="newDialoginputdata.Remarks" />
             </el-row>
         </el-col>
         <template #footer>
@@ -47,10 +70,12 @@
     .dialog-footer button:first-child {
         margin-right: 10px;
     }
-    .colauto{
+
+    .colauto {
         margin: auto;
     }
-    .rowtop{
+
+    .rowtop {
         margin-top: 20;
         margin-left: 10px;
         line-height: 50px;
