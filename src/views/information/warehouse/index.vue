@@ -7,6 +7,7 @@ import WarehouseDialog from './components/WarehouseDialog.vue'
 import useWarehouseStore from '@/store/modules/information/warehouse.ts'
 import RoadwaySlideover from '@/views/information/warehouse/components/RoadwaySlideover.vue'
 import GoodsShelves from '@/views/information/warehouse/components/GoodsShelves.vue'
+import EditConfig from "@/views/information/warehouse/components/EditConfig.vue";
 
 const WarehouseStore = useWarehouseStore()
 const { Warehouse_Totals } = storeToRefs(WarehouseStore)
@@ -122,6 +123,13 @@ async function GetWarehouseList() {
   if (!tableData.value) { loading.value = false }
   warehouseSelection.value = []
 }
+
+// 仓库配置
+const OpenConfig = ref(false)
+
+function OpenEditConfig() {
+  OpenConfig.value = true
+}
 </script>
 
 <template>
@@ -209,7 +217,7 @@ async function GetWarehouseList() {
               <el-button type="primary" link @click="OpenGoodsShelves(scope.row.Id)">
                 设置货架
               </el-button>
-              <el-button type="primary" link>
+              <el-button type="primary" link @click="OpenEditConfig">
                 配置
               </el-button>
               <el-button type="primary" link @click="OpenEditWarehouse('edit', scope.row.Id)">
@@ -246,6 +254,7 @@ async function GetWarehouseList() {
     <el-drawer v-model="isGoodsShelves" title="设置货架" size="67%">
       <GoodsShelves :stor-id="storId" title="货架" />
     </el-drawer>
+    <EditConfig :show-config="OpenConfig" />
   </div>
 </template>
 

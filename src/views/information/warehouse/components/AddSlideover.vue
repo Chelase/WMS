@@ -51,13 +51,10 @@ onMounted(() => {
 })
 
 function IsEdit() {
-  if (props.title === '货架') {
-    if (props.isEdit === '编辑') {
+  if (props.isEdit === '编辑') {
+    if (props.title === '货架') {
       getEditGoodsShelvesList()
-    }
-  }
-  else if (props.title === '巷道') {
-    if (props.isEdit === '编辑') {
+    } else if (props.title === '巷道') {
       getEditRoadwaySlideoverList()
     }
   }
@@ -93,7 +90,11 @@ function upList() {
 // 关闭弹窗
 function closeShow() {
   emit('upAddSlideoverShow', false)
-  AddSlideoverFormRef.value.resetFields()
+  SlideoverForm.value = {
+    Code: '',
+    name: '',
+    StorId: props.storId,
+  }
 }
 
 function SaveData() {
