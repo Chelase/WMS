@@ -16,7 +16,6 @@ const props = defineProps({
 })
 
 watch(() => props.storId, (newValue) => {
-  console.log(newValue)
   getRoadwayList.value.StorId = newValue
   getRoadway()
 })
@@ -115,7 +114,7 @@ async function getRoadway() {
       :title="title"
       :stor-id="props.storId"
       @up-add-slideover-show="upIsAddRoadwayShow"
-      @up-roadway-list="getRoadway"
+      @up-list="getRoadway"
     />
   </el-dialog>
 </template>

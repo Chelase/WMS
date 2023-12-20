@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue'
 import type { FormInstance } from 'element-plus'
-import Message from 'vue-m-message'
+import { ElMessage } from 'element-plus'
 import useWarehouseStore from '@/store/modules/information/warehouse.ts'
 
 const props = defineProps({
@@ -15,7 +15,7 @@ const props = defineProps({
   },
 })
 
-const emit = defineEmits(['upAddSlideoverShow', 'upRoadwayList'])
+const emit = defineEmits(['upAddSlideoverShow', 'upList'])
 
 const WarehouseStore = useWarehouseStore()
 
@@ -28,7 +28,6 @@ const SlideoverForm = ref({
 })
 
 watch(() => props.storId, (newValue) => {
-  console.log(newValue)
   SlideoverForm.value.storId = newValue
 })
 
@@ -40,7 +39,7 @@ const SlideoverRules = ref({
 
 // 通知组件更新列表
 function upList() {
-  emit('upRoadwayList')
+  emit('upList')
 }
 
 // 关闭弹窗
@@ -52,8 +51,9 @@ function closeShow() {
 function SaveData() {
   AddSlideoverFormRef.value && AddSlideoverFormRef.value?.validate(async (valid) => {
     if (valid) {
-      await WarehouseStore.AddRoadwayData(SlideoverForm.value)
-      Message.success('操作成功')
+      if (props.title === '巷道') { await WarehouseStore.AddRoadwayData(SlideoverForm.value) }
+      else { await WarehouseStore.AddGoodsShelvesData(SlideoverForm.value) }
+      ElMessage.success('操作成功')
       closeShow()
       upList()
     }

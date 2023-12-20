@@ -115,7 +115,7 @@ async function getGoodsShelves() {
       :title="title"
       :stor-id="props.storId"
       @up-add-slideover-show="upIsAddRoadwayShow"
-      @up-roadway-list="getRoadway"
+      @up-list="getGoodsShelves"
     />
   </el-dialog>
 </template>
