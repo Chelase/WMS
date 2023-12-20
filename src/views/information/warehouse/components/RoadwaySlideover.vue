@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { onMounted, ref, watch } from 'vue'
 import { storeToRefs } from 'pinia'
+import { ElMessage, ElMessageBox } from 'element-plus'
 import useWarehouseStore from '@/store/modules/information/warehouse.ts'
 import AddSlideover from '@/views/information/warehouse/components/AddSlideover.vue'
 
@@ -31,6 +32,46 @@ async function Page(currentPage) {
 }
 
 onMounted(() => getRoadway())
+
+// 多选及删除
+const Selection = ref([])
+const warehouseSelection = ref([])
+const disabled = computed(() => {
+  return !warehouseSelection.value.length
+})
+
+function handleSelectionChange(val) {
+  Selection.value = val
+  // 清除warehouseSelection中不再在Selection中的项
+  warehouseSelection.value = warehouseSelection.value.filter((item) => {
+    return Selection.value.includes(item.Id)
+  })
+
+  // 将Selection中的所有Id推入warehouseSelection，并删除重复的项
+  warehouseSelection.value = [...new Set([...warehouseSelection.value, ...Selection.value.map(item => item.Id)])]
+}
+
+async function delRoadwaySlideover(id) {
+  ElMessageBox.confirm(
+    '确认删除吗?',
+    {
+      confirmButtonText: '确定',
+      cancelButtonText: '取消',
+      type: 'warning',
+    },
+  )
+    .then(async () => {
+      if (id) {
+        await WarehouseStore.delRoadwaySlideoverData([id])
+      }
+      else {
+        await WarehouseStore.delRoadwaySlideoverData(warehouseSelection.value)
+      }
+      await getRoadway()
+      ElMessage.success('操作成功')
+    })
+    .catch(() => {})
+}
 
 // 新增巷道
 const IsAddRoadwayShow = ref(false)
@@ -81,7 +122,7 @@ async function getRoadway() {
     <el-button type="primary" @click="OpenEdit('add')">
       <svg-icon name="ep:plus" /> &nbsp; 新建
     </el-button>
-    <el-button disabled>
+    <el-button :disabled="disabled" :type="disabled ? '' : 'primary'" @click="delRoadwaySlideover">
       <svg-icon name="ep:minus" /> &nbsp; 删除
     </el-button>
     <el-button type="primary" @click="getRoadway">
@@ -100,6 +141,7 @@ async function getRoadway() {
     border
     :data="RoadwayList"
     style="width: 100%"
+    @selection-change="handleSelectionChange"
   >
     <el-table-column type="selection" width="55" />
     <el-table-column property="PB_Storage.Name" label="所属仓库" width="220" />
@@ -110,7 +152,7 @@ async function getRoadway() {
         <el-button type="primary" link @click="OpenEdit('edit', scope.row.Id)">
           编辑
         </el-button>
-        <el-button type="primary" link>
+        <el-button type="primary" link @click="delRoadwaySlideover(scope.row.Id)">
           删除
         </el-button>
       </template>

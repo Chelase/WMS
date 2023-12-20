@@ -71,6 +71,11 @@ const useWarehouseStore = defineStore('warehouse', () => {
     await warehouseApi.AddRoadwayDataList(data)
   }
 
+  // 删除巷道
+  const delRoadwaySlideoverData = async (array: NonNullable<unknown>) => {
+    await warehouseApi.delRoadwaySlideoverDataList(array)
+  }
+
   // 获取货架
   const getGoodsShelvesData = async (data: NonNullable<unknown>) => {
     const { Data, Total } = await warehouseApi.getGoodsShelvesDataList(data)
@@ -93,6 +98,11 @@ const useWarehouseStore = defineStore('warehouse', () => {
     await warehouseApi.AddGoodsShelvesDataList(data)
   }
 
+  // 删除货架
+  const delGoodsShelvesData = async (array: NonNullable<unknown>) => {
+    await warehouseApi.delGoodsShelvesDataList(array)
+  }
+
   return {
     warehouseList,
     Warehouse_Totals,
@@ -110,9 +120,11 @@ const useWarehouseStore = defineStore('warehouse', () => {
     getRoadwayData,
     getEditRoadwaySlideoverData,
     AddRoadwayData,
+    delRoadwaySlideoverData,
     getGoodsShelvesData,
     getEditGoodsShelvesData,
     AddGoodsShelvesData,
+    delGoodsShelvesData,
   }
 })
 

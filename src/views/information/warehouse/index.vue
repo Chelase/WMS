@@ -43,9 +43,7 @@ async function Page(currentPage) {
 const Selection = ref([])
 const warehouseSelection = ref([])
 const disabled = computed(() => {
-  let disabled = true
-  disabled = warehouseSelection.value.length === 0
-  return disabled
+  return !warehouseSelection.value.length
 })
 
 function handleSelectionChange(val) {
@@ -59,7 +57,7 @@ function handleSelectionChange(val) {
   warehouseSelection.value = [...new Set([...warehouseSelection.value, ...Selection.value.map(item => item.Id)])]
 }
 
-async function delWarehouse() {
+async function delWarehouse(id) {
   ElMessageBox.confirm(
     '确认删除吗?',
     {
@@ -69,7 +67,11 @@ async function delWarehouse() {
     },
   )
     .then(async () => {
-      await WarehouseStore.delWarehouseData(warehouseSelection.value)
+      if (id) {
+        await WarehouseStore.delWarehouseData([id])
+      } else {
+        await WarehouseStore.delWarehouseData(warehouseSelection.value)
+      }
       await GetWarehouseList()
       Message.success('操作成功')
     })
@@ -213,7 +215,7 @@ async function GetWarehouseList() {
               <el-button type="primary" link @click="OpenEditWarehouse('edit', scope.row.Id)">
                 编辑
               </el-button>
-              <el-button type="primary" link>
+              <el-button type="primary" link @click="delWarehouse(scope.row.Id)">
                 删除
               </el-button>
             </el-row>
