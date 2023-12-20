@@ -33,7 +33,7 @@ async function Page(currentPage) {
 
 onMounted(() => getGoodsShelves())
 
-// 新增巷道
+// 新增货架
 const IsAddRoadwayShow = ref(false)
 
 const loading = ref(false)
@@ -42,7 +42,23 @@ function upIsAddRoadwayShow(row) {
   IsAddRoadwayShow.value = row
 }
 
-// 获取巷道
+// 编辑
+const editId = ref('')
+const isEdit = ref('')
+function OpenEdit(type, row) {
+  switch (type) {
+    case 'add':
+      isEdit.value = '新增'
+      break
+    case 'edit':
+      isEdit.value = '编辑'
+      editId.value = row
+      break
+  }
+  IsAddRoadwayShow.value = true
+}
+
+// 获取货架
 const GoodsShelvesList = ref([])
 const getGoodsShelvesList = ref({
   PageIndex: 1,
@@ -63,7 +79,7 @@ async function getGoodsShelves() {
 
 <template>
   <el-row>
-    <el-button type="primary" @click="IsAddRoadwayShow = true">
+    <el-button type="primary" @click="OpenEdit('add')">
       <svg-icon name="ep:plus" /> &nbsp; 新建
     </el-button>
     <el-button disabled>
@@ -91,8 +107,8 @@ async function getGoodsShelves() {
     <el-table-column property="Code" label="货架编号" width="220" />
     <el-table-column property="Name" label="货架名称" width="220" />
     <el-table-column label="操作">
-      <template #default>
-        <el-button type="primary" link>
+      <template #default="scope">
+        <el-button type="primary" link @click="OpenEdit('edit', scope.row.Id)">
           编辑
         </el-button>
         <el-button type="primary" link>
@@ -110,12 +126,14 @@ async function getGoodsShelves() {
     @current-change="Page"
   />
 
-  <el-dialog v-model="IsAddRoadwayShow" title="新增货架" width="40%" style="height: 250px">
+  <el-dialog v-model="IsAddRoadwayShow" :title="`${isEdit}货架`" width="40%" style="height: 250px">
     <AddSlideover
       :title="title"
       :stor-id="props.storId"
+      :is-edit="isEdit"
+      :edit-id="editId"
       @up-add-slideover-show="upIsAddRoadwayShow"
-      @up-roadway-list="getRoadway"
+      @up-list="getGoodsShelves"
     />
   </el-dialog>
 </template>

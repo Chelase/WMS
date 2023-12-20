@@ -10,12 +10,27 @@ import GoodsShelves from '@/views/information/warehouse/components/GoodsShelves.
 
 const WarehouseStore = useWarehouseStore()
 const { Warehouse_Totals } = storeToRefs(WarehouseStore)
+const storId = ref('')
 
-// 添加仓库
+// 添加及编辑仓库
 const isWarehouseShow = ref(false)
 
 function upIsWarehouseShow(row) {
   isWarehouseShow.value = row
+}
+
+const title = ref('')
+function OpenEditWarehouse(type, row) {
+  switch (type) {
+    case 'add' :
+      title.value = '新增'
+      break
+    case 'edit' :
+      title.value = '编辑'
+      storId.value = row
+      break
+  }
+  isWarehouseShow.value = true
 }
 
 // 分页
@@ -63,7 +78,6 @@ async function delWarehouse() {
 
 // 设置巷道
 const isRoadwayShow = ref(false)
-const storId = ref('')
 
 function OpenRoadwaySlideover(row) {
   isRoadwayShow.value = true
@@ -112,7 +126,7 @@ async function GetWarehouseList() {
   <div>
     <PageMain>
       <el-row>
-        <el-button type="primary" @click="isWarehouseShow = true">
+        <el-button type="primary" @click="OpenEditWarehouse('add')">
           <svg-icon name="ep:plus" /> &nbsp; 新建
         </el-button>
         <el-button :disabled="disabled" :type="disabled ? '' : 'primary'" @click="delWarehouse">
@@ -196,7 +210,7 @@ async function GetWarehouseList() {
               <el-button type="primary" link>
                 配置
               </el-button>
-              <el-button type="primary" link>
+              <el-button type="primary" link @click="OpenEditWarehouse('edit', scope.row.Id)">
                 编辑
               </el-button>
               <el-button type="primary" link>
@@ -216,8 +230,13 @@ async function GetWarehouseList() {
       />
     </PageMain>
 
-    <HDialog v-model="isWarehouseShow" title="新增仓库">
-      <WarehouseDialog @up-warehouse-show="upIsWarehouseShow" @up-warehouse-list="GetWarehouseList" />
+    <HDialog v-model="isWarehouseShow" :title="`${title}仓库`">
+      <WarehouseDialog
+        :title="title"
+        :stor-id="storId"
+        @up-warehouse-show="upIsWarehouseShow"
+        @up-warehouse-list="GetWarehouseList"
+      />
     </HDialog>
     <el-drawer v-model="isRoadwayShow" title="设置巷道" size="67%">
       <RoadwaySlideover :stor-id="storId" title="巷道" />

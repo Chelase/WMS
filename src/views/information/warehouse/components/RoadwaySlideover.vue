@@ -16,7 +16,6 @@ const props = defineProps({
 })
 
 watch(() => props.storId, (newValue) => {
-  console.log(newValue)
   getRoadwayList.value.StorId = newValue
   getRoadway()
 })
@@ -42,6 +41,22 @@ function upIsAddRoadwayShow(row) {
   IsAddRoadwayShow.value = row
 }
 
+// 编辑
+const editId = ref('')
+const isEdit = ref('')
+function OpenEdit(type, row) {
+  switch (type) {
+    case 'add':
+      isEdit.value = '新增'
+      break
+    case 'edit':
+      isEdit.value = '编辑'
+      editId.value = row
+      break
+  }
+  IsAddRoadwayShow.value = true
+}
+
 // 获取巷道
 const RoadwayList = ref([])
 const getRoadwayList = ref({
@@ -63,7 +78,7 @@ async function getRoadway() {
 
 <template>
   <el-row>
-    <el-button type="primary" @click="IsAddRoadwayShow = true">
+    <el-button type="primary" @click="OpenEdit('add')">
       <svg-icon name="ep:plus" /> &nbsp; 新建
     </el-button>
     <el-button disabled>
@@ -91,8 +106,8 @@ async function getRoadway() {
     <el-table-column property="Code" label="巷道编号" width="220" />
     <el-table-column property="Name" label="巷道名称" width="220" />
     <el-table-column label="操作">
-      <template #default>
-        <el-button type="primary" link>
+      <template #default="scope">
+        <el-button type="primary" link @click="OpenEdit('edit', scope.row.Id)">
           编辑
         </el-button>
         <el-button type="primary" link>
@@ -110,12 +125,14 @@ async function getRoadway() {
     @current-change="Page"
   />
 
-  <el-dialog v-model="IsAddRoadwayShow" title="新增巷道" width="40%" style="height: 250px">
+  <el-dialog v-model="IsAddRoadwayShow" :title="`${isEdit}巷道`" width="40%" style="height: 250px">
     <AddSlideover
       :title="title"
       :stor-id="props.storId"
+      :is-edit="isEdit"
+      :edit-id="editId"
       @up-add-slideover-show="upIsAddRoadwayShow"
-      @up-roadway-list="getRoadway"
+      @up-list="getRoadway"
     />
   </el-dialog>
 </template>

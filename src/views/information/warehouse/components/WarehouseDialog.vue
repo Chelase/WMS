@@ -1,12 +1,40 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { onMounted, ref, watch } from 'vue'
 import type { FormInstance, FormRules } from 'element-plus'
 import Message from 'vue-m-message'
+import { storeToRefs } from 'pinia'
 import useWarehouseStore from '@/store/modules/information/warehouse.ts'
+import useUserStore from '@/store/modules/user.ts'
+
+const props = defineProps({
+  title: {
+    type: String,
+    default: '',
+  },
+  storId: {
+    type: String,
+    default: '',
+  },
+})
 
 const emit = defineEmits(['upWarehouseShow', 'upWarehouseList'])
 
 const WarehouseStore = useWarehouseStore()
+const userStore = useUserStore()
+
+const id = ref(props.storId)
+
+watch(() => props.storId, (newValue) => {
+  id.value = newValue
+})
+
+onMounted(() => {
+  if (props.title === '编辑') {
+    getEditWarehouse()
+  }
+})
+
+const WarehouseFormRef = ref<FormInstance>()
 
 const WarehouseForm = ref({
   code: '',
@@ -14,6 +42,13 @@ const WarehouseForm = ref({
   type: '',
   remarks: '',
 })
+
+// 获取仓库编辑详情
+async function getEditWarehouse() {
+  await WarehouseStore.GetEditWarehouseList({ id: id.value })
+  const { WarehouseFormData } = storeToRefs(WarehouseStore)
+  WarehouseForm.value = WarehouseFormData.value
+}
 
 const WarehouseRules = ref<FormRules>({
   name: [
@@ -35,12 +70,22 @@ function upList() {
 }
 
 // 新增
-const WarehouseFormRef = ref<FormInstance>()
 async function SaveData() {
   WarehouseFormRef.value && WarehouseFormRef.value?.validate(async (valid) => {
     if (valid) {
-      console.log(WarehouseForm.value)
-      await WarehouseStore.AddWarehouseList(WarehouseForm.value)
+      if (props.title === '新增') { await WarehouseStore.AddWarehouseList(WarehouseForm.value) }
+      else {
+        const EditWarehouseForm = ref({
+          Code: WarehouseForm.value.code,
+          CreateTime: WarehouseStore.CreateTimes,
+          CreatorId: userStore.CreatorId,
+          Id: id.value,
+          Name: WarehouseForm.value.name,
+          Remarks: WarehouseForm.value.remarks,
+          Type: WarehouseForm.value.type,
+        })
+        await WarehouseStore.AddWarehouseList(EditWarehouseForm.value)
+      }
       Message.success('操作成功')
       closeShow()
       upList()

@@ -12,9 +12,8 @@ const useUserStore = defineStore(
 
     const userName = ref(localStorage.userName ?? '')
     const token = ref(localStorage.token ?? '')
-    const failure_time = ref(localStorage.failure_time ?? '')
-    const avatar = ref(localStorage.avatar ?? '')
     const permissions = ref<string[]>([])
+    const CreatorId = ref('')
     const isLogin = computed(() => {
       let retn = false
       if (token.value) {
@@ -35,6 +34,8 @@ const useUserStore = defineStore(
       console.log(userInfo)
       userName.value = userInfo.Data.UserInfo.UserName
       localStorage.setItem('userName', userName.value)
+      CreatorId.value = userInfo.Data.UserInfo.Id
+      localStorage.setItem('CreatorId', CreatorId.value)
       permissions.value = userInfo.Data.Permissions
       localStorage.setItem('permissions', userInfo.Data.Permissions)
     }
@@ -42,13 +43,12 @@ const useUserStore = defineStore(
     async function logout(redirect = router.currentRoute.value.fullPath) {
       localStorage.removeItem('userName')
       localStorage.removeItem('token')
-      localStorage.removeItem('failure_time')
-      localStorage.removeItem('avatar')
+      localStorage.removeItem('permissions')
+      localStorage.removeItem('CreatorId')
       userName.value = ''
       token.value = ''
-      failure_time.value = ''
-      avatar.value = ''
       permissions.value = []
+      CreatorId.value = ''
       routeStore.removeRoutes()
       menuStore.setActived(0)
       router.push({
@@ -75,8 +75,8 @@ const useUserStore = defineStore(
     return {
       userName,
       token,
-      avatar,
       permissions,
+      CreatorId,
       isLogin,
       login,
       logout,
