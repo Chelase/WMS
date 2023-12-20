@@ -1,9 +1,96 @@
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
+import { computed, onMounted, ref } from 'vue'
+import { storeToRefs } from 'pinia'
+import Message from 'vue-m-message'
+import { ElMessageBox } from 'element-plus'
 import WarehouseDialog from './components/WarehouseDialog.vue'
 import useWarehouseStore from '@/store/modules/information/warehouse.ts'
+import RoadwaySlideover from '@/views/information/warehouse/components/RoadwaySlideover.vue'
+import GoodsShelves from '@/views/information/warehouse/components/GoodsShelves.vue'
 
 const WarehouseStore = useWarehouseStore()
+const { Warehouse_Totals } = storeToRefs(WarehouseStore)
+const storId = ref('')
+
+// 添加及编辑仓库
+const isWarehouseShow = ref(false)
+
+function upIsWarehouseShow(row) {
+  isWarehouseShow.value = row
+}
+
+const title = ref('')
+function OpenEditWarehouse(type, row) {
+  switch (type) {
+    case 'add' :
+      title.value = '新增'
+      break
+    case 'edit' :
+      title.value = '编辑'
+      storId.value = row
+      break
+  }
+  isWarehouseShow.value = true
+}
+
+// 分页
+async function Page(currentPage) {
+  getTabList.value.pageIndex = currentPage
+  await GetWarehouseList()
+}
+
+// 多选及删除
+const Selection = ref([])
+const warehouseSelection = ref([])
+const disabled = computed(() => {
+  let disabled = true
+  disabled = warehouseSelection.value.length === 0
+  return disabled
+})
+
+function handleSelectionChange(val) {
+  Selection.value = val
+  // 清除warehouseSelection中不再在Selection中的项
+  warehouseSelection.value = warehouseSelection.value.filter((item) => {
+    return Selection.value.includes(item.Id)
+  })
+
+  // 将Selection中的所有Id推入warehouseSelection，并删除重复的项
+  warehouseSelection.value = [...new Set([...warehouseSelection.value, ...Selection.value.map(item => item.Id)])]
+}
+
+async function delWarehouse() {
+  ElMessageBox.confirm(
+    '确认删除吗?',
+    {
+      confirmButtonText: '确定',
+      cancelButtonText: '取消',
+      type: 'warning',
+    },
+  )
+    .then(async () => {
+      await WarehouseStore.delWarehouseData(warehouseSelection.value)
+      await GetWarehouseList()
+      Message.success('操作成功')
+    })
+    .catch(() => {})
+}
+
+// 设置巷道
+const isRoadwayShow = ref(false)
+
+function OpenRoadwaySlideover(row) {
+  isRoadwayShow.value = true
+  storId.value = row
+}
+
+// 设置货架
+const isGoodsShelves = ref(false)
+
+function OpenGoodsShelves(row) {
+  isGoodsShelves.value = true
+  storId.value = row
+}
 
 onMounted(() => {
   GetWarehouseList()
@@ -20,19 +107,18 @@ const getTabList = ref({
   SortField: 'Id',
 })
 
+const loading = ref(true)
+
+// 查询值
 const search = ref('')
 
 async function GetWarehouseList() {
+  loading.value = true
   await WarehouseStore.getWarehouse(getTabList.value)
   tableData.value = WarehouseStore.warehouseList
-  console.log('仓库列表', tableData.value)
-}
-
-// 添加仓库
-const isWarehouseShow = ref(false)
-
-function upIsWarehouseShow(row) {
-  isWarehouseShow.value = row
+  loading.value = false
+  if (!tableData.value) { loading.value = false }
+  warehouseSelection.value = []
 }
 </script>
 
@@ -40,14 +126,14 @@ function upIsWarehouseShow(row) {
   <div>
     <PageMain>
       <el-row>
-        <el-button type="primary" @click="isWarehouseShow = true">
-          <svg-icon name="ep:plus" /> &nbsp 新建
+        <el-button type="primary" @click="OpenEditWarehouse('add')">
+          <svg-icon name="ep:plus" /> &nbsp; 新建
         </el-button>
-        <el-button disabled>
-          <svg-icon name="ep:minus" /> &nbsp 删除
+        <el-button :disabled="disabled" :type="disabled ? '' : 'primary'" @click="delWarehouse">
+          <svg-icon name="ep:minus" /> &nbsp; 删除
         </el-button>
-        <el-button type="primary">
-          <svg-icon name="ep:refresh" /> &nbsp 刷新
+        <el-button type="primary" @click="GetWarehouseList">
+          <svg-icon name="ep:refresh" /> &nbsp; 刷新
         </el-button>
       </el-row>
       <el-row style="margin: 20px 0">
@@ -58,7 +144,7 @@ function upIsWarehouseShow(row) {
         <el-button>重置</el-button>
       </el-row>
       <el-table
-        ref="WarehouseTableRef"
+        v-loading="loading"
         border
         :data="tableData"
         style="width: 100%"
@@ -67,42 +153,97 @@ function upIsWarehouseShow(row) {
         <el-table-column type="selection" width="55" />
         <el-table-column property="Code" label="仓库编号" width="120" />
         <el-table-column property="Name" label="仓库名称" width="120" />
-        <el-table-column property="Type" label="仓库类型" width="120" />
-        <el-table-column property="IsZone" label="托盘管理" width="120" />
-        <el-table-column property="IsTray" label="托盘分区" width="120" />
-        <el-table-column property="Disable" label="仓库状态" width="120" />
-        <el-table-column property="IsDefault" label="默认仓库" width="120" />
+        <el-table-column property="Type" label="仓库类型" width="120">
+          <template #default="scope">
+            <p>{{ scope.row.Type === 'Plane' ? '平面仓库' : '立体仓库' }}</p>
+          </template>
+        </el-table-column>
+        <el-table-column property="IsZone" label="托盘管理" width="120">
+          <template #default="scope">
+            <div v-if="scope.row.IsZone" class="success">
+              <p>是</p>
+            </div>
+            <div v-else class="danger">
+              <p>否</p>
+            </div>
+          </template>
+        </el-table-column>
+        <el-table-column property="IsTray" label="托盘分区" width="120">
+          <template #default="scope">
+            <div v-if="scope.row.IsTray" class="success">
+              <p>是</p>
+            </div>
+            <div v-else class="danger">
+              <p>否</p>
+            </div>
+          </template>
+        </el-table-column>
+        <el-table-column property="Disable" label="仓库状态" width="120">
+          <template #default="scope">
+            <div v-if="scope.row.Disable" class="success">
+              <p>启用</p>
+            </div>
+            <div v-else class="danger">
+              <p>停用</p>
+            </div>
+          </template>
+        </el-table-column>
+        <el-table-column property="IsDefault" label="默认仓库" width="120">
+          <template #default="scope">
+            <div v-if="scope.row.IsDefault" class="success">
+              <p>是</p>
+            </div>
+            <div v-else class="danger">
+              <p>否</p>
+            </div>
+          </template>
+        </el-table-column>
         <el-table-column label="操作" width="329">
-          <el-row>
-            <el-button type="text">
-              设置巷道
-            </el-button>
-            <el-button type="text">
-              设置货架
-            </el-button>
-            <el-button type="text">
-              配置
-            </el-button>
-            <el-button type="text">
-              编辑
-            </el-button>
-            <el-button type="text">
-              删除
-            </el-button>
-          </el-row>
+          <template #default="scope">
+            <el-row>
+              <el-button type="primary" link @click="OpenRoadwaySlideover(scope.row.Id)">
+                设置巷道
+              </el-button>
+              <el-button type="primary" link @click="OpenGoodsShelves(scope.row.Id)">
+                设置货架
+              </el-button>
+              <el-button type="primary" link>
+                配置
+              </el-button>
+              <el-button type="primary" link @click="OpenEditWarehouse('edit', scope.row.Id)">
+                编辑
+              </el-button>
+              <el-button type="primary" link>
+                删除
+              </el-button>
+            </el-row>
+          </template>
         </el-table-column>
       </el-table>
       <el-pagination
-        style="float: right"
+        style="float: right;margin-right: 30px"
         :page-size="10"
-        layout="prev, pager, next"
-        :total="2"
+        layout="total, prev, pager, next"
+        :current-page="getTabList.pageIndex"
+        :total="Warehouse_Totals"
+        @current-change="Page"
       />
     </PageMain>
 
-    <HDialog v-model="isWarehouseShow" title="新增仓库">
-      <WarehouseDialog @up-warehouse-show="upIsWarehouseShow" />
+    <HDialog v-model="isWarehouseShow" :title="`${title}仓库`">
+      <WarehouseDialog
+        :title="title"
+        :stor-id="storId"
+        @up-warehouse-show="upIsWarehouseShow"
+        @up-warehouse-list="GetWarehouseList"
+      />
     </HDialog>
+    <el-drawer v-model="isRoadwayShow" title="设置巷道" size="67%">
+      <RoadwaySlideover :stor-id="storId" title="巷道" />
+    </el-drawer>
+    <el-drawer v-model="isGoodsShelves" title="设置货架" size="67%">
+      <GoodsShelves :stor-id="storId" title="货架" />
+    </el-drawer>
   </div>
 </template>
 
@@ -110,5 +251,31 @@ function upIsWarehouseShow(row) {
 .el-input{
   width: 200px;
   margin-right: 10px;
+}
+.success{
+  width: 40px;
+  height: 25px;
+  background: #f6ffed;
+  color: #52c41a;
+  border: #b7eb8f 1px solid;
+  border-radius: 5px;
+  p{
+    text-align: center;
+    margin-top: 0;
+    font-size: 13px;
+  }
+}
+.danger{
+  width: 40px;
+  height: 25px;
+  background: #fff1f0;
+  color: #f5222d;
+  border: #ffa39e 1px solid;
+  border-radius: 5px;
+  p{
+    text-align: center;
+    margin-top: 0;
+    font-size: 13px;
+  }
 }
 </style>
