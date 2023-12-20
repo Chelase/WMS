@@ -7,7 +7,7 @@ import WarehouseDialog from './components/WarehouseDialog.vue'
 import useWarehouseStore from '@/store/modules/information/warehouse.ts'
 import RoadwaySlideover from '@/views/information/warehouse/components/RoadwaySlideover.vue'
 import GoodsShelves from '@/views/information/warehouse/components/GoodsShelves.vue'
-import EditConfig from "@/views/information/warehouse/components/EditConfig.vue";
+import EditConfig from '@/views/information/warehouse/components/EditConfig.vue'
 
 const WarehouseStore = useWarehouseStore()
 const { Warehouse_Totals } = storeToRefs(WarehouseStore)
@@ -70,7 +70,8 @@ async function delWarehouse(id) {
     .then(async () => {
       if (id) {
         await WarehouseStore.delWarehouseData([id])
-      } else {
+      }
+      else {
         await WarehouseStore.delWarehouseData(warehouseSelection.value)
       }
       await GetWarehouseList()
