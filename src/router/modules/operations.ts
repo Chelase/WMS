@@ -17,7 +17,7 @@ const routes: RouteRecordRaw = {
     {
       path: 'Warehousing',
       name: 'Warehousing',
-      component: () => import('@/views/operations/Warehousing.vue'),
+      component: () => import('@/views/operations/Warehousing/index.vue'),
       meta: {
         title: '入库管理',
       },

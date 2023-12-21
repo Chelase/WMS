@@ -17,7 +17,7 @@ const routes: RouteRecordRaw = {
     {
       path: 'warehouse',
       name: 'warehouse',
-      component: () => import('@/views/information/warehouse.vue'),
+      component: () => import('@/views/information/warehouse/index.vue'),
       meta: {
         title: '仓库管理',
         icon: 'carbon:bare-metal-server',
@@ -29,6 +29,7 @@ const routes: RouteRecordRaw = {
       component: () => import('@/views/information/CargoArea.vue'),
       meta: {
         title: '货区管理',
+        icon: 'carbon:area',
       },
     },
     {
