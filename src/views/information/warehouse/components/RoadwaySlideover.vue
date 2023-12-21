@@ -130,7 +130,7 @@ async function getRoadway() {
       <svg-icon name="ep:refresh" /> &nbsp; 刷新
     </el-button>
   </el-row>
-  <el-row style="margin: 20px 0">
+  <el-row style="margin: 20px 0;">
     <el-input v-model="search" placeholder="仓库编号或名称" />
     <el-button type="primary">
       查询
@@ -141,7 +141,7 @@ async function getRoadway() {
     v-loading="loading"
     border
     :data="RoadwayList"
-    style="width: 100%"
+    style="width: 100%;"
     @selection-change="handleSelectionChange"
   >
     <el-table-column type="selection" width="55" />
@@ -163,7 +163,7 @@ async function getRoadway() {
     </template>
   </el-table>
   <el-pagination
-    style="float: right;margin-right: 30px"
+    style="float: right;margin-right: 30px;"
     :page-size="10"
     layout="total, prev, pager, next"
     :current-page="getRoadwayList.PageIndex"
@@ -182,7 +182,7 @@ async function getRoadway() {
 </template>
 
 <style scoped lang="scss">
-.el-input{
+.el-input {
   width: 200px;
   margin-right: 10px;
 }

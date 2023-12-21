@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
-import { getdataListAPI } from '@/api/modules/operations/Warehousing.ts'
+import useOutboundStore from '@/store/modules/operations/outbound.ts'
 import drawer from '@/components/drawer/index.vue'
 
+const OutboundStore = useOutboundStore()
 const radio = ref('全部')
 const input = ref('')
 const valuetimetwo = ref('')
@@ -12,7 +13,7 @@ const year = currentDate.getFullYear()
 const month = currentDate.getMonth()
 const day = currentDate.getDate()
 const slideover = ref(false)
-
+const outlist = ref([])
 const options = [
   {
     value: '销售出库',
@@ -39,17 +40,16 @@ const options = [
     label: '生产出库',
   },
 ]
+
 async function getdataList() {
-  const res = await getdataListAPI({
+  await OutboundStore.getdataList({
     pageIndex: 1,
     pageRows: 10,
-    search: {
-      status: null,
-    },
+    search: {},
     sortType: 'desc',
-    sortField: 'CreateTime',
+    sortField: 'OutTime',
   })
-  console.log(res)
+  outlist.value = OutboundStore.datalist.Data
 }
 onMounted(() => {
   getdataList()
@@ -126,19 +126,42 @@ function close(e) {
         </ElButton>
       </div>
       <el-table
+        :data="outlist"
         border
         style="width: 100%;"
       >
         <el-table-column type="selection" width="55" />
-        <el-table-column label="出库单号" width="120" />
-        <el-table-column label="出库时间" />
+        <el-table-column prop="Code" label="出库单号" width="180" />
+        <el-table-column prop="OutTime" label="出库时间" />
         <el-table-column label="出库类型" width="120" />
-        <el-table-column label="出库数量" />
-        <el-table-column label="状态" />
-        <el-table-column label="客户" />
-        <el-table-column label="制单人" />
-        <el-table-column label="审核人" />
-        <el-table-column label="操作" />
+        <el-table-column prop="OutNum" label="出库数量" width="90" />
+        <el-table-column prop="Status" label="状态">
+          <template #default="scope">
+            <el-tag v-if="scope.row.Status === 0 " class="ml-2">
+              待审核
+            </el-tag>
+            <el-tag v-else-if="scope.row.Status === 1 " class="ml-2" type="success">
+              审核成功
+            </el-tag>
+            <el-tag v-else class="ml-2" type="danger">
+              审核失败
+            </el-tag>
+          </template>
+        </el-table-column>
+        <el-table-column prop="Customer.Name" label="客户" width="100" />
+        <el-table-column prop="CreateUser.RealName" label="制单人" />
+        <el-table-column prop="AuditUser.RealName" label="审核人" />
+        <el-table-column label="操作" width="200">
+          <el-button type="text">
+            查看
+          </el-button>
+          <el-button type="text">
+            编辑
+          </el-button>
+          <el-button type="text">
+            删除
+          </el-button>
+        </el-table-column>
       </el-table>
     </PageMain>
   </div>

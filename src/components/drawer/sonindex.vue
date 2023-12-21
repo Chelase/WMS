@@ -17,7 +17,7 @@ const encodingInput = ref('')
 const encodingInput2 = ref('')
 const value = ref('')
 const valuef = ref('')
-
+const radio = ref()
 const datalistae = ref([])
 const treedatalist = ref([])
 const treedata = ref('')
@@ -187,7 +187,11 @@ function qingchu2() {
         :data="querydataliste"
         border
       >
-        <el-table-column type="radio" width="55" />
+        <el-table-column width="55">
+          <el-radio-group v-model="radio">
+            <el-radio :label="1" size="small" />
+          </el-radio-group>
+        </el-table-column>
         <el-table-column prop="Name" label="物料名称" width="135" />
         <el-table-column prop="Code" label="物料编码" width="290" />
         <el-table-column prop="MaterialType.Name" label="物料类别" width="130" />
