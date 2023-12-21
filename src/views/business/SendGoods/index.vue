@@ -1,12 +1,51 @@
+<route lang="yaml">
+  meta:
+  title: 发货管理
+</route>
+<script setup lang="ts">
+  import { ref, onMounted } from 'vue'
+  //表格初始值  
 
+  //控制组件显示隐藏
+  const showhidd = ref(false)
+
+  //单号输入框
+  const oddnumbers = ref()
+  //收货类型选择器 v-model
+  const goodsTypeof = ref({})
+  const dateSelete = (value) => {
+    console.log(value)
+
+  }
+  //日期选择框
+  const twodates = ref('')
+  //收获类型选择器 数据
+  const options = ref([
+    {
+      value: 1,
+      label: 1,
+    },
+    {
+      value: 2,
+      label: 22,
+    },
+    {
+      value: 3,
+      label: 333,
+    },
+  ])
+  //表格数据
+  const tableData = ref([])
+
+</script>
 <template>
   <div>
     <PageMain>
-      系统参数
+      发货管理
       <el-row>
         <el-button type="primary" @click="showhidd = true">+ &nbsp;&nbsp; 新建</el-button>
         <el-button type="info" plain>- &nbsp;&nbsp; 删除</el-button>
-        <el-button type="primary" @click="gettableData()"> <svg-icon name="ep:refresh-right"></svg-icon> 刷新</el-button>
+        <el-button type="primary"> &nbsp;&nbsp;刷新</el-button>
         <el-button type="primary">全部</el-button>
         <el-button type="default">编制中</el-button>
         <el-button type="default">已确认</el-button>
@@ -25,27 +64,21 @@
         <el-button type="default" class="martop">重置</el-button>
       </el-row>
 
-      <el-table :data="tableData" border style="width: 100%" text-align="center" @selection-change="handleSelectionChange">
+      <el-table :data="tableData" border style="width: 100%" text-align="center">
         <el-table-column type="selection" width="80" />
-        <el-table-column prop="收货单号" label="收货单号" width="180" />
-        <el-table-column prop="auditeTime" label="订单日期" />
+        <el-table-column prop="发货单号" label="发货单号" width="180" />
+        <el-table-column prop="订单日期" label="订单日期" />
         <el-table-column prop="收货类型" label="收货类型" />
         <el-table-column prop="关联单号" label="关联单号" />
-        <el-table-column prop="deleted" label="状态">
-          <template #default="scope">
-            <el-tag :type="scope.row.tag === 'Home' ? '' : 'success'" disable-transitions>
-              {{scope.row.deleted?'正常':'停用'}} </el-tag>
-          </template>
-        </el-table-column>
-        <el-table-column prop="supplier.contactName" label="供应商" />
-        <el-table-column prop="totalAmt" label="收货数量" />
-        <el-table-column prop="totalNum" label="入库数量" />
+        <el-table-column prop="状态" label="状态" />
+        <el-table-column prop="供应商" label="供应商" />
+        <el-table-column prop="收货数量" label="收货数量" />
+        <el-table-column prop="入库数量" label="入库数量" />
         <el-table-column prop="操作" label="操作" />
       </el-table>
     </PageMain>
-    <el-drawer v-model="showhidd" title="新建" size="60%">
-      <newaddFrom></newaddFrom>
-    </el-drawer>
+    <HDialog v-model="showhidd" title="新建">
+    </HDialog>
   </div>
 </template>
 

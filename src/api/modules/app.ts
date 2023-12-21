@@ -10,4 +10,8 @@ export default {
   menuList: () => api.get('app/menu/list', {
     baseURL: '/mock/',
   }),
+
+  // 业务操作--收货管理
+  // 获取收货管理初始值
+
 }

@@ -1,8 +1,67 @@
+<route lang="yaml">
+  meta:
+  title: 收货管理
+</route>
+
+<script setup lang="ts">
+  //新建弹框组件
+  import newaddFrom from '@/components/drawer/index.vue'
+  import { ref, onMounted } from 'vue'
+  //表格初始值  
+  import { getTakeOverList } from '@/api/modules/TakeOver/TakeOver.ts'
+
+  //控制组件显示隐藏
+  const showhidd = ref(false)
+
+  //单号输入框
+  const oddnumbers = ref()
+  //收货类型选择器 v-model
+  const goodsTypeof = ref({})
+  const dateSelete = (value) => {
+    console.log(value)
+
+  }
+  //日期选择框
+  const twodates = ref('')
+  //收获类型选择器 数据
+  const options = ref([
+    {
+      value: 1,
+      label: 1,
+    },
+    {
+      value: 2,
+      label: 22,
+    },
+    {
+      value: 3,
+      label: 333,
+    },
+  ])
+  //表格数据
+  const tableData = ref([])
+  const gettableData = async () => {
+    const { data } = await getTakeOverList()
+    console.log('%cdata', 'color: yellow;', data)
+    tableData.value = data
+  }
+  onMounted(() => {
+    gettableData()
+  })
+
+  //存储表格多选选中数据
+  const multipleSelection = ref < User[] > ([])
+  // 监听选择多选
+  const handleSelectionChange = (val: User[]) => {
+    multipleSelection.value = val
+    console.log(multipleSelection.value)
+  }
+</script>
 
 <template>
   <div>
     <PageMain>
-      系统参数
+      收货管理
       <el-row>
         <el-button type="primary" @click="showhidd = true">+ &nbsp;&nbsp; 新建</el-button>
         <el-button type="info" plain>- &nbsp;&nbsp; 删除</el-button>
