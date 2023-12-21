@@ -37,14 +37,14 @@ const SlideoverForm = ref({
 
 watch(() => props.storId, (newStorId) => {
   SlideoverForm.value.StorId = newStorId
-})
+}, { immediate: true })
 
 const id = ref(props.editId)
 
 watch(() => props.editId, (newEditId) => {
   id.value = newEditId
   IsEdit()
-})
+}, { immediate: true })
 
 onMounted(() => {
   IsEdit()
@@ -54,7 +54,8 @@ function IsEdit() {
   if (props.isEdit === '编辑') {
     if (props.title === '货架') {
       getEditGoodsShelvesList()
-    } else if (props.title === '巷道') {
+    }
+    else if (props.title === '巷道') {
       getEditRoadwaySlideoverList()
     }
   }

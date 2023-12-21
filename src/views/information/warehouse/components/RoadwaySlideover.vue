@@ -114,6 +114,7 @@ async function getRoadway() {
   const { RoadwayDataList } = storeToRefs(WarehouseStore)
   RoadwayList.value = RoadwayDataList.value
   loading.value = false
+  warehouseSelection.value = []
 }
 </script>
 
@@ -157,6 +158,9 @@ async function getRoadway() {
         </el-button>
       </template>
     </el-table-column>
+    <template #empty>
+      <el-empty />
+    </template>
   </el-table>
   <el-pagination
     style="float: right;margin-right: 30px"

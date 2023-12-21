@@ -23,8 +23,12 @@ const useWarehouseStore = defineStore('warehouse', () => {
   // 获取仓库列表
   const getWarehouse = async (data: NonNullable<unknown>) => {
     const { Data, Total } = await warehouseApi.getWarehouseDataList(data)
-    warehouseList.value = Data
-    Warehouse_Totals.value = Total
+    if (Data) {
+      warehouseList.value = Data
+    }
+    if (Total) {
+      Warehouse_Totals.value = Total
+    }
   }
 
   // 新增及编辑仓库

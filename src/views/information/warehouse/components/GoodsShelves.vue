@@ -115,6 +115,7 @@ async function getGoodsShelves() {
   const { GoodsShelvesDataList } = storeToRefs(WarehouseStore)
   GoodsShelvesList.value = GoodsShelvesDataList.value
   loading.value = false
+  warehouseSelection.value = []
 }
 </script>
 
@@ -158,6 +159,9 @@ async function getGoodsShelves() {
         </el-button>
       </template>
     </el-table-column>
+    <template #empty>
+      <el-empty />
+    </template>
   </el-table>
   <el-pagination
     style="float: right;margin-right: 30px"

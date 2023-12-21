@@ -119,9 +119,9 @@ const search = ref('')
 async function GetWarehouseList() {
   loading.value = true
   await WarehouseStore.getWarehouse(getTabList.value)
-  tableData.value = WarehouseStore.warehouseList
+  const { warehouseList } = storeToRefs(WarehouseStore)
+  if (warehouseList.value.length !== 0) { tableData.value = warehouseList.value }
   loading.value = false
-  if (!tableData.value) { loading.value = false }
   warehouseSelection.value = []
 }
 
@@ -130,6 +130,10 @@ const OpenConfig = ref(false)
 
 function OpenEditConfig() {
   OpenConfig.value = true
+}
+
+function CloseConfig(row) {
+  OpenConfig.value = row
 }
 </script>
 
@@ -230,6 +234,9 @@ function OpenEditConfig() {
             </el-row>
           </template>
         </el-table-column>
+        <template #empty>
+          <el-empty />
+        </template>
       </el-table>
       <el-pagination
         style="float: right;margin-right: 30px"
@@ -255,7 +262,7 @@ function OpenEditConfig() {
     <el-drawer v-model="isGoodsShelves" title="设置货架" size="67%">
       <GoodsShelves :stor-id="storId" title="货架" />
     </el-drawer>
-    <EditConfig :show-config="OpenConfig" />
+    <EditConfig :show-config="OpenConfig" @up-open-config="CloseConfig" />
   </div>
 </template>
 
