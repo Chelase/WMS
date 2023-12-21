@@ -29,6 +29,10 @@ export default {
   AddRoadwayDataList(data: NonNullable<unknown>) {
     return api.post('/PB/PB_Laneway/SaveData', data)
   },
+  // 删除巷道
+  delRoadwaySlideoverDataList(array: NonNullable<unknown>) {
+    return api.post('/PB/PB_Laneway/DeleteData', array)
+  },
   // 获取货架
   getGoodsShelvesDataList(data: NonNullable<unknown>) {
     return api.post('/PB/PB_Rack/GetDataList', data)
@@ -41,4 +45,8 @@ export default {
   AddGoodsShelvesDataList(data: NonNullable<unknown>) {
     return api.post('/PB/PB_Rack/SaveData', data)
   },
+  // 删除货架
+  delGoodsShelvesDataList(array: NonNullable<unknown>) {
+    return api.post('/PB/PB_Rack/DeleteData', array)
+  }
 }

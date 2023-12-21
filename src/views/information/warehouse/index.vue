@@ -7,6 +7,7 @@ import WarehouseDialog from './components/WarehouseDialog.vue'
 import useWarehouseStore from '@/store/modules/information/warehouse.ts'
 import RoadwaySlideover from '@/views/information/warehouse/components/RoadwaySlideover.vue'
 import GoodsShelves from '@/views/information/warehouse/components/GoodsShelves.vue'
+import EditConfig from '@/views/information/warehouse/components/EditConfig.vue'
 
 const WarehouseStore = useWarehouseStore()
 const { Warehouse_Totals } = storeToRefs(WarehouseStore)
@@ -43,9 +44,7 @@ async function Page(currentPage) {
 const Selection = ref([])
 const warehouseSelection = ref([])
 const disabled = computed(() => {
-  let disabled = true
-  disabled = warehouseSelection.value.length === 0
-  return disabled
+  return !warehouseSelection.value.length
 })
 
 function handleSelectionChange(val) {
@@ -59,7 +58,7 @@ function handleSelectionChange(val) {
   warehouseSelection.value = [...new Set([...warehouseSelection.value, ...Selection.value.map(item => item.Id)])]
 }
 
-async function delWarehouse() {
+async function delWarehouse(id) {
   ElMessageBox.confirm(
     '确认删除吗?',
     {
@@ -69,7 +68,12 @@ async function delWarehouse() {
     },
   )
     .then(async () => {
-      await WarehouseStore.delWarehouseData(warehouseSelection.value)
+      if (id) {
+        await WarehouseStore.delWarehouseData([id])
+      }
+      else {
+        await WarehouseStore.delWarehouseData(warehouseSelection.value)
+      }
       await GetWarehouseList()
       Message.success('操作成功')
     })
@@ -115,10 +119,21 @@ const search = ref('')
 async function GetWarehouseList() {
   loading.value = true
   await WarehouseStore.getWarehouse(getTabList.value)
-  tableData.value = WarehouseStore.warehouseList
+  const { warehouseList } = storeToRefs(WarehouseStore)
+  if (warehouseList.value.length !== 0) { tableData.value = warehouseList.value }
   loading.value = false
-  if (!tableData.value) { loading.value = false }
   warehouseSelection.value = []
+}
+
+// 仓库配置
+const OpenConfig = ref(false)
+
+function OpenEditConfig() {
+  OpenConfig.value = true
+}
+
+function CloseConfig(row) {
+  OpenConfig.value = row
 }
 </script>
 
@@ -207,18 +222,21 @@ async function GetWarehouseList() {
               <el-button type="primary" link @click="OpenGoodsShelves(scope.row.Id)">
                 设置货架
               </el-button>
-              <el-button type="primary" link>
+              <el-button type="primary" link @click="OpenEditConfig">
                 配置
               </el-button>
               <el-button type="primary" link @click="OpenEditWarehouse('edit', scope.row.Id)">
                 编辑
               </el-button>
-              <el-button type="primary" link>
+              <el-button type="primary" link @click="delWarehouse(scope.row.Id)">
                 删除
               </el-button>
             </el-row>
           </template>
         </el-table-column>
+        <template #empty>
+          <el-empty />
+        </template>
       </el-table>
       <el-pagination
         style="float: right;margin-right: 30px"
@@ -244,6 +262,7 @@ async function GetWarehouseList() {
     <el-drawer v-model="isGoodsShelves" title="设置货架" size="67%">
       <GoodsShelves :stor-id="storId" title="货架" />
     </el-drawer>
+    <EditConfig :show-config="OpenConfig" @up-open-config="CloseConfig" />
   </div>
 </template>
 
