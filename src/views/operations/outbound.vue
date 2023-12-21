@@ -15,16 +15,28 @@ const slideover = ref(false)
 
 const options = [
   {
-    value: '生产产品入库',
-    label: '生产产品入库',
+    value: '销售出库',
+    label: '销售出库',
   },
   {
-    value: '采购收获入库',
-    label: '采购收获入库',
+    value: '调拨出库',
+    label: '调拨出库',
   },
   {
-    value: '退货入库',
-    label: '退货入库',
+    value: '盘亏出库',
+    label: '盘亏出库',
+  },
+  {
+    value: '其他出库',
+    label: '其他出库',
+  },
+  {
+    value: '采购出库',
+    label: '采购出库',
+  },
+  {
+    value: '生产出库',
+    label: '生产出库',
   },
 ]
 async function getdataList() {
@@ -84,7 +96,7 @@ function close(e) {
       </div>
       <div>
         <span>
-          <el-select v-model="value" style="width: 180px;" class="m-2" placeholder="入库类型">
+          <el-select v-model="value" style="width: 180px;" class="m-2" placeholder="出库类型">
             <el-option
               v-for="item in options"
               :key="item.value"
@@ -94,7 +106,7 @@ function close(e) {
           </el-select>
         </span>
         <span>
-          <ElInput v-model="input" style="width: 180px;height: 32px;" placeholder="入库/关联单号" />
+          <ElInput v-model="input" style="width: 180px;height: 32px;" placeholder="出库/关联单号" />
         </span>
         <span>
           <el-date-picker
@@ -118,13 +130,12 @@ function close(e) {
         style="width: 100%;"
       >
         <el-table-column type="selection" width="55" />
-        <el-table-column label="入库单号" width="120" />
-        <el-table-column label="入库类型" width="120" />
-        <el-table-column label="入库时间" />
-        <el-table-column label="关联单号" />
+        <el-table-column label="出库单号" width="120" />
+        <el-table-column label="出库时间" />
+        <el-table-column label="出库类型" width="120" />
+        <el-table-column label="出库数量" />
         <el-table-column label="状态" />
-        <el-table-column label="供应商" />
-        <el-table-column label="入库数量" />
+        <el-table-column label="客户" />
         <el-table-column label="制单人" />
         <el-table-column label="审核人" />
         <el-table-column label="操作" />
