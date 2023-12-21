@@ -10,10 +10,10 @@ const api = axios.create({
   timeout: 1000 * 60,
   responseType: 'json',
 })
-
 api.interceptors.request.use(
   (request) => {
     //加载框
+    ElLoading.service({ fullscreen: true })
     // 全局拦截请求发送前提交的参数
     const userStore = useUserStore()
     // 设置请求头
@@ -40,6 +40,11 @@ api.interceptors.response.use(
      * 规则是当 status 为 1 时表示请求成功，为 0 时表示接口需要登录或者登录状态失效，需要重新登录
      * 请求出错时 error 会返回错误信息
      */
+    
+    //关闭加载框
+    const loadingInstance = ElLoading.service({ fullscreen: true })
+    loadingInstance.close()
+
     if (response.data.Success === false) {
       if (response.data.Msg !== '') {
         // 错误提示
@@ -52,6 +57,10 @@ api.interceptors.response.use(
     return Promise.resolve(response.data)
   },
   (error) => {
+    //关闭加载框
+    const loadingInstance = ElLoading.service({ fullscreen: true })
+    loadingInstance.close()
+
     let message = error.message
     if (message === 'Network Error') {
       message = '后端网络故障'
