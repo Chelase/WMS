@@ -34,6 +34,8 @@ interface RuleForm {
 }
 
 const ruleFormRef = ref<FormInstance>()
+const ruleFormReftwo = ref<FormInstance>()
+
 const ruleForm = reactive<RuleForm>({
   name: '',
   region: '',
@@ -220,7 +222,7 @@ function spaceButn() {
       style="height: 480px;"
     >
       <el-form
-        ref="ruleFormRef"
+        ref="ruleFormReftwo"
         :model="ruleForm"
         :rules="rules"
         label-width="220px"
@@ -257,7 +259,7 @@ function spaceButn() {
         <ElButton @click="addDrawer = false">
           取消
         </ElButton>
-        <el-button type="primary" @click="submitForm(ruleFormRef)">
+        <el-button type="primary" @click="submitForm(ruleFormReftwo)">
           确定
         </el-button>
       </div>
