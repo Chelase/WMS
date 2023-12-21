@@ -3,6 +3,7 @@ import axios from 'axios'
 // import qs from 'qs'
 import Message from 'vue-m-message'
 import useUserStore from '@/store/modules/user'
+import { ElLoading } from 'element-plus'
 
 const api = axios.create({
   baseURL: (import.meta.env.DEV && import.meta.env.VITE_OPEN_PROXY === 'true') ? 'http://wyz19940328.vicp.cc/api' : import.meta.env.VITE_APP_API_BASEURL,
@@ -12,6 +13,7 @@ const api = axios.create({
 
 api.interceptors.request.use(
   (request) => {
+    //加载框
     // 全局拦截请求发送前提交的参数
     const userStore = useUserStore()
     // 设置请求头
