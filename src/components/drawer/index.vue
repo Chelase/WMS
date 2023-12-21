@@ -1,13 +1,15 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { reactive, ref } from 'vue'
+import type { FormInstance, FormRules } from 'element-plus'
 import sonDrawer from '@/components/drawer/sonindex.vue'
 
 const emit = defineEmits(['close'])
 const dialogVisible = ref(false)
-const value = ref('')
+const guanlian = ref('')
 const quantityInput = ref('')
-
-const options = [
+const Pinput = ref('')
+const Tinput = ref('')
+const optionss = [
   {
     value: '生产产品入库',
     label: '生产产品入库',
@@ -21,24 +23,100 @@ const options = [
     label: '退货入库',
   },
 ]
-const relevanceInput = ref('')
+
+interface RuleForm {
+  name: string
+  region: string
+  count: string
+  type: string
+  supplier: string
+  date: string
+}
+
+const ruleFormRef = ref<FormInstance>()
+const ruleForm = reactive<RuleForm>({
+  name: '',
+  region: '',
+  count: '',
+  type: '',
+  supplier: '',
+  date: '',
+})
+
+const rules = reactive<FormRules<RuleForm>>({
+  name: [
+    { required: true, message: '请输入入库数量', trigger: 'blur' },
+  ],
+  region: [
+    {
+      required: true,
+      message: '请选择物料',
+      trigger: 'change',
+    },
+  ],
+  count: [
+    {
+      required: true,
+      message: '请选择货位',
+      trigger: 'change',
+    },
+  ],
+  type: [
+    {
+      required: true,
+      message: '请选择入库类型',
+      trigger: 'change',
+    },
+  ],
+  supplier: [
+    {
+      required: true,
+      message: '请选择供应商',
+      trigger: 'change',
+    },
+  ],
+  date: [
+    {
+      type: 'date',
+      required: true,
+      message: '请选择日期',
+      trigger: 'change',
+    },
+  ],
+})
+
+async function submitForm(formEl: FormInstance | undefined) {
+  if (!formEl) { return }
+  await formEl.validate((valid, fields) => {
+    if (valid) {
+      console.log('submit!')
+    }
+    else {
+      console.log('error submit!', fields)
+    }
+  })
+}
+
+// const relevanceInput = ref('')
 const remarkInput = ref('')
-
-const valuetimeone = ref('')
-const currentDate = new Date()
-const year = currentDate.getFullYear()
-const month = currentDate.getMonth()
-const day = currentDate.getDate()
-
+const huoweia = ref('')
+// const currentDate = new Date()
+// const year = currentDate.getFullYear()
+// const month = currentDate.getMonth()
+// const day = currentDate.getDate()
 const addDrawer = ref(false)
+const title = ref('供应商选择')
+const types = ref()
+
 function close() {
   emit('close', false)
 }
 function closeson(e) {
   dialogVisible.value = e
 }
-const title = ref('供应商选择')
-const types = ref()
+function chuan(e) {
+  huoweia.value = e
+}
 function danchu() {
   dialogVisible.value = true
   title.value = '物料选择'
@@ -48,53 +126,58 @@ function supplierbutton() {
   dialogVisible.value = true
   types.value = 1
 }
+function spaceButn() {
+  dialogVisible.value = true
+  types.value = 3
+  title.value = '货位选择'
+}
 </script>
 
 <template>
   <div>
     <el-row style="margin-bottom: 10px;">
-      <el-col :span="8">
-        <span style="margin: 10px;">入库单号:</span>
-        <ElInput style="width: 260px;height: 32px;" placeholder="系统自动生成" :disabled="true" />
-      </el-col>
-      <el-col :span="8">
-        <span style="margin: 10px;">入库时间:</span>
-        <el-date-picker
-          v-model="valuetimeone"
-          style="width: 260px;height: 32px;"
-          type="date"
-          placeholder="请选择日期"
-          :default-value="new Date(year, month, day)"
-        />
-      </el-col>
-      <el-col :span="8">
-        <span>入库类型:</span>
-        <el-select v-model="value" style="width: 260px;height: 32px;" class="m-2" placeholder="入库类型">
-          <el-option
-            v-for="item in options"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value"
-          />
-        </el-select>
-      </el-col>
-    </el-row>
-    <el-row>
-      <el-col :span="8">
-        <span style="margin: 10px;">关联单号:</span>
-        <ElInput v-model="relevanceInput" style="width: 260px;height: 32px;" />
-      </el-col>
-      <el-col :span="8">
-        <span style="margin-left: 28px;">供应商:</span>
-        <el-select style="width: 210px;height: 32px;" class="m-2" placeholder="供应商/下料点" />
-        <el-button type="primary" @click="supplierbutton()">
-          <SvgIcon name="ep:search" />
-        </el-button>
-      </el-col>
-      <el-col :span="8">
-        <span style="margin: 10px;margin-left: 30px;">备注:</span>
-        <ElInput v-model="remarkInput" style="width: 260px;height: 32px;" />
-      </el-col>
+      <el-form
+        ref="ruleFormRef"
+        :model="ruleForm"
+        :rules="rules"
+        label-width="120px"
+        class="demo-ruleForm"
+        status-icon
+      >
+        <el-form-item label="入库单号" style="float: left;">
+          <el-input style="width: 260px;height: 32px;" placeholder="系统自动生成" disabled />
+        </el-form-item>
+        <el-form-item label="入库时间" style="float: left;" required>
+          <el-col :span="11">
+            <el-form-item style="width: 260px;height: 32px;" prop="date">
+              <el-date-picker
+                v-model="ruleForm.date"
+                type="date"
+                label="Pick a date"
+                placeholder="请选择日期"
+                style="width: 260px;height: 32px;"
+              />
+            </el-form-item>
+          </el-col>
+        </el-form-item>
+        <el-form-item label="入库类型" prop="type">
+          <el-select v-model="ruleForm.type" style="width: 260px;height: 32px;" placeholder="入库类型">
+            <el-option v-for="item in optionss" :key="item.value" :value="item.value" />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="关联单号" style="float: left;">
+          <el-input v-model="guanlian" style="width: 260px;height: 32px;" />
+        </el-form-item>
+        <el-form-item label="供应商" prop="supplier" style="float: left;" required>
+          <el-select v-model="ruleForm.supplier" style="width: 210px;height: 32px;" class="m-2" placeholder="供应商/下料点" />
+          <el-button type="primary" @click="supplierbutton()">
+            <SvgIcon name="ep:search" />
+          </el-button>
+        </el-form-item>
+        <el-form-item label="备注">
+          <ElInput v-model="remarkInput" style="width: 260px;height: 32px;" />
+        </el-form-item>
+      </el-form>
     </el-row>
     <ElButton type="primary" @click="addDrawer = true">
       <SvgIcon name="ep:plus" />
@@ -118,9 +201,9 @@ function supplierbutton() {
       <ElButton @click="close">
         取消
       </ElButton>
-      <ElButton type="primary">
+      <el-button type="primary" @click="submitForm(ruleFormRef)">
         保存
-      </ElButton>
+      </el-button>
     </div>
     <el-dialog
       v-model="dialogVisible"
@@ -128,70 +211,59 @@ function supplierbutton() {
       width="70%"
       style="height: 500px;"
     >
-      <sonDrawer :types="types" @closeson="closeson" />
+      <sonDrawer :types="types" @closeson="closeson" @chuan="chuan" />
     </el-dialog>
     <el-dialog
       v-model="addDrawer"
       title="入库"
-      width="58%"
-      style="height: 330px;"
+      width="50%"
+      style="height: 480px;"
     >
-      <el-row>
-        <el-col :span="12">
-          <span style="margin-left: 28px;">物料:</span>
-          <el-select style="width: 210px;height: 32px;" class="m-2" />
+      <el-form
+        ref="ruleFormRef"
+        :model="ruleForm"
+        :rules="rules"
+        label-width="220px"
+        class="demo-ruleForm"
+        style=" text-align: center; justify-content: center;"
+        status-icon
+      >
+        <el-form-item label="物料" prop="region">
+          <el-select v-model="ruleForm.region" style="width: 210px;height: 32px;" class="m-2" />
           <el-button type="primary" @click="danchu()">
             <SvgIcon name="ep:search" />
           </el-button>
-        </el-col>
-        <el-col :span="12">
-          <span style="margin-left: 28px;">货位:</span>
-          <el-select style="width: 210px;height: 32px;" class="m-2" />
-          <el-button type="primary">
+        </el-form-item>
+        <el-form-item label="货位" prop="count">
+          <el-select v-model="ruleForm.count" style="width: 210px;height: 32px;" class="m-2" />
+          <el-button type="primary" @click="spaceButn()">
             <SvgIcon name="ep:search" />
           </el-button>
-        </el-col>
-      </el-row>
-      <el-row>
-        <el-col :span="12">
-          <span style="margin-left: 18px; margin-right: 10px;">批次号:</span>
-          <ElInput style="width: 260px;height: 32px;" />
-        </el-col>
-        <el-col :span="12">
-          <span style="margin-left: 28px; margin-right: 10px;">条码:</span>
-          <ElInput style="width: 260px;height: 32px;" />
-        </el-col>
-      </el-row>
-      <el-row>
-        <el-col :span="12">
-          <span style="margin-left: 30px;margin-right: 10px;">单价:</span>
-          <ElInput style="width: 260px;height: 32px;" />
-        </el-col>
-        <el-col :span="12">
-          <span style="margin-left: 1px; margin-right: 10px;">入库数量:</span>
-          <ElInput v-model="quantityInput" style="width: 260px;height: 32px;" />
-        </el-col>
-      </el-row>
-      <div style="position: absolute; left: 640px; top: 270px;">
+        </el-form-item>
+        <el-form-item label="批次号">
+          <el-input v-model="quantityInput" style="width: 260px;height: 32px;" />
+        </el-form-item>
+        <el-form-item label="条码">
+          <el-input v-model="Pinput" style="width: 260px;height: 32px;" />
+        </el-form-item>
+        <el-form-item label="单价">
+          <el-input v-model="Tinput" style="width: 260px;height: 32px;" />
+        </el-form-item>
+        <el-form-item label="入库数量" prop="name">
+          <el-input v-model="ruleForm.name" style="width: 260px;height: 32px;" />
+        </el-form-item>
+      </el-form>
+      <div style="position: absolute; left: 300px; top: 420px;">
         <ElButton @click="addDrawer = false">
           取消
         </ElButton>
-        <ElButton type="primary">
-          确认
-        </ElButton>
+        <el-button type="primary" @click="submitForm(ruleFormRef)">
+          确定
+        </el-button>
       </div>
     </el-dialog>
   </div>
 </template>
 
-<style scoped lang="scss">
-.demo-date-picker {
-  width: 220px;
-  height: 40px;
-  padding: 0;
-}
-
-.el-col {
-  line-height: 50px;
-}
+<style scoped lang="ts">
 </style>

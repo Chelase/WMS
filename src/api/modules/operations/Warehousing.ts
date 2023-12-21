@@ -13,3 +13,23 @@ export function GetTreeDataListAPI() {
     method: 'post',
   })
 }
+export function GetDataList(data) {
+  return api({
+    url: '/PB/PB_Location/GetDataList',
+    method: 'post',
+    data,
+  })
+}
+export function QueryStorageDataAPI() {
+  return api({
+    url: '/PB/PB_Storage/QueryStorageData',
+    method: 'post',
+  })
+}
+export function QueryDataListAPI(data) {
+  return api({
+    url: '/PB/PB_Material/QueryDataList',
+    method: 'post',
+    data,
+  })
+}
