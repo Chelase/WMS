@@ -1,8 +1,8 @@
 <script setup lang="ts">
   //数据表格组件
   import tables from './components/dictionaryTable.vue'
-  //公共组件--------侧边弹框组件
-  import newaddFrom from '@/components/drawer/index.vue'
+  //组件--------侧边弹框组件
+  import newaddFrom from './components/broadsideWindow.vue'
   //组件-------新建对话框
   import newDialog from './components/newDialog.vue'
   //字典初始值
@@ -16,7 +16,15 @@
   const delDictionaryList = ref([])
   const deletefun = (value) => {
     // console.log('父组件', value)
-    delDictionaryList.value = value
+    // delDictionaryList.value = value
+    value.forEach(item => {
+      // console.log(item.IsSystem)
+      if (!item.IsSystem) {
+        delDictionaryList.value.push(item)
+        console.log(item)
+      }
+    });
+      console.log('delDictionaryList', delDictionaryList.value)
     // console.log(delDictionaryList.value.length)
   }
 
@@ -26,7 +34,7 @@
   //存储 字典view 初始值
   const dictionaryDataList = ref([])
   //存储 字典 总条数
-  const DictionaryListNum = ref(Number)
+  const DictionaryListNum = ref(0)
   //获取 字典初始值
   const getdictionarylist = async (num: 1) => {
     const res = await dictionarylist(num)
@@ -45,6 +53,8 @@
   provide('tableDatas', dictionaryDataList)
   //向新建对话框传值————控制显示隐藏
   provide('newdialogShow', newlogShow)
+  //向侧边弹框组件传值————表格数据
+  provide('DictionaryList', DictionaryListNum)
 
   //存储点击的字典列表的数据
   const dictionarylistData = ref()
@@ -60,6 +70,8 @@
     getdictionarylist(value)
     console.log('viwe', value)
   }
+
+  const input2 = ref()
 
 </script>
 
@@ -86,14 +98,11 @@
       <newDialog @Refresh="newlogShow = false"></newDialog>
       <!-- //字典值编辑测边框 -->
       <el-drawer v-model="showhidd" title="字典值" size="60%">
-        <newaddFrom></newaddFrom>
+        <newaddFrom @getdictionary="getdictionarylist"></newaddFrom>
       </el-drawer>
       <div class="example-pagination-block">
         <el-row>
-          <span>总数： {{ DictionaryListNum }}</span>
-          &nbsp; &nbsp;
-          <span>当前: {{nums * 10 - 9}}-{{nums == Math.ceil(DictionaryListNum/10)?DictionaryListNum: nums * 10}} </span>
-          <el-pagination @current-change="nextView" layout="prev, pager, next" :total="DictionaryListNum"/>
+          <el-pagination @current-change="nextView" layout="total, prev, pager, next" :total="DictionaryListNum" />
         </el-row>
       </div>
     </PageMain>
