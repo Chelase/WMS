@@ -107,7 +107,7 @@ function qingchu() {
   treedata.value = ''
 }
 function qingchu2() {
-  gongysdata.value = '',
+  gongysdata.value = ''
   encodingInput.value = ''
 }
 </script>
