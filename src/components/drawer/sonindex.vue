@@ -98,6 +98,18 @@ onMounted(() => {
   queryStorageData()
   querydatalist()
 })
+function qingchu() {
+  encodingInput.value = ''
+  encodingInput2.value = ''
+  quertlistdata.value = ''
+  value.value = ''
+  valuef.value = ''
+  treedata.value = ''
+}
+function qingchu2() {
+  gongysdata.value = '',
+  encodingInput.value = ''
+}
 </script>
 
 <template>
@@ -118,7 +130,7 @@ onMounted(() => {
         <ElButton type="primary">
           查询
         </ElButton>
-        <ElButton>
+        <ElButton @click="qingchu2">
           重置
         </ElButton>
       </span>
@@ -165,7 +177,7 @@ onMounted(() => {
         <ElButton type="primary">
           查询
         </ElButton>
-        <ElButton>
+        <ElButton @click="qingchu">
           重置
         </ElButton>
       </span>
