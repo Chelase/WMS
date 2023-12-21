@@ -262,7 +262,7 @@ function CloseConfig(row) {
     <el-drawer v-model="isGoodsShelves" title="设置货架" size="67%">
       <GoodsShelves :stor-id="storId" title="货架" />
     </el-drawer>
-    <EditConfig :show-config="OpenConfig" @up-open-config="CloseConfig" />
+    <EditConfig v-model="OpenConfig" @up-open-config="CloseConfig" />
   </div>
 </template>
 
