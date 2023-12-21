@@ -7,6 +7,10 @@ import useWarehouseStore from '@/store/modules/information/warehouse.ts'
 import useUserStore from '@/store/modules/user.ts'
 
 const props = defineProps({
+  IsShow: {
+    type: Boolean,
+    default: false,
+  },
   title: {
     type: String,
     default: '',
@@ -40,11 +44,19 @@ watch(() => props.storId, (newStorId) => {
 }, { immediate: true })
 
 const id = ref(props.editId)
+const isShow = props.IsShow
 
 watch(() => props.editId, (newEditId) => {
   id.value = newEditId
   IsEdit()
 }, { immediate: true })
+
+watch(() => props.IsShow, (newValue) => {
+  console.log(55, newValue)
+  if (newValue === true) {
+    IsEdit()
+  }
+})
 
 onMounted(() => {
   IsEdit()
@@ -142,29 +154,31 @@ function SaveData() {
 </script>
 
 <template>
-  <el-form
-    ref="AddSlideoverFormRef"
-    :rules="SlideoverRules"
-    :model="SlideoverForm"
-    label-position="right"
-    label-width="auto"
-    reset-fields
-  >
-    <el-form-item prop="code" :label="`${title}编号`">
-      <el-input v-model="SlideoverForm.Code" placeholder="系统自动生成" disabled />
-    </el-form-item>
-    <el-form-item prop="name" :label="`${title}名称`">
-      <el-input v-model="SlideoverForm.name" />
-    </el-form-item>
-  </el-form>
-  <el-row style="float: right">
-    <el-button @click="closeShow">
-      取消
-    </el-button>
-    <el-button type="primary" @click="SaveData">
-      确定
-    </el-button>
-  </el-row>
+  <el-dialog v-model="isShow" :title="`${isEdit}巷道`" width="40%" style="height: 250px">
+    <el-form
+      ref="AddSlideoverFormRef"
+      :rules="SlideoverRules"
+      :model="SlideoverForm"
+      label-position="right"
+      label-width="auto"
+      reset-fields
+    >
+      <el-form-item prop="code" :label="`${title}编号`">
+        <el-input v-model="SlideoverForm.Code" placeholder="系统自动生成" disabled />
+      </el-form-item>
+      <el-form-item prop="name" :label="`${title}名称`">
+        <el-input v-model="SlideoverForm.name" />
+      </el-form-item>
+    </el-form>
+    <el-row style="float: right;">
+      <el-button @click="closeShow">
+        取消
+      </el-button>
+      <el-button type="primary" @click="SaveData">
+        确定
+      </el-button>
+    </el-row>
+  </el-dialog>
 </template>
 
 <style scoped lang="scss">

@@ -170,17 +170,15 @@ async function getRoadway() {
     :total="WarehouseStore.RoadwayTotal"
     @current-change="Page"
   />
-
-  <el-dialog v-model="IsAddRoadwayShow" :title="`${isEdit}巷道`" width="40%" style="height: 250px">
-    <AddSlideover
-      :title="title"
-      :stor-id="props.storId"
-      :is-edit="isEdit"
-      :edit-id="editId"
-      @up-add-slideover-show="upIsAddRoadwayShow"
-      @up-list="getRoadway"
-    />
-  </el-dialog>
+  <AddSlideover
+    v-model="IsAddRoadwayShow"
+    :title="title"
+    :stor-id="props.storId"
+    :is-edit="isEdit"
+    :edit-id="editId"
+    @up-add-slideover-show="upIsAddRoadwayShow"
+    @up-list="getRoadway"
+  />
 </template>
 
 <style scoped lang="scss">

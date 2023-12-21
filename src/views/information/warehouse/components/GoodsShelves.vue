@@ -171,17 +171,15 @@ async function getGoodsShelves() {
     :total="WarehouseStore.GoodsShelvesTotal"
     @current-change="Page"
   />
-
-  <el-dialog v-model="IsAddRoadwayShow" :title="`${isEdit}货架`" width="40%" style="height: 250px">
-    <AddSlideover
-      :title="title"
-      :stor-id="props.storId"
-      :is-edit="isEdit"
-      :edit-id="editId"
-      @up-add-slideover-show="upIsAddRoadwayShow"
-      @up-list="getGoodsShelves"
-    />
-  </el-dialog>
+  <AddSlideover
+    v-model="IsAddRoadwayShow"
+    :title="title"
+    :stor-id="props.storId"
+    :is-edit="isEdit"
+    :edit-id="editId"
+    @up-add-slideover-show="upIsAddRoadwayShow"
+    @up-list="getGoodsShelves"
+  />
 </template>
 
 <style scoped lang="scss">

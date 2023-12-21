@@ -10,9 +10,10 @@ const props = defineProps({
 
 const emit = defineEmits(['upOpenConfig'])
 
-const isShow = ref(props.ShowConfig)
+const isShow = ref(false)
 
 watch(() => props.ShowConfig, (newValue) => {
+  console.log(16, newValue)
   isShow.value = newValue
 })
 
@@ -22,7 +23,7 @@ const Disable = ref(false)
 const IsDefault = ref(false)
 
 function closeConfig() {
-  emit(['upOpenConfig'], false)
+  emit('upOpenConfig', false)
 }
 </script>
 
@@ -85,7 +86,7 @@ function closeConfig() {
       </el-col>
     </el-row>
     <template #footer>
-      <el-button>取消</el-button>
+      <el-button @click="closeConfig">取消</el-button>
       <el-button type="primary">
         确定
       </el-button>
