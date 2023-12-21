@@ -8,6 +8,7 @@ import useWarehouseStore from '@/store/modules/information/warehouse.ts'
 import RoadwaySlideover from '@/views/information/warehouse/components/RoadwaySlideover.vue'
 import GoodsShelves from '@/views/information/warehouse/components/GoodsShelves.vue'
 import EditConfig from '@/views/information/warehouse/components/EditConfig.vue'
+import {Minus, Plus, Refresh} from '@element-plus/icons-vue'
 
 const WarehouseStore = useWarehouseStore()
 const { Warehouse_Totals } = storeToRefs(WarehouseStore)
@@ -130,24 +131,20 @@ function OpenEditConfig(row) {
   OpenConfig.value = true
   storId.value = row
 }
-
-function CloseConfig(row) {
-  OpenConfig.value = row
-}
 </script>
 
 <template>
   <div>
     <PageMain>
       <el-row>
-        <el-button type="primary" @click="OpenEditWarehouse('add')">
-          <svg-icon name="ep:plus" /> &nbsp; 新建
+        <el-button type="primary" :icon="Plus" @click="OpenEditWarehouse('add')">
+          新建
         </el-button>
-        <el-button :disabled="disabled" :type="disabled ? '' : 'primary'" @click="delWarehouse">
-          <svg-icon name="ep:minus" /> &nbsp; 删除
+        <el-button :icon="Minus" :disabled="disabled" :type="disabled ? '' : 'primary'" @click="delWarehouse">
+          删除
         </el-button>
-        <el-button type="primary" @click="GetWarehouseList">
-          <svg-icon name="ep:refresh" /> &nbsp; 刷新
+        <el-button type="primary" :icon="Refresh" @click="GetWarehouseList">
+          刷新
         </el-button>
       </el-row>
       <el-row style="margin: 20px 0">
@@ -263,7 +260,6 @@ function CloseConfig(row) {
     </el-drawer>
     <EditConfig
       v-model:OpenConfig="OpenConfig"
-      @up-open-config="CloseConfig"
       :stor-id="storId"
       @up-list="GetWarehouseList"
     />

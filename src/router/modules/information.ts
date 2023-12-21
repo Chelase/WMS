@@ -26,7 +26,7 @@ const routes: RouteRecordRaw = {
     {
       path: 'CargoArea',
       name: 'CargoArea',
-      component: () => import('@/views/information/CargoArea.vue'),
+      component: () => import('@/views/information/CargoArea/index.vue'),
       meta: {
         title: '货区管理',
         icon: 'carbon:area',

@@ -87,7 +87,7 @@ async function getEditRoadwaySlideoverList() {
 
 const SlideoverRules = ref({
   name: [
-    { required: true, trigger: 'blur', message: '请输入系统名称' },
+    { required: true, trigger: 'blur', message: '请输入名称' },
   ],
 })
 
