@@ -19,7 +19,7 @@ const optionss = [
     label: '采购收获入库',
   },
   {
-    value: '退货入库s',
+    value: '退货入库',
     label: '退货入库',
   },
 ]
