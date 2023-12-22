@@ -35,7 +35,7 @@ const routes: RouteRecordRaw = {
     {
       path: 'location',
       name: 'location',
-      component: () => import('@/views/information/location.vue'),
+      component: () => import('@/views/information/location/index.vue'),
       meta: {
         title: '货位管理',
       },

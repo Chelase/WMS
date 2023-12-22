@@ -20,6 +20,7 @@
     "release": "bumpp"
   },
   "dependencies": {
+    "@element-plus/icons-vue": "^2.3.1",
     "@headlessui/vue": "^1.7.16",
     "@vueuse/core": "^10.7.0",
     "@vueuse/integrations": "^10.7.0",
