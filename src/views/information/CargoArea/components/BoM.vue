@@ -20,7 +20,6 @@ const props = defineProps({
 
 const emit = defineEmits(['update:openBoMShow'])
 const CargoAreaStore = useCargoAreaStore()
-const { BoMTotal } = storeToRefs(CargoAreaStore)
 const BoMListRef = ref('')
 
 // 关闭
@@ -102,7 +101,7 @@ async function delBoM(AreaId, MaterialId) {
 }
 
 // 分页
-const { CargoAreaTotal } = storeToRefs(CargoAreaStore)
+const { BoMTotal } = storeToRefs(CargoAreaStore)
 async function Page(currentPage) {
   getBoMListForm.value.PageIndex = currentPage
   await getBoMList()
@@ -168,10 +167,8 @@ function OpenAddBoMShow() {
       :total="BoMTotal"
       @current-change="Page"
     />
+    <AddBoM v-model:open-add-bo-m="openAddBoM" :area-id="areaId" @up-list="getBoMList" />
   </el-drawer>
-  <div>
-    <AddBoM v-model:open-add-bo-m="openAddBoM" />
-  </div>
 </template>
 
 <style scoped lang="scss">

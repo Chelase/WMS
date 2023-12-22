@@ -15,6 +15,8 @@ const useCargoAreaStore = defineStore('CargoArea', () => {
   const CreateTimes = ref('')
   const BoMData = ref([])
   const BoMTotal = ref(0)
+  const BoMTreeData = ref([])
+  const BoMQueryData = ref([])
 
   // 获取货区列表
   const getCargoAreaData = async (data: NonNullable<unknown>) => {
@@ -59,6 +61,18 @@ const useCargoAreaStore = defineStore('CargoArea', () => {
     BoMTotal.value = Total
   }
 
+  // 获取物料类型树型列表
+  const getBoMTreeData = async () => {
+    const { Data } = await CargoAreaApi.getBoMTreeDataList()
+    BoMTreeData.value = Data
+  }
+
+  // 获取物料
+  const getBoMQueryData = async (data: NonNullable<unknown>) => {
+    const { Data } = await CargoAreaApi.getBoMQueryDataList(data)
+    BoMQueryData.value = Data
+  }
+
   return {
     CargoAreaData,
     warehouseData,
@@ -68,12 +82,16 @@ const useCargoAreaStore = defineStore('CargoArea', () => {
     CreateTimes,
     BoMData,
     BoMTotal,
+    BoMTreeData,
+    BoMQueryData,
     getCargoAreaData,
     getCargoAreaWarehouseData,
     getQueryData,
     AddCargoAreaData,
     getEditCargoAreaData,
     getBoMData,
+    getBoMTreeData,
+    getBoMQueryData,
   }
 })
 

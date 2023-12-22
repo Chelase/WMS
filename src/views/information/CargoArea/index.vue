@@ -161,11 +161,11 @@ function OpenBoM(id) {
       </el-row>
       <el-row style="margin: 10px 20px">
         <el-select v-model="getCargoDataForm.Search.StorageId" placeholder="请选择仓库">
-          <el-option v-for="item in warehouseList" :label="item.Name" :value="item.Id" />
+          <el-option v-for="item in warehouseList" :key="item.Id" :label="item.Name" :value="item.Id" />
         </el-select>
         <el-input v-model="getCargoDataForm.Search.keyword" placeholder="货区编号或名称" />
         <el-select v-model="getCargoDataForm.Search.AreaType" placeholder="货区类型">
-          <el-option v-for="elem in QueryList" :label="elem.Name" :value="elem.Code" />
+          <el-option v-for="elem in QueryList" :key="elem.Id" :label="elem.Name" :value="elem.Code" />
         </el-select>
         <el-button type="primary" style="margin-left: 10px" @click="getCargoList">
           查询

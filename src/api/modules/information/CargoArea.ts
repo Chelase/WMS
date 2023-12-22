@@ -33,4 +33,16 @@ export default {
   delBoMDataList(AreaId: NonNullable<string>, array: NonNullable<any>) {
     return api.post(`/PB/PB_AreaMaterial/DeleteData?AreaId=${AreaId}`, array)
   },
+  // 获取物料类型树列表
+  getBoMTreeDataList() {
+    return api.post('/PB/PB_MaterialType/GetTreeDataList')
+  },
+  // 获取物料
+  getBoMQueryDataList(data: NonNullable<unknown>) {
+    return api.post('/PB/PB_Material/QueryDataList', data)
+  },
+  // BoM添加物料
+  AddBoMQuerySaveData(data: NonNullable<unknown>) {
+    return api.post('/PB/PB_AreaMaterial/SaveDatas', data)
+  },
 }
