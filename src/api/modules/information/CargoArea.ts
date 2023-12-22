@@ -24,5 +24,13 @@ export default {
   // 删除货区数据
   delCargoAreaDataList(array: NonNullable<any>) {
     return api.post('/PB/PB_StorArea/DeleteData', array)
-  }
+  },
+  // 获取物料清单
+  getBoMDataList(data: NonNullable<unknown>) {
+    return api.post('/PB/PB_AreaMaterial/GetDataList', data)
+  },
+  // 删除物料
+  delBoMDataList(AreaId: NonNullable<string>, array: NonNullable<any>) {
+    return api.post(`/PB/PB_AreaMaterial/DeleteData?AreaId=${AreaId}`, array)
+  },
 }

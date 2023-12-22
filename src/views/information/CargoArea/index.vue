@@ -1,15 +1,15 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { onMounted, ref } from 'vue'
 import { Minus, Plus, Refresh } from '@element-plus/icons-vue'
-import useCargoAreaStore from '@/store/modules/information/CargoArea.ts'
 import { storeToRefs } from 'pinia'
-import AddCargoArea from "@/views/information/CargoArea/components/AddCargoArea.vue";
-import {ElMessageBox} from "element-plus";
-import Message from "vue-m-message";
+import { ElMessageBox } from 'element-plus'
+import Message from 'vue-m-message'
+import AddCargoArea from '@/views/information/CargoArea/components/AddCargoArea.vue'
+import useCargoAreaStore from '@/store/modules/information/CargoArea.ts'
 import CargoAreaApi from '@/api/modules/information/CargoArea.ts'
+import BoM from '@/views/information/CargoArea/components/BoM.vue'
 
 const CargoAreaStore = useCargoAreaStore()
-
 
 // 获取货区
 onMounted(() => {
@@ -47,7 +47,6 @@ function handleSelectionChange(val) {
 
   // 将Selection中的所有Id推入warehouseSelection，并删除重复的项
   warehouseSelection.value = [...new Set([...warehouseSelection.value, ...Selection.value.map(item => item.Id)])]
-  console.log(warehouseSelection.value)
 }
 
 async function delCargoArea(id) {
@@ -65,6 +64,7 @@ async function delCargoArea(id) {
       }
       else {
         await CargoAreaApi.delCargoAreaDataList(warehouseSelection.value)
+        // console.log(CargoAreaTableRef.value.getSelectionRows()) // 表格返回当前行的数据
       }
       await getCargoList()
       Message.success('操作成功')
@@ -134,6 +134,15 @@ async function Page(currentPage) {
   getCargoDataForm.value.PageIndex = currentPage
   await getCargoList()
 }
+
+// 关联物料
+const openBoMShow = ref(false)
+const areaId = ref('')
+
+function OpenBoM(id) {
+  areaId.value = id
+  openBoMShow.value = true
+}
 </script>
 
 <template>
@@ -143,7 +152,7 @@ async function Page(currentPage) {
         <el-button type="primary" :icon="Plus" @click="OpenAddCargoAreaEdit('add')">
           新建
         </el-button>
-        <el-button :icon="Minus" :disabled="disabled" :type="disabled ? '' : 'primary'" @click="delCargoArea">
+        <el-button :icon="Minus" :disabled="disabled" :type="disabled ? '' : 'primary'" @click="delCargoArea(null)">
           删除
         </el-button>
         <el-button type="primary" :icon="Refresh" @click="getCargoList">
@@ -151,21 +160,23 @@ async function Page(currentPage) {
         </el-button>
       </el-row>
       <el-row style="margin: 10px 20px">
-        <el-select placeholder="请选择仓库" v-model="getCargoDataForm.Search.StorageId">
+        <el-select v-model="getCargoDataForm.Search.StorageId" placeholder="请选择仓库">
           <el-option v-for="item in warehouseList" :label="item.Name" :value="item.Id" />
         </el-select>
-        <el-input placeholder="货区编号或名称" v-model="getCargoDataForm.Search.keyword" />
-        <el-select placeholder="货区类型" v-model="getCargoDataForm.Search.AreaType">
+        <el-input v-model="getCargoDataForm.Search.keyword" placeholder="货区编号或名称" />
+        <el-select v-model="getCargoDataForm.Search.AreaType" placeholder="货区类型">
           <el-option v-for="elem in QueryList" :label="elem.Name" :value="elem.Code" />
         </el-select>
-        <el-button type="primary" @click="getCargoList" style="margin-left: 10px">
+        <el-button type="primary" style="margin-left: 10px" @click="getCargoList">
           查询
         </el-button>
-        <el-button @click="Rest">重置</el-button>
+        <el-button @click="Rest">
+          重置
+        </el-button>
       </el-row>
       <el-table
-        border
         v-loading="loading"
+        border
         :data="CargoAreaList"
         @selection-change="handleSelectionChange"
       >
@@ -177,9 +188,15 @@ async function Page(currentPage) {
         <el-table-column label="操作">
           <template #default="scope">
             <el-row>
-              <el-button type="primary" link @click="OpenAddCargoAreaEdit('edit', scope.row.Id, scope.row.PB_Storage.Id)">编辑</el-button>
-              <el-button type="primary" link @click="delCargoArea(scope.row.Id)">删除</el-button>
-              <el-button type="primary" link>关联物料</el-button>
+              <el-button type="primary" link @click="OpenAddCargoAreaEdit('edit', scope.row.Id, scope.row.PB_Storage.Id)">
+                编辑
+              </el-button>
+              <el-button type="primary" link @click="delCargoArea(scope.row.Id)">
+                删除
+              </el-button>
+              <el-button type="primary" link @click="OpenBoM(scope.row.Id)">
+                关联物料
+              </el-button>
             </el-row>
           </template>
         </el-table-column>
@@ -205,6 +222,7 @@ async function Page(currentPage) {
       :stor-id="StorId"
       @up-list="getCargoList"
     />
+    <BoM v-model:open-bo-m-show="openBoMShow" :area-id="areaId" />
   </div>
 </template>
 
