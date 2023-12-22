@@ -13,6 +13,8 @@ const useCargoAreaStore = defineStore('CargoArea', () => {
   })
   const CargoAreaTotal = ref(0)
   const CreateTimes = ref('')
+  const BoMData = ref([])
+  const BoMTotal = ref(0)
 
   // 获取货区列表
   const getCargoAreaData = async (data: NonNullable<unknown>) => {
@@ -50,6 +52,13 @@ const useCargoAreaStore = defineStore('CargoArea', () => {
     CreateTimes.value = CreateTime
   }
 
+  // 获取物料清单
+  const getBoMData = async (data: NonNullable<unknown>) => {
+    const { Data, Total } = await CargoAreaApi.getBoMDataList(data)
+    BoMData.value = Data
+    BoMTotal.value = Total
+  }
+
   return {
     CargoAreaData,
     warehouseData,
@@ -57,11 +66,14 @@ const useCargoAreaStore = defineStore('CargoArea', () => {
     CargoAreaFormData,
     CargoAreaTotal,
     CreateTimes,
+    BoMData,
+    BoMTotal,
     getCargoAreaData,
     getCargoAreaWarehouseData,
     getQueryData,
     AddCargoAreaData,
     getEditCargoAreaData,
+    getBoMData,
   }
 })
 

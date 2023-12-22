@@ -140,7 +140,7 @@ function OpenEditConfig(row) {
         <el-button type="primary" :icon="Plus" @click="OpenEditWarehouse('add')">
           新建
         </el-button>
-        <el-button :icon="Minus" :disabled="disabled" :type="disabled ? '' : 'primary'" @click="delWarehouse">
+        <el-button :icon="Minus" :disabled="disabled" :type="disabled ? '' : 'primary'" @click="delWarehouse(null)">
           删除
         </el-button>
         <el-button type="primary" :icon="Refresh" @click="GetWarehouseList">
