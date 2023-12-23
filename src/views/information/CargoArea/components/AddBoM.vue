@@ -64,7 +64,6 @@ function handleSelectionChange(val) {
 
   // 将Selection中的所有Id推入warehouseSelection，并删除重复的项
   warehouseSelection.value = [...new Set([...warehouseSelection.value, ...Selection.value.map(item => item.Id)])]
-  console.log(warehouseSelection.value)
 }
 
 function closeShow() {
@@ -84,6 +83,7 @@ async function SaveData() {
     <el-row>
       <el-tree-select
         v-model="getBoMListForm.Search.TypeId"
+        clearable
         style="margin-right: 10px"
         :data="BoMTreeList"
         check-strictly

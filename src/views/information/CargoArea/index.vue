@@ -159,12 +159,12 @@ function OpenBoM(id) {
           刷新
         </el-button>
       </el-row>
-      <el-row style="margin: 10px 20px">
-        <el-select v-model="getCargoDataForm.Search.StorageId" placeholder="请选择仓库">
+      <el-row style="margin: 20px 0">
+        <el-select v-model="getCargoDataForm.Search.StorageId" clearable placeholder="请选择仓库">
           <el-option v-for="item in warehouseList" :key="item.Id" :label="item.Name" :value="item.Id" />
         </el-select>
         <el-input v-model="getCargoDataForm.Search.keyword" placeholder="货区编号或名称" />
-        <el-select v-model="getCargoDataForm.Search.AreaType" placeholder="货区类型">
+        <el-select v-model="getCargoDataForm.Search.AreaType" clearable placeholder="货区类型">
           <el-option v-for="elem in QueryList" :key="elem.Id" :label="elem.Name" :value="elem.Code" />
         </el-select>
         <el-button type="primary" style="margin-left: 10px" @click="getCargoList">
@@ -185,7 +185,7 @@ function OpenBoM(id) {
         <el-table-column property="Code" label="货区编号" width="200" />
         <el-table-column property="Name" label="货区名称" width="200" />
         <el-table-column property="Type" label="货区类型" width="200" />
-        <el-table-column label="操作">
+        <el-table-column label="操作" width="369">
           <template #default="scope">
             <el-row>
               <el-button type="primary" link @click="OpenAddCargoAreaEdit('edit', scope.row.Id, scope.row.PB_Storage.Id)">
@@ -214,6 +214,7 @@ function OpenBoM(id) {
       />
     </PageMain>
     <AddCargoArea
+      v-if="OpenAddCargoArea"
       v-model:OpenAddCargoArea="OpenAddCargoArea"
       :title="title"
       :warehouse-list="warehouseList"

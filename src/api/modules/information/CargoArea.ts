@@ -41,7 +41,7 @@ export default {
   getBoMQueryDataList(data: NonNullable<unknown>) {
     return api.post('/PB/PB_Material/QueryDataList', data)
   },
-  // BoM添加物料
+  // BoM添加及编辑物料
   AddBoMQuerySaveData(data: NonNullable<unknown>) {
     return api.post('/PB/PB_AreaMaterial/SaveDatas', data)
   },
