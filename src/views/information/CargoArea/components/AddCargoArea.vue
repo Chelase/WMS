@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, watch } from 'vue'
+import { onMounted, ref } from 'vue'
 import type { FormInstance, FormRules } from 'element-plus'
 import { storeToRefs } from 'pinia'
 import Message from 'vue-m-message'
@@ -38,13 +38,8 @@ const emit = defineEmits(['update:OpenAddCargoArea', 'upList'])
 const CargoAreaStore = useCargoAreaStore()
 const userStore = useUserStore()
 
-const id = ref(props.editId)
-
-watch(() => props.editId, (newEditId) => {
-  if (newEditId !== '') {
-    id.value = newEditId
-    getEditCargoAreaList()
-  }
+onMounted(() => {
+  if (props.title === '编辑') { getEditCargoAreaList() }
 })
 
 const CargoAreaFormRef = ref<FormInstance>()
@@ -55,16 +50,6 @@ const CargoAreaForm = ref({
   StorId: '',
   Name: '',
 })
-
-// watch(() => props.title, (newValue) => {
-//   if (newValue === '新增') {
-//     CargoAreaFormRef.value && CargoAreaFormRef.value?.validate(async (valid) => {
-//       if (valid) {
-//         CargoAreaFormRef.value.resetFields()
-//       }
-//     })
-//   }
-// })
 
 const CargoAreaFormRules = ref<FormRules>({
   StorId: [
@@ -79,10 +64,9 @@ const CargoAreaFormRules = ref<FormRules>({
 })
 
 async function getEditCargoAreaList() {
-  await CargoAreaStore.getEditCargoAreaData({ id: id.value })
+  await CargoAreaStore.getEditCargoAreaData({ id: props.editId })
   const { CargoAreaFormData } = storeToRefs(CargoAreaStore)
   CargoAreaForm.value = CargoAreaFormData.value
-  console.log(73, CargoAreaFormData.value)
 }
 
 function closeShow() {
@@ -101,7 +85,7 @@ function SaveData() {
           Code: CargoAreaForm.value.Code,
           CreateTime: CargoAreaStore.CreateTimes,
           CreatorId: userStore.CreatorId,
-          Id: id.value,
+          Id: props.editId,
           Name: CargoAreaForm.value.Name,
           StorId: props.storId,
           Type: CargoAreaForm.value.Type,
@@ -135,12 +119,12 @@ function SaveData() {
             <el-input v-model="CargoAreaForm.Code" placeholder="系统自动生成" disabled />
           </el-form-item>
           <el-form-item prop="StorId" label="仓库">
-            <el-select v-model="CargoAreaForm.StorId" placeholder="请选择仓库">
+            <el-select v-model="CargoAreaForm.StorId" clearable placeholder="请选择仓库">
               <el-option v-for="item in warehouseList" :label="item.Name" :value="item.Id" />
             </el-select>
           </el-form-item>
           <el-form-item prop="Type" label="货区类型">
-            <el-select v-model="CargoAreaForm.Type" placeholder="货区类型">
+            <el-select v-model="CargoAreaForm.Type" clearable placeholder="货区类型">
               <el-option v-for="elem in queryList" :label="elem.Name" :value="elem.Code" />
             </el-select>
           </el-form-item>

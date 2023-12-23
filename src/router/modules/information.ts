@@ -38,6 +38,7 @@ const routes: RouteRecordRaw = {
       component: () => import('@/views/information/location.vue'),
       meta: {
         title: '货位管理',
+        icon: 'ep:box',
       },
     },
     {
@@ -46,14 +47,16 @@ const routes: RouteRecordRaw = {
       component: () => import('@/views/information/customer.vue'),
       meta: {
         title: '客户管理',
+        icon: 'teenyicons:address-book-outline',
       },
     },
     {
       path: 'supplier',
       name: 'supplier',
-      component: () => import('@/views/information/supplier.vue'),
+      component: () => import('@/views/information/supplier/index.vue'),
       meta: {
         title: '供应商管理',
+        icon: 'charm:people',
       },
     },
     {
@@ -62,6 +65,7 @@ const routes: RouteRecordRaw = {
       component: () => import('@/views/information/material.vue'),
       meta: {
         title: '物料类型',
+        icon: 'uiw:tags-o',
       },
     },
     {
@@ -86,6 +90,7 @@ const routes: RouteRecordRaw = {
       component: () => import('@/views/information/metering.vue'),
       meta: {
         title: '计量单位',
+        icon: 'uiw:tag-o',
       },
     },
     {

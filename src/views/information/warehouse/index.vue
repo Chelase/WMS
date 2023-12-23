@@ -137,7 +137,7 @@ function OpenEditConfig(row) {
   <div>
     <PageMain>
       <el-row>
-        <el-button type="primary" :icon="Plus" @click="OpenEditWarehouse('add')">
+        <el-button type="primary" :icon="Plus" @click="OpenEditWarehouse('add', '')">
           新建
         </el-button>
         <el-button :icon="Minus" :disabled="disabled" :type="disabled ? '' : 'primary'" @click="delWarehouse(null)">
