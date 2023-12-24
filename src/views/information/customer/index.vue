@@ -2,7 +2,11 @@
   import { ref, onMounted, provide } from 'vue'
   import { RefreshRight } from '@element-plus/icons-vue'
   import { ElMessage, ElMessageBox } from 'element-plus'
+  //添加框
   import addCustom from './components/newAddCustom.vue'
+  //地址 测边框
+  import broadsideBox from './components/broadsideBox.vue'
+
   import storeQueryData from '@/store/modules/information/customer.ts'
 
   //store
@@ -117,7 +121,7 @@
         cancelButtonText: '取消',
         type: 'warning',
       }
-    ).then(async() => {
+    ).then(async () => {
       // getQueryData(selectionData)
       if (seecieddata.length === 1) {
         await getQueryData.delQueryDatas(seecieddata)
@@ -137,14 +141,22 @@
 
   //编辑按钮
   const edit = (row) => {
-    // console.log(row)
+    console.log(row)
     isshow.value = true
-    formData.value.Name = row.Name,
-      formData.value.Type = row.Type,
-      formData.value.Phone = row.Phone,
-      formData.value.Fax = row.Fax,
-      formData.value.Email = row.Email,
-      formData.value.Remarks = row.Remarks
+    formData.value = {
+      Name: row.Name,
+      Type: row.Type,
+      Phone: row.Phone,
+      Fax: row.Fax,
+      Email: row.Email,
+      Remarks: row.Remarks,
+      Code: row.Code,
+      CreateTime: row.CreateTime,
+      CreatorId: row.CreatorId,
+      Deleted: row.Deleted,
+      Id: row.Id
+    }
+    console.log(formData.value)
   }
 
   //监听分页
@@ -154,6 +166,19 @@
     getQueryDatas()
   }
 
+  //传递点击的客户id
+  const  customId = ref()
+  provide('customId', customId)
+  //控制 地址 侧边框显示隐藏
+  const sideIsshow = ref(false)
+  //向子组件传递 数据
+  provide('customAddress')
+  //地址按钮
+  const customAddress = (row) => {
+    // console.log(row)
+    customId.value = row.Id
+    sideIsshow.value = true
+  }
 </script>
 <template>
   <div>
@@ -198,7 +223,7 @@
               <el-row style="color: rgb(25, 113, 228);" class="marleft">
                 <span @click="edit(row)">编辑</span>
                 <span @click="deletepop([row.Id])">删除</span>
-                <span>地址</span>
+                <span @click="customAddress(row)">地址</span>
               </el-row>
             </template>
           </el-table-column>
@@ -210,7 +235,10 @@
           <el-pagination layout="total, prev, pager, next" :total="tableDataNum" @current-change="PageChange" />
         </div>
       </el-row>
-
+      <!-- 测边框 -->
+      <el-drawer v-model="sideIsshow" size="60%">
+        <broadsideBox v-if="sideIsshow"></broadsideBox>
+      </el-drawer>
     </PageMain>
     <addCustom @refreshs="getQueryDatas"></addCustom>
   </div>

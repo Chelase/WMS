@@ -7,7 +7,7 @@
     //父组件传值 控制显示
     const outerVisible = inject('showform')
     //触发父组件方法
-    const emit = defineEmits('refreshs')
+    const emit = defineEmits(['refreshs'])
 
     const userType = [
         { chin: '公司', engl: 'Company' },
