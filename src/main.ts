@@ -5,10 +5,7 @@ import '@/utils/system.copyright'
 import ElementPlus from 'element-plus'
 import 'element-plus/dist/index.css'
 import 'element-plus/theme-chalk/dark/css-vars.css'
-<<<<<<< HEAD
 // 如果您正在使用CDN引入，请删除下面一行。
-=======
->>>>>>> master
 import * as ElementPlusIconsVue from '@element-plus/icons-vue'
 
 import FloatingVue from 'floating-vue'
