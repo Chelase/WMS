@@ -40,10 +40,6 @@ app.use(ElementPlus)
 app.use(FloatingVue, {
   distance: 12,
 })
-
-for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
-  app.component(key, component)
-}
 app.use(Message)
 app.use(pinia)
 app.use(router)

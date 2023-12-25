@@ -46,7 +46,6 @@ async function getEditWarehouse() {
   WarehouseForm.value = WarehouseFormData.value
   const { warehouseState } = storeToRefs(WarehouseStore)
   state.value = warehouseState.value
-  console.log(54, state.value)
 }
 
 function closeConfig() {

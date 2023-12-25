@@ -26,7 +26,7 @@ const routes: RouteRecordRaw = {
     {
       path: 'CargoArea',
       name: 'CargoArea',
-      component: () => import('@/views/information/CargoArea.vue'),
+      component: () => import('@/views/information/CargoArea/index.vue'),
       meta: {
         title: '货区管理',
         icon: 'carbon:area',
@@ -38,6 +38,7 @@ const routes: RouteRecordRaw = {
       component: () => import('@/views/information/location/index.vue'),
       meta: {
         title: '货位管理',
+        icon: 'ep:box',
       },
     },
     {
@@ -46,22 +47,25 @@ const routes: RouteRecordRaw = {
       component: () => import('@/views/information/customer/index.vue'),
       meta: {
         title: '客户管理',
+        icon: 'teenyicons:address-book-outline',
       },
     },
     {
       path: 'supplier',
       name: 'supplier',
-      component: () => import('@/views/information/supplier.vue'),
+      component: () => import('@/views/information/supplier/index.vue'),
       meta: {
         title: '供应商管理',
+        icon: 'charm:people',
       },
     },
     {
       path: 'material',
       name: 'material',
-      component: () => import('@/views/information/material.vue'),
+      component: () => import('@/views/information/material/index.vue'),
       meta: {
         title: '物料类型',
+        icon: 'uiw:tags-o',
       },
     },
     {
@@ -86,6 +90,7 @@ const routes: RouteRecordRaw = {
       component: () => import('@/views/information/metering.vue'),
       meta: {
         title: '计量单位',
+        icon: 'uiw:tag-o',
       },
     },
     {

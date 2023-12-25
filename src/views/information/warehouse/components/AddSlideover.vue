@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, ref, watch } from 'vue'
+import { ref, watch, onMounted } from 'vue'
 import type { FormInstance } from 'element-plus'
 import { ElMessage } from 'element-plus'
 import { storeToRefs } from 'pinia'
@@ -39,24 +39,8 @@ const SlideoverForm = ref({
   StorId: props.storId,
 })
 
-watch(() => props.storId, (newStorId) => {
-  SlideoverForm.value.StorId = newStorId
-})
+onMounted(() => IsEdit())
 
-const id = ref(props.editId)
-
-watch(() => props.editId, (newEditId) => {
-  console.log('newEditId', newEditId)
-  id.value = newEditId
-})
-watch(() => props.value, (newValue) => {
-  console.log('newValue', newValue)
-  if (newValue === true) IsEdit()
-})
-
-onMounted(() => {
-  IsEdit()
-})
 
 function IsEdit() {
   if (props.isEdit === '编辑') {
@@ -71,7 +55,7 @@ function IsEdit() {
 
 // 获取货架编辑详情
 async function getEditGoodsShelvesList() {
-  await WarehouseStore.getEditGoodsShelvesData({ id: id.value })
+  await WarehouseStore.getEditGoodsShelvesData({ id: props.editId })
   const { SlideoverFormData } = storeToRefs(WarehouseStore)
   SlideoverForm.value.name = SlideoverFormData.value.name
   SlideoverForm.value.Code = SlideoverFormData.value.Code
@@ -79,7 +63,7 @@ async function getEditGoodsShelvesList() {
 
 // 获取巷道编辑详情
 async function getEditRoadwaySlideoverList() {
-  await WarehouseStore.getEditRoadwaySlideoverData({ id: id.value })
+  await WarehouseStore.getEditRoadwaySlideoverData({ id: props.editId })
   const { SlideoverFormData } = storeToRefs(WarehouseStore)
   SlideoverForm.value.name = SlideoverFormData.value.name
   SlideoverForm.value.Code = SlideoverFormData.value.Code
@@ -87,7 +71,7 @@ async function getEditRoadwaySlideoverList() {
 
 const SlideoverRules = ref({
   name: [
-    { required: true, trigger: 'blur', message: '请输入系统名称' },
+    { required: true, trigger: 'blur', message: '请输入名称' },
   ],
 })
 
@@ -99,11 +83,8 @@ function upList() {
 // 关闭弹窗
 function closeShow() {
   emit('update:value', false)
-  SlideoverForm.value = {
-    Code: '',
-    name: '',
-    StorId: props.storId,
-  }
+  SlideoverForm.value.Code = ''
+  AddSlideoverFormRef.value.resetFields()
 }
 
 function SaveData() {
@@ -118,7 +99,7 @@ function SaveData() {
             Code: SlideoverForm.value.Code,
             CreateTime: WarehouseStore.CreateTimes,
             CreatorId: userStore.CreatorId,
-            Id: id.value,
+            Id: props.editId,
             Name: SlideoverForm.value.name,
             StorId: SlideoverForm.value.StorId,
           })
@@ -134,7 +115,7 @@ function SaveData() {
             Code: SlideoverForm.value.Code,
             CreateTime: WarehouseStore.CreateTimes,
             CreatorId: userStore.CreatorId,
-            Id: id.value,
+            Id: props.editId,
             Name: SlideoverForm.value.name,
             StorId: SlideoverForm.value.StorId,
           })
@@ -151,6 +132,7 @@ function SaveData() {
 
 <template>
   <el-dialog
+    v-if="value"
     :model-value="value"
     :title="`${isEdit + title}`"
     width="40%"

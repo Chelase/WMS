@@ -38,15 +38,14 @@ api.interceptors.response.use(
      * 规则是当 status 为 1 时表示请求成功，为 0 时表示接口需要登录或者登录状态失效，需要重新登录
      * 请求出错时 error 会返回错误信息
      */
+    if (response.data instanceof Blob) { return response.data }
     if (response.data.ErrorCode === 401) {
       useUserStore().logout()
     }
     if (response.data.Success === false) {
       if (response.data.Msg !== '') {
         // 错误提示
-        Message.error(response.data.Msg, {
-          zIndex: 2000,
-        })
+        Message.error(response.data.Msg)
         return Promise.reject(response.data)
       }
     }
