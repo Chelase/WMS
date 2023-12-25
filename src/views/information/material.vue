@@ -5,7 +5,7 @@
 <template>
   <div>
     <PageMain>
-      物料管理
+      物料类型
     </PageMain>
   </div>
 </template>
