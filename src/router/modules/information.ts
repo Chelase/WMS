@@ -79,7 +79,7 @@ const routes: RouteRecordRaw = {
     {
       path: 'MaterialManagement',
       name: 'MaterialManagement',
-      component: () => import('@/views/information/MaterialManagement.vue'),
+      component: () => import('@/views/information/MaterialManagement/index.vue'),
       meta: {
         title: '物料管理',
       },
