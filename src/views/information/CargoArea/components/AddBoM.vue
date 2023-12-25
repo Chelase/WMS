@@ -17,6 +17,7 @@ const props = defineProps({
 })
 
 const emit = defineEmits(['update:openAddBoM', 'upList'])
+
 const CargoAreaStore = useCargoAreaStore()
 
 onMounted(() => {
