@@ -41,4 +41,8 @@ export default {
   EditAddressDataIsDefault(id: NonNullable<string>) {
     return api.post(`/PB/PB_Address/ModifyDefault?id=${id}`)
   },
+  // 导入供应商模板
+  ImportSupplierDataList(data: NonNullable<unknown>) {
+    return api.post('/PB/PB_Supplier/Import', data)
+  },
 }

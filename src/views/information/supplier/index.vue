@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import { Minus, Plus, Refresh } from '@element-plus/icons-vue'
+import { Download, Minus, Plus, Refresh, Upload } from '@element-plus/icons-vue'
 import { storeToRefs } from 'pinia'
 import { computed, onMounted, ref } from 'vue'
+import type { UploadInstance } from 'element-plus'
 import { ElMessageBox } from 'element-plus'
 import Message from 'vue-m-message'
 import supplierApi from '@/api/modules/information/supplier.ts'
@@ -112,6 +113,14 @@ function OpenAddressShow(id, name) {
   supId.value = id
   names.value = name
 }
+
+// 导入
+const importSuppliers = ref(false)
+const fileListRef = ref<UploadInstance>()
+
+function submitUpload() {
+  fileListRef.value!.submit()
+}
 </script>
 
 <template>
@@ -127,7 +136,7 @@ function OpenAddressShow(id, name) {
         <el-button type="primary" :icon="Refresh" @click="getSupplierList">
           刷新
         </el-button>
-        <el-button type="primary" style="position: absolute;right: 25px">
+        <el-button type="primary" style="position: absolute;right: 25px" @click="importSuppliers = true">
           导入供应商
         </el-button>
       </el-row>
@@ -222,6 +231,33 @@ function OpenAddressShow(id, name) {
         :name="names"
         :sup-id="supId"
       />
+      <el-dialog
+        v-model="importSuppliers"
+        title="导入供应商信息"
+        width="30%"
+        @close="importSuppliers = false"
+      >
+        <el-row justify="center">
+          <el-col :span="10">
+            <el-upload
+              ref="fileListRef"
+              class="upload-demo"
+              action="http://118.190.145.57/api/PB/PB_Supplier/Import"
+              :auto-upload="false"
+              @change="submitUpload"
+            >
+              <el-button :icon="Upload" type="primary">
+                上传数据
+              </el-button>
+            </el-upload>
+          </el-col>
+          <el-col :span="10">
+            <el-button :icon="Download" tag="a" href="http://118.190.145.57/api/PB/PB_Supplier/ExportToExcel">
+              下载模板表
+            </el-button>
+          </el-col>
+        </el-row>
+      </el-dialog>
     </PageMain>
   </div>
 </template>
