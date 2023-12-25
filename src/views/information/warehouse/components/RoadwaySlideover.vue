@@ -167,6 +167,7 @@ async function getRoadway() {
     @current-change="Page"
   />
   <AddSlideover
+    v-if="IsAddRoadwayShow"
     v-model:value="IsAddRoadwayShow"
     :title="title"
     :stor-id="props.storId"

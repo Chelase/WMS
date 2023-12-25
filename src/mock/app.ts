@@ -26,7 +26,7 @@ export default [
                   {
                     path: 'page',
                     name: 'multilevelMenuExample1',
-                    component: 'information/CargoArea.vue',
+                    component: 'information/index.vue',
                     meta: {
                       title: '导航1',
                     },
@@ -42,7 +42,7 @@ export default [
                       {
                         path: 'page',
                         name: 'multilevelMenuExample2-1',
-                        component: 'information/level2/CargoArea.vue',
+                        component: 'information/level2/index.vue',
                         meta: {
                           title: '导航2-1',
                         },
