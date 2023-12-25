@@ -1,6 +1,6 @@
 <script setup lang="ts">
     import { ref, inject, defineEmits } from 'vue'
-    const emit = defineEmits(['showpop'])
+    const emit = defineEmits(['showpop','showdele'])
     //表格数据
     //接收父级数据
     const tableDatas = inject('tableDatas')
@@ -22,10 +22,18 @@
 </script>
 <template>
     <el-table :data="tableDatas" border style="width: 100%" @selection-change="handleSelectionChange">
-        <el-table-column prop="" type="selection" />
+        <el-table-column prop="" type="selection">
+            <template #default="{row}"> 
+                <el-checkbox :disabled="row.IsSystem"></el-checkbox>
+            </template>
+        </el-table-column>
         <el-table-column prop="CreatorId" label="编号" width="280" />
         <el-table-column prop="Name" label="名称" width="280" />
-        <el-table-column prop="Deleted" label="系统必须" width="150" />
+        <el-table-column prop="IsSystem" label="系统必须" width="150">
+            <template #default="scope">
+                {{scope.row.IsSystem?'是':'否'}}
+            </template>
+        </el-table-column>
         <el-table-column prop="Remarks" label="备注" />
         <el-table-column label="操作">
             <template #default="scope">

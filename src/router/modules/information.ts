@@ -44,7 +44,7 @@ const routes: RouteRecordRaw = {
     {
       path: 'customer',
       name: 'customer',
-      component: () => import('@/views/information/customer.vue'),
+      component: () => import('@/views/information/customer/index.vue'),
       meta: {
         title: '客户管理',
         icon: 'teenyicons:address-book-outline',
