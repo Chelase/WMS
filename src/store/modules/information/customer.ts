@@ -57,6 +57,12 @@ const storeQueryData = defineStore('querydata', () => {
     const addAddressData = async(data: NonNullable<unknown>) => {
         const res = await addAddressDataList(data)
         // console.log(res)
+        if( res.Msg == '请求成功！') {
+            ElMessage({
+                message: '操作成功.',
+                type: 'success',
+            })
+        }
     }
 
     //删除地址
@@ -65,7 +71,7 @@ const storeQueryData = defineStore('querydata', () => {
         // console.log(res)
     }
 
-    //修改地址
+    //修改状态
     const modifyAddressState = async(data:NonNullable<unknown>) => {
         const res = await modifyAddressListstate(data)
         // console.log(res)

@@ -18,16 +18,7 @@
     const customId = inject('customId')
 
     //输入框内容v-model
-    const addAddressContent = ref({
-        Address: '',
-        Code: '',
-        CusId: customId.value,
-        IsDefault: false,
-        IsEnable: true,
-        Name: '',
-        Remarks: '',
-        SupId: ''
-    })
+    const addAddressContent = inject('addAddressContent')
 
     //取消
     //清空输入框 并 关闭弹框
@@ -70,7 +61,7 @@
             </el-row>
             <el-row>
                 <span>备注：</span>
-                <el-input maxlength="30" placeholder="Please input" show-word-limit type="textarea" class="w-130 m-2"
+                <el-input maxlength="30" show-word-limit type="textarea" class="w-130 m-2"
                     v-model="addAddressContent.Remarks" />
             </el-row>
         </el-col>
