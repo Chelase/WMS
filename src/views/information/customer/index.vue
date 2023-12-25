@@ -202,10 +202,10 @@
       <el-row>
         <!-- 表格 -->
         <el-table :data="tableData" border style="width: 100%" @selection-change="handleSelectionChange">
-          <el-table-column type="selection" width="55" />
-          <el-table-column prop="Code" label="客户编号" width="280" />
-          <el-table-column prop="Name" label="客户名称" width="280" />
-          <el-table-column prop="Type" label="客户类型" width="280">
+          <el-table-column type="selection"/>
+          <el-table-column prop="Code" label="客户编号"/>
+          <el-table-column prop="Name" label="客户名称"/>
+          <el-table-column prop="Type" label="客户类型">
             <template #default="{row}">
               <span>{{
                 row.Type=='Personal'?'个人':
@@ -215,10 +215,10 @@
                 }}</span>
             </template>
           </el-table-column>
-          <el-table-column prop="Phone" label="电话" width="280" />
-          <el-table-column prop="Fax" label="传真" width="280" />
-          <el-table-column prop="Email" label="Email" width="280" />
-          <el-table-column prop="name" label="操作" width="485">
+          <el-table-column prop="Phone" label="电话"/>
+          <el-table-column prop="Fax" label="传真"/>
+          <el-table-column prop="Email" label="Email"/>
+          <el-table-column prop="name" label="操作">
             <template #default="{ row }">
               <el-row style="color: rgb(25, 113, 228);" class="marleft">
                 <span @click="edit(row)">编辑</span>
