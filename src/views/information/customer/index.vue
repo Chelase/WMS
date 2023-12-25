@@ -167,7 +167,7 @@
   }
 
   //传递点击的客户id
-  const  customId = ref()
+  const customId = ref()
   provide('customId', customId)
   //控制 地址 侧边框显示隐藏
   const sideIsshow = ref(false)
@@ -179,16 +179,26 @@
     customId.value = row.Id
     sideIsshow.value = true
   }
+
+
+  //导入导出弹框
+  const imexportIsshow = ref(false)
+  const daoc = () => {
+    imexportIsshow.value = true
+  }
 </script>
 <template>
   <div>
     <PageMain>
       客户管理
-      <el-row>
+      <el-row style="width: 100%;">
         <el-button type="primary" @click="createdata">+ 新建</el-button>
         <el-button type="info" plain disabled v-if="!selectionData.length">- 删除</el-button>
         <el-button type="info" v-else @click="deletepop">- 删除</el-button>
         <el-button type="primary" :icon="RefreshRight" @click="getQueryDatas">刷新</el-button>
+        <div style="position: absolute; right: 200px;">
+          <el-button type="primary" @click="daoc">导入客户</el-button>
+        </div>
       </el-row>
       <el-row style="margin-top: 20px;">
         <el-select class="m-2" placeholder="客户类型" :span="6" style="margin: 0;" v-model="SelectedType">
@@ -202,9 +212,9 @@
       <el-row>
         <!-- 表格 -->
         <el-table :data="tableData" border style="width: 100%" @selection-change="handleSelectionChange">
-          <el-table-column type="selection"/>
-          <el-table-column prop="Code" label="客户编号"/>
-          <el-table-column prop="Name" label="客户名称"/>
+          <el-table-column type="selection" />
+          <el-table-column prop="Code" label="客户编号" />
+          <el-table-column prop="Name" label="客户名称" />
           <el-table-column prop="Type" label="客户类型">
             <template #default="{row}">
               <span>{{
@@ -215,9 +225,9 @@
                 }}</span>
             </template>
           </el-table-column>
-          <el-table-column prop="Phone" label="电话"/>
-          <el-table-column prop="Fax" label="传真"/>
-          <el-table-column prop="Email" label="Email"/>
+          <el-table-column prop="Phone" label="电话" />
+          <el-table-column prop="Fax" label="传真" />
+          <el-table-column prop="Email" label="Email" />
           <el-table-column prop="name" label="操作">
             <template #default="{ row }">
               <el-row style="color: rgb(25, 113, 228);" class="marleft">
@@ -241,6 +251,24 @@
       </el-drawer>
     </PageMain>
     <addCustom @refreshs="getQueryDatas"></addCustom>
+
+    <el-dialog v-model="imexportIsshow" title="导入导出" width="30%">
+      <el-row justify="center">
+        <el-col :span="10">
+          <el-upload ref="fileListRef" class="upload-demo" action="http://118.190.145.57/api/PB/PB_Customer/Import"
+            :auto-upload="false" @change="submitUpload">
+            <el-button :icon="Upload" type="primary">
+              上传数据
+            </el-button>
+          </el-upload>
+        </el-col>
+        <el-col :span="10">
+          <el-button :icon="Download" tag="a" href="http://118.190.145.57/api/PB/PB_Customer/ExportToExcel">
+            下载模板表
+          </el-button>
+        </el-col>
+      </el-row>
+    </el-dialog>
   </div>
 </template>
 
