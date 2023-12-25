@@ -71,7 +71,7 @@ const routes: RouteRecordRaw = {
     {
       path: 'MaterialPoint',
       name: 'MaterialPoint',
-      component: () => import('@/views/information/MaterialPoint.vue'),
+      component: () => import('@/views/information/MaterialPoint/index.vue'),
       meta: {
         title: '上下料点',
         icon: 'memory:align-vertical-distribute',
