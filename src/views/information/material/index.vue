@@ -144,33 +144,15 @@ onMounted(() => {
         @selection-change="handleSelectionChange"
       >
         <el-table-column type="selection" width="55" />
-        <el-table-column prop="Code" label="货位编号" width="100" />
-        <el-table-column prop="Name" label="货位名称" width="100" />
-        <el-table-column prop="PB_Storage.Name" label="仓库" width="90" />
-        <el-table-column prop="PB_StorArea.Name" label="货区" width="100" />
-        <el-table-column prop="PB_Laneway.Name" label="巷道" width="100" />
-        <el-table-column prop="PB_Rack.Name" label="货架" width="140" />
-        <el-table-column prop="OverVol" label="余量" />
-        <el-table-column prop="IsForbid" label="状态">
-          <template #default="scope">
-            <el-tag v-if="scope.row.IsForbid === true " class="ml-2" type="success">
-              启用
-            </el-tag>
-            <el-tag v-else class="ml-2" type="danger">
-              禁用
-            </el-tag>
-          </template>
-        </el-table-column>
-        <el-table-column prop="IsDefault" label="默认">
-          <template #default="scope">
-            <el-tag v-if="scope.row.IsDefault === true " class="ml-2" type="success">
-              是
-            </el-tag>
-            <el-tag v-else class="ml-2" type="danger">
-              否
-            </el-tag>
-          </template>
-        </el-table-column>
+        <el-table-column prop="Code" label="物料名称" width="100" />
+        <el-table-column prop="Name" label="物料编码" width="100" />
+        <el-table-column prop="PB_Storage.Name" label="物料简称" width="90" />
+        <el-table-column prop="PB_StorArea.Name" label="物料类别" width="100" />
+        <el-table-column prop="PB_Laneway.Name" label="条码" width="100" />
+        <el-table-column prop="PB_Rack.Name" label="物料规格" width="140" />
+        <el-table-column prop="OverVol" label="单位" />
+        <el-table-column prop="IsForbid" label="上限数量" />
+        <el-table-column prop="IsDefault" label="下限数量" />
         <el-table-column label="操作" width="150">
           <template #default="scope">
             <el-button type="text" @click="bianji(scope.row.Id)">
