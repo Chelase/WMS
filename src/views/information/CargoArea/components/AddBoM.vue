@@ -86,6 +86,7 @@ async function SaveData() {
         clearable
         style="margin-right: 10px"
         :data="BoMTreeList"
+        :props="{ value: 'Id', label: 'Text' }"
         check-strictly
         :render-after-expand="false"
       />
