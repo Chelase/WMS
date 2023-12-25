@@ -10,6 +10,12 @@ const useWarehouseStore = defineStore('warehouse', () => {
     type: '',
     remarks: '',
   })
+  const warehouseState = ref({
+    IsZone: '',
+    IsTray: '',
+    Disable: '',
+    IsDefault: '',
+  })
   const CreateTimes = ref('')
   const SlideoverFormData = ref({
     Code: '',
@@ -38,12 +44,18 @@ const useWarehouseStore = defineStore('warehouse', () => {
 
   // 获取编辑仓库详情
   const GetEditWarehouseList = async (id: NonNullable<unknown>) => {
-    const { Data: { Code, Name, Type, Remarks, CreateTime } } = await warehouseApi.GetEditWarehouseDataList(id)
+    const { Data: { Code, Name, Type, Remarks, CreateTime, IsZone, IsTray, Disable, IsDefault } } = await warehouseApi.GetEditWarehouseDataList(id)
     WarehouseFormData.value = {
       code: Code,
       name: Name,
       type: Type,
       remarks: Remarks,
+    }
+    warehouseState.value = {
+      IsZone,
+      IsTray,
+      Disable,
+      IsDefault,
     }
     CreateTimes.value = CreateTime
   }
@@ -111,6 +123,7 @@ const useWarehouseStore = defineStore('warehouse', () => {
     warehouseList,
     Warehouse_Totals,
     WarehouseFormData,
+    warehouseState,
     CreateTimes,
     SlideoverFormData,
     RoadwayDataList,

@@ -113,9 +113,7 @@ const getTabList = ref({
 
 const loading = ref(true)
 
-// 查询值
-const search = ref('')
-
+// 获取仓库
 async function GetWarehouseList() {
   loading.value = true
   await WarehouseStore.getWarehouse(getTabList.value)
@@ -128,8 +126,9 @@ async function GetWarehouseList() {
 // 仓库配置
 const OpenConfig = ref(false)
 
-function OpenEditConfig() {
+function OpenEditConfig(row) {
   OpenConfig.value = true
+  storId.value = row
 }
 
 function CloseConfig(row) {
@@ -152,11 +151,11 @@ function CloseConfig(row) {
         </el-button>
       </el-row>
       <el-row style="margin: 20px 0">
-        <el-input v-model="search" placeholder="仓库编号或名称" />
-        <el-button type="primary">
+        <el-input v-model="getTabList.search.keyword" placeholder="仓库编号或名称" />
+        <el-button type="primary" @click="GetWarehouseList">
           查询
         </el-button>
-        <el-button>重置</el-button>
+        <el-button @click="getTabList.search.keyword = ''">重置</el-button>
       </el-row>
       <el-table
         v-loading="loading"
@@ -222,7 +221,7 @@ function CloseConfig(row) {
               <el-button type="primary" link @click="OpenGoodsShelves(scope.row.Id)">
                 设置货架
               </el-button>
-              <el-button type="primary" link @click="OpenEditConfig">
+              <el-button type="primary" link @click="OpenEditConfig(scope.row.Id)">
                 配置
               </el-button>
               <el-button type="primary" link @click="OpenEditWarehouse('edit', scope.row.Id)">
@@ -262,7 +261,12 @@ function CloseConfig(row) {
     <el-drawer v-model="isGoodsShelves" title="设置货架" size="67%">
       <GoodsShelves :stor-id="storId" title="货架" />
     </el-drawer>
-    <EditConfig v-model="OpenConfig" @up-open-config="CloseConfig" />
+    <EditConfig
+      v-model:OpenConfig="OpenConfig"
+      @up-open-config="CloseConfig"
+      :stor-id="storId"
+      @up-list="GetWarehouseList"
+    />
   </div>
 </template>
 

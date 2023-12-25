@@ -23,8 +23,6 @@ watch(() => props.storId, (newValue) => {
 
 const WarehouseStore = useWarehouseStore()
 
-const search = ref('')
-
 // 分页
 async function Page(currentPage) {
   getRoadwayList.value.PageIndex = currentPage
@@ -78,10 +76,6 @@ const IsAddRoadwayShow = ref(false)
 
 const loading = ref(false)
 
-function upIsAddRoadwayShow(row) {
-  IsAddRoadwayShow.value = row
-}
-
 // 编辑
 const editId = ref('')
 const isEdit = ref('')
@@ -103,7 +97,9 @@ const RoadwayList = ref([])
 const getRoadwayList = ref({
   PageIndex: 1,
   PageRows: 10,
-  Search: {},
+  Search: {
+    keyword: '',
+  },
   SortField: 'Id',
   SortType: 'asc',
   StorId: props.storId,
@@ -131,17 +127,17 @@ async function getRoadway() {
     </el-button>
   </el-row>
   <el-row style="margin: 20px 0">
-    <el-input v-model="search" placeholder="仓库编号或名称" />
-    <el-button type="primary">
+    <el-input v-model="getRoadwayList.Search.keyword" placeholder="仓库编号或名称" />
+    <el-button type="primary" @click="getRoadway">
       查询
     </el-button>
-    <el-button>重置</el-button>
+    <el-button @click="getRoadwayList.Search.keyword = ''">重置</el-button>
   </el-row>
   <el-table
     v-loading="loading"
     border
     :data="RoadwayList"
-    style="width: 100%"
+    style="width: 100%;"
     @selection-change="handleSelectionChange"
   >
     <el-table-column type="selection" width="55" />
@@ -163,7 +159,7 @@ async function getRoadway() {
     </template>
   </el-table>
   <el-pagination
-    style="float: right;margin-right: 30px"
+    style="float: right;margin-right: 30px;"
     :page-size="10"
     layout="total, prev, pager, next"
     :current-page="getRoadwayList.PageIndex"
@@ -171,18 +167,17 @@ async function getRoadway() {
     @current-change="Page"
   />
   <AddSlideover
-    v-model="IsAddRoadwayShow"
+    v-model:value="IsAddRoadwayShow"
     :title="title"
     :stor-id="props.storId"
     :is-edit="isEdit"
     :edit-id="editId"
-    @up-add-slideover-show="upIsAddRoadwayShow"
     @up-list="getRoadway"
   />
 </template>
 
 <style scoped lang="scss">
-.el-input{
+.el-input {
   width: 200px;
   margin-right: 10px;
 }

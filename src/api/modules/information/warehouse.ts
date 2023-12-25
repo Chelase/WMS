@@ -48,5 +48,5 @@ export default {
   // 删除货架
   delGoodsShelvesDataList(array: NonNullable<unknown>) {
     return api.post('/PB/PB_Rack/DeleteData', array)
-  }
+  },
 }

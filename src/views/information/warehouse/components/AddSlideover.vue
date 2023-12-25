@@ -7,7 +7,7 @@ import useWarehouseStore from '@/store/modules/information/warehouse.ts'
 import useUserStore from '@/store/modules/user.ts'
 
 const props = defineProps({
-  IsShow: {
+  value: {
     type: Boolean,
     default: false,
   },
@@ -26,7 +26,7 @@ const props = defineProps({
   },
 })
 
-const emit = defineEmits(['upAddSlideoverShow', 'upList'])
+const emit = defineEmits(['update:value', 'upList'])
 
 const WarehouseStore = useWarehouseStore()
 const userStore = useUserStore()
@@ -41,21 +41,17 @@ const SlideoverForm = ref({
 
 watch(() => props.storId, (newStorId) => {
   SlideoverForm.value.StorId = newStorId
-}, { immediate: true })
+})
 
 const id = ref(props.editId)
-const isShow = props.IsShow
 
 watch(() => props.editId, (newEditId) => {
+  console.log('newEditId', newEditId)
   id.value = newEditId
-  IsEdit()
-}, { immediate: true })
-
-watch(() => props.IsShow, (newValue) => {
-  console.log(55, newValue)
-  if (newValue === true) {
-    IsEdit()
-  }
+})
+watch(() => props.value, (newValue) => {
+  console.log('newValue', newValue)
+  if (newValue === true) IsEdit()
 })
 
 onMounted(() => {
@@ -102,7 +98,7 @@ function upList() {
 
 // 关闭弹窗
 function closeShow() {
-  emit('upAddSlideoverShow', false)
+  emit('update:value', false)
   SlideoverForm.value = {
     Code: '',
     name: '',
@@ -154,7 +150,13 @@ function SaveData() {
 </script>
 
 <template>
-  <el-dialog v-model="isShow" :title="`${isEdit}巷道`" width="40%" style="height: 250px">
+  <el-dialog
+    :model-value="value"
+    :title="`${isEdit + title}`"
+    width="40%"
+    style="height: 250px"
+    @close="closeShow"
+  >
     <el-form
       ref="AddSlideoverFormRef"
       :rules="SlideoverRules"

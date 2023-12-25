@@ -35,7 +35,7 @@ const routes: RouteRecordRaw = {
     {
       path: 'location',
       name: 'location',
-      component: () => import('@/views/information/location.vue'),
+      component: () => import('@/views/information/location/index.vue'),
       meta: {
         title: '货位管理',
       },
@@ -75,7 +75,7 @@ const routes: RouteRecordRaw = {
     {
       path: 'MaterialManagement',
       name: 'MaterialManagement',
-      component: () => import('@/views/information/MaterialManagement.vue'),
+      component: () => import('@/views/information/MaterialManagement/index.vue'),
       meta: {
         title: '物料管理',
       },
