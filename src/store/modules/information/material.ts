@@ -3,6 +3,7 @@ import materialApi from '@/api/modules/information/material.ts'
 
 const useMaterialStore = defineStore('material', () => {
   const MaterialTreeData = ref([])
+  const MaterialTreeTotal = ref([])
   const MaterialFormData = ref({
     Code: '',
     Name: '',
@@ -33,6 +34,7 @@ const useMaterialStore = defineStore('material', () => {
 
   return {
     MaterialTreeData,
+    MaterialTreeTotal,
     MaterialFormData,
     MaterialCreateTime,
     MaterialEditId,

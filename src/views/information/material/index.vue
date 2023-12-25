@@ -10,6 +10,7 @@ import AddMaterial from '@/views/information/material/components/AddMaterial.vue
 import Import from "@/components/Import/index.vue";
 
 const MaterialStore = useMaterialStore()
+// const { MaterialTreeTotal } = storeToRefs(MaterialStore)
 
 onMounted(() => getMaterialTreeList())
 
@@ -90,6 +91,13 @@ function OpenAddMaterialShow(type, id) {
   openAddMaterial.value = true
 }
 
+// 分页
+async function Page(currentPage) {
+  getMaterialForm.value.PageIndex = currentPage
+  await getMaterialTreeList()
+}
+
+// 控制导入组件开关
 const openShow = ref(false)
 </script>
 
@@ -137,6 +145,14 @@ const openShow = ref(false)
           <el-empty />
         </template>
       </el-table>
+<!--      <el-pagination-->
+<!--        style="float: right;margin-right: 30px"-->
+<!--        :page-size="10"-->
+<!--        layout="total, prev, pager, next"-->
+<!--        :current-page="getMaterialForm.PageIndex"-->
+<!--        :total="MaterialTreeTotal"-->
+<!--        @current-change="Page"-->
+<!--      />-->
     </PageMain>
     <AddMaterial
       v-if="openAddMaterial"
