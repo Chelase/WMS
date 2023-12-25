@@ -62,7 +62,7 @@ const routes: RouteRecordRaw = {
     {
       path: 'material',
       name: 'material',
-      component: () => import('@/views/information/material.vue'),
+      component: () => import('@/views/information/material/index.vue'),
       meta: {
         title: '物料类型',
         icon: 'uiw:tags-o',
