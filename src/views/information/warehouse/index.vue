@@ -3,12 +3,12 @@ import { computed, onMounted, ref } from 'vue'
 import { storeToRefs } from 'pinia'
 import Message from 'vue-m-message'
 import { ElMessageBox } from 'element-plus'
+import { Minus, Plus, Refresh } from '@element-plus/icons-vue'
 import WarehouseDialog from './components/WarehouseDialog.vue'
 import useWarehouseStore from '@/store/modules/information/warehouse.ts'
 import RoadwaySlideover from '@/views/information/warehouse/components/RoadwaySlideover.vue'
 import GoodsShelves from '@/views/information/warehouse/components/GoodsShelves.vue'
 import EditConfig from '@/views/information/warehouse/components/EditConfig.vue'
-import {Minus, Plus, Refresh} from '@element-plus/icons-vue'
 
 const WarehouseStore = useWarehouseStore()
 const { Warehouse_Totals } = storeToRefs(WarehouseStore)
@@ -152,7 +152,9 @@ function OpenEditConfig(row) {
         <el-button type="primary" @click="GetWarehouseList">
           查询
         </el-button>
-        <el-button @click="getTabList.search.keyword = ''">重置</el-button>
+        <el-button @click="getTabList.search.keyword = ''">
+          重置
+        </el-button>
       </el-row>
       <el-table
         v-loading="loading"
