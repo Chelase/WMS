@@ -24,6 +24,11 @@ const useSupplierStore = defineStore('supplier', () => {
     Remarks: '',
     SupId: '',
   })
+  const AddressEditForm = ref({
+    CreateTime: '',
+    IsDefault: false,
+    IsEnable: false,
+  })
 
   // 获取供应商列表
   const getSupplierData = async (data: NonNullable<unknown>) => {
@@ -47,13 +52,18 @@ const useSupplierStore = defineStore('supplier', () => {
 
   // 获取编辑地址详情
   const getEditAddressData = async (id: NonNullable<object>) => {
-    const { Data: { Code, Address, SupId, Remarks, Name } } = await supplierApi.getEditAddressDataList(id)
+    const { Data: { Code, Address, SupId, Remarks, Name, CreateTime, IsEnable, IsDefault } } = await supplierApi.getEditAddressDataList(id)
     AddressFormData.value = {
       Address,
       Code,
       Name,
       Remarks,
       SupId,
+    }
+    AddressEditForm.value = {
+      CreateTime,
+      IsDefault,
+      IsEnable,
     }
   }
 
@@ -64,6 +74,7 @@ const useSupplierStore = defineStore('supplier', () => {
     AddressData,
     AddressDataTotal,
     AddressFormData,
+    AddressEditForm,
     getSupplierData,
     getEditSupplierData,
     getAddressData,

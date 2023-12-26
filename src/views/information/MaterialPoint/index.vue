@@ -2,12 +2,14 @@
 import { onMounted, ref } from 'vue'
 import { Minus, Plus, Refresh } from '@element-plus/icons-vue'
 import { storeToRefs } from 'pinia'
+import { ElMessageBox } from 'element-plus'
+import Message from 'vue-m-message'
+import BoM from './components/BoM.vue'
 import Import from '@/components/Import/index.vue'
 import useMaterialPointStore from '@/store/modules/information/MaterialPoint.ts'
 import useCargoAreaStore from '@/store/modules/information/cargoarea.ts'
 import AddMaterialPont from '@/views/information/MaterialPoint/components/AddMaterialPont.vue'
-
-// import MaterialPointApi from "@/api/modules/information/MaterialPoint.ts";
+import MaterialPointApi from '@/api/modules/information/MaterialPoint.ts'
 
 const MaterialPointStore = useMaterialPointStore()
 const CargoAreaStore = useCargoAreaStore()
@@ -73,6 +75,73 @@ async function Page(currentPage) {
   await getMaterialPointList()
 }
 
+// 多选及删除
+const Selection = ref([])
+const warehouseSelection = ref([])
+const disabled = computed(() => {
+  return !warehouseSelection.value.length
+})
+
+function handleSelectionChange(val) {
+  Selection.value = val
+  // 清除warehouseSelection中不再在Selection中的项
+  warehouseSelection.value = warehouseSelection.value.filter((item) => {
+    return Selection.value.includes(item.Id)
+  })
+
+  // 将Selection中的所有Id推入warehouseSelection，并删除重复的项
+  warehouseSelection.value = [...new Set([...warehouseSelection.value, ...Selection.value.map(item => item.Id)])]
+}
+
+async function delMaterialPoint(id) {
+  ElMessageBox.confirm(
+    '确认删除吗?',
+    {
+      confirmButtonText: '确定',
+      cancelButtonText: '取消',
+      type: 'warning',
+    },
+  )
+    .then(async () => {
+      if (id) {
+        await MaterialPointApi.delMaterialPointDataList([id])
+      }
+      else {
+        await MaterialPointApi.delMaterialPointDataList(warehouseSelection.value)
+      }
+      await getMaterialPointList()
+      Message.success('操作成功')
+    })
+    .catch(() => {})
+}
+
+// 启用与停用
+async function IsEnable(id, Enable) {
+  ElMessageBox.confirm(
+    Enable ? '确认启用此料点吗?' : '确认停用此料点吗?',
+    {
+      confirmButtonText: '确定',
+      cancelButtonText: '取消',
+      type: 'warning',
+    },
+  )
+    .then(async () => {
+      await MaterialPointApi.IsEnableMaterialPoint(id, Enable)
+      await getMaterialPointList()
+      Message.success('操作成功')
+    })
+    .catch(() => {})
+}
+
+// 关联物料
+const openBoMShow = ref(false)
+const pointId = ref('')
+
+function OpenBoM(id) {
+  pointId.value = id
+  openBoMShow.value = true
+}
+
 // 导入组件开关
 const openShow = ref(false)
 </script>
@@ -84,7 +153,7 @@ const openShow = ref(false)
         <el-button type="primary" :icon="Plus" @click="OpenMaterialPontShow('add', null)">
           新建
         </el-button>
-        <el-button :icon="Minus" disabled>
+        <el-button :icon="Minus" :disabled="disabled" :type="disabled ? '' : 'primary'" @click="delMaterialPoint(null)">
           删除
         </el-button>
         <el-button type="primary" :icon="Refresh" @click="getMaterialPointList">
@@ -116,12 +185,35 @@ const openShow = ref(false)
         v-loading="loading"
         border
         :data="MaterialPointList"
+        @selection-change="handleSelectionChange"
       >
         <el-table-column type="selection" width="55" />
         <el-table-column property="Name" label="名称" />
         <el-table-column property="Code" label="编码" width="120" />
-        <el-table-column property="Storage.Name" label="仓库" width="120" />
-        <el-table-column property="Laneway.Name" label="巷道" width="120" />
+        <el-table-column property="Storage.Name" label="仓库" width="120">
+          <template #default="scope">
+            <el-tooltip
+              class="box-item"
+              effect="dark"
+              :content="scope.row.Storage.Code"
+              placement="top"
+            >
+              <p>{{scope.row.Storage.Name}}</p>
+            </el-tooltip>
+          </template>
+        </el-table-column>
+        <el-table-column property="Laneway.Name" label="巷道" width="120">
+          <template #default="scope">
+            <el-tooltip
+              class="box-item"
+              effect="dark"
+              :content="scope.row.Laneway.Code"
+              placement="top"
+            >
+              <p>{{scope.row.Laneway.Name}}</p>
+            </el-tooltip>
+          </template>
+        </el-table-column>
         <el-table-column property="Type" label="类型" width="80">
           <template #default="scope">
             <p v-if="scope.row.Type === 'In'">
@@ -147,18 +239,28 @@ const openShow = ref(false)
         </el-table-column>
         <el-table-column label="操作">
           <template #default="scope">
-            <el-button type="primary" link @click="OpenMaterialPontShow('edit', scope.row.Id)">
-              编辑
-            </el-button>
-            <el-button type="primary" link>
-              删除
-            </el-button>
-            <el-button type="primary" link>
-              启用
-            </el-button>
-            <el-button type="primary" link>
-              关联物料
-            </el-button>
+            <el-row v-if="!scope.row.IsEnable">
+              <el-button type="primary" link @click="OpenMaterialPontShow('edit', scope.row.Id)">
+                编辑
+              </el-button>
+              <el-button type="primary" link @click="delMaterialPoint(scope.row.Id)">
+                删除
+              </el-button>
+              <el-button type="primary" link @click="IsEnable(scope.row.Id, true)">
+                启用
+              </el-button>
+              <el-button type="primary" link @click="OpenBoM(scope.row.Id)">
+                关联物料
+              </el-button>
+            </el-row>
+            <el-row v-else>
+              <el-button type="primary" link @click="IsEnable(scope.row.Id, false)">
+                停用
+              </el-button>
+              <el-button type="primary" link @click="OpenBoM(scope.row.Id)">
+                关联物料
+              </el-button>
+            </el-row>
           </template>
         </el-table-column>
         <template #empty>
@@ -187,6 +289,11 @@ const openShow = ref(false)
       :edit-id="editId"
       :warehouse-list="warehouseList"
       @up-list="getMaterialPointList"
+    />
+    <BoM
+      v-if="openBoMShow"
+      v-model:open-bo-m-show="openBoMShow"
+      :point-id="pointId"
     />
   </div>
 </template>

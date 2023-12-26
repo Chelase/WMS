@@ -12,6 +12,9 @@ const useMaterialPointStore = defineStore('MaterialPoint', () => {
     StorId: '',
     Type: '',
   })
+  const MaterialPontCreateTime = ref('')
+  const MaterialPontBoMData = ref([])
+  const MaterialPontBoMDataTotal = ref(0)
 
   // 获取上下料点
   const getMaterialPointData = async (data: NonNullable<unknown>) => {
@@ -28,7 +31,7 @@ const useMaterialPointStore = defineStore('MaterialPoint', () => {
 
   // 获取编辑料点详情
   const getEditMaterialPontData = async (id: NonNullable<object>) => {
-    const { Data: { Code, LaneId, Name, StorId, Type } } = await MaterialPointApi.getEditMaterialPointDataList(id)
+    const { Data: { Code, LaneId, Name, StorId, Type, CreateTime } } = await MaterialPointApi.getEditMaterialPointDataList(id)
     AddMaterialPontFormData.value = {
       Code,
       LaneId,
@@ -36,6 +39,14 @@ const useMaterialPointStore = defineStore('MaterialPoint', () => {
       StorId,
       Type,
     }
+    MaterialPontCreateTime.value = CreateTime
+  }
+
+  // 获取料点物料清单
+  const getMaterialPointDataBoM = async (data: NonNullable<unknown>) => {
+    const { Data, Total } = await MaterialPointApi.getMaterialPointBoMDataList(data)
+    MaterialPontBoMData.value = Data
+    MaterialPontBoMDataTotal.value = Total
   }
 
   return {
@@ -43,9 +54,13 @@ const useMaterialPointStore = defineStore('MaterialPoint', () => {
     MaterialPointTotal,
     ByStorData,
     AddMaterialPontFormData,
+    MaterialPontCreateTime,
+    MaterialPontBoMData,
+    MaterialPontBoMDataTotal,
     getMaterialPointData,
     getByStorData,
     getEditMaterialPontData,
+    getMaterialPointDataBoM,
   }
 })
 
