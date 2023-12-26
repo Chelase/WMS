@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, watch } from 'vue'
+import { onMounted, ref } from 'vue'
 import { Minus, Plus, Refresh } from '@element-plus/icons-vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { storeToRefs } from 'pinia'
@@ -40,13 +40,14 @@ const getBoMListForm = ref({
 })
 const BoMList = ref([])
 
-watch(() => props.areaId, (newAreaId) => {
-  getBoMListForm.value.AreaId = newAreaId
-  getBoMList()
-})
+// watch(() => props.areaId, (newAreaId) => {
+//   getBoMListForm.value.AreaId = newAreaId
+//   getBoMList()
+// })
+
+onMounted(() => getBoMList())
 
 // 获取物料列表
-const areaId = ref('')
 const loading = ref(false)
 async function getBoMList() {
   loading.value = true
@@ -54,10 +55,6 @@ async function getBoMList() {
   const { BoMData } = storeToRefs(CargoAreaStore)
   BoMList.value = BoMData.value
   loading.value = false
-  if (BoMList.value.length !== 0) {
-    const { AreaId } = BoMList.value[0]
-    areaId.value = AreaId
-  }
 }
 
 // 多选及删除
@@ -92,7 +89,7 @@ async function delBoM(AreaId, MaterialId) {
         await CargoAreaApi.delBoMDataList(AreaId, [MaterialId])
       }
       else {
-        await CargoAreaApi.delBoMDataList(areaId.value, warehouseSelection.value)
+        await CargoAreaApi.delBoMDataList(props.areaId, warehouseSelection.value)
       }
       await getBoMList()
       ElMessage.success('操作成功')
@@ -167,7 +164,11 @@ function OpenAddBoMShow() {
       :total="BoMTotal"
       @current-change="Page"
     />
-    <AddBoM v-model:open-add-bo-m="openAddBoM" :area-id="areaId" @up-list="getBoMList" />
+    <AddBoM
+      v-model:open-add-bo-m="openAddBoM"
+      :area-id="props.areaId"
+      @up-list="getBoMList"
+    />
   </el-drawer>
 </template>
 

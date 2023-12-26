@@ -149,7 +149,7 @@ function OpenBoM(id) {
   <div>
     <PageMain>
       <el-row>
-        <el-button type="primary" :icon="Plus" @click="OpenAddCargoAreaEdit('add')">
+        <el-button type="primary" :icon="Plus" @click="OpenAddCargoAreaEdit('add', null)">
           新建
         </el-button>
         <el-button :icon="Minus" :disabled="disabled" :type="disabled ? '' : 'primary'" @click="delCargoArea(null)">
@@ -223,7 +223,11 @@ function OpenBoM(id) {
       :stor-id="StorId"
       @up-list="getCargoList"
     />
-    <BoM v-model:open-bo-m-show="openBoMShow" :area-id="areaId" />
+    <BoM
+      v-if="openBoMShow"
+      v-model:open-bo-m-show="openBoMShow"
+      :area-id="areaId"
+    />
   </div>
 </template>
 

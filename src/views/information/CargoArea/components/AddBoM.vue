@@ -17,6 +17,7 @@ const props = defineProps({
 })
 
 const emit = defineEmits(['update:openAddBoM', 'upList'])
+
 const CargoAreaStore = useCargoAreaStore()
 
 onMounted(() => {
@@ -86,6 +87,7 @@ async function SaveData() {
         clearable
         style="margin-right: 10px"
         :data="BoMTreeList"
+        :props="{ value: 'Id', label: 'Text' }"
         check-strictly
         :render-after-expand="false"
       />
