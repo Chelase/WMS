@@ -98,7 +98,7 @@ const routes: RouteRecordRaw = {
     {
       path: 'TrayType',
       name: 'TrayType',
-      component: () => import('@/views/information/TrayType.vue'),
+      component: () => import('@/views/information/TrayType/index.vue'),
       meta: {
         title: '托盘类型',
         icon: 'uiw:tags-o',

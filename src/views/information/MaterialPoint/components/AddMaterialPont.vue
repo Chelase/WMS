@@ -4,8 +4,8 @@ import { storeToRefs } from 'pinia'
 import type { FormInstance } from 'element-plus'
 import { ElMessage } from 'element-plus'
 import useMaterialPointStore from '@/store/modules/information/MaterialPoint.ts'
-import MaterialPointApi from '@/api/modules/information/MaterialPoint.ts'
 import useUserStore from '@/store/modules/user.ts'
+import MaterialPointApi from '@/api/modules/information/MaterialPoint.ts'
 
 const props = defineProps({
   openMaterialPont: {
@@ -79,7 +79,8 @@ async function SaveData() {
     if (valid) {
       if (props.title === '新增') {
         await MaterialPointApi.AddMaterialPointDataList(AddMaterialPontForm.value)
-      } else if (props.title === '编辑') {
+      }
+      else if (props.title === '编辑') {
         await MaterialPointApi.AddMaterialPointDataList({
           Code: AddMaterialPontForm.value.Code,
           CreateTime: MaterialPontStore.MaterialPontCreateTime,

@@ -7,8 +7,10 @@ export {}
 
 declare module 'vue' {
   export interface GlobalComponents {
+    AddBoM: typeof import('./../components/BoM/AddBoM.vue')['default']
     Auth: typeof import('./../components/Auth/index.vue')['default']
     AuthAll: typeof import('./../components/AuthAll/index.vue')['default']
+    BoM: typeof import('./../components/BoM/BoM.vue')['default']
     Drawer: typeof import('./../components/drawer/index.vue')['default']
     FileUpload: typeof import('./../components/FileUpload/index.vue')['default']
     FixedActionBar: typeof import('./../components/FixedActionBar/index.vue')['default']
