@@ -37,9 +37,6 @@ const meteringlistdata = ref({
 function tapReset() {
   meteringlistdata.value.search.keyword = ''
 }
-function close(e) {
-  slideover.value = e
-}
 const meteringlist = ref()
 async function getdataList() {
   await MeteringStore.getdataList(meteringlistdata.value)
@@ -62,12 +59,12 @@ async function deletedata(id) {
 const ide = ref()
 function xinzeng() {
   slideover.value = true
-  title.value = '新增货位'
+  title.value = '新增单位'
 }
 function bianji(id) {
   slideover.value = true
   ide.value = id
-  title.value = '编辑货位'
+  title.value = '编辑单位'
 }
 function handleSelectionChange(value) {
   selectionData.value = []
