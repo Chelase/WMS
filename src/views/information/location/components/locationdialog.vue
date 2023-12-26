@@ -38,6 +38,7 @@ const ruleForm = reactive<RuleForm>({
   racks: '',
   rlsc: '',
 })
+const thedata = ref()
 
 const rules = reactive<FormRules<RuleForm>>({
   name: [
@@ -89,16 +90,17 @@ function submitForm() {
         rackId: ruleForm.region,
         remarks: ruleForm.desc,
         storId: ruleForm.stash,
-        creatorId: 'Admin',
-        errorCode: null,
-        pB_Storage: null,
-        pB_StorArea: null,
-        pB_Laneway: null,
-        pB_Rack: null,
-        pB_LocalTrays: null,
-        createTime: '2023-12-24 20:27:45.373',
-        lockType: 0,
-        deleted: false,
+        creatorId: thedata.value.Data.CreatorId,
+        errorCode: thedata.value.Data.ErrorCode,
+        pB_Storage: thedata.value.Data.PB_Storage,
+        pB_StorArea: thedata.value.Data.PB_StorArea,
+        pB_Laneway: thedata.value.Data.PB_Laneway,
+        pB_Rack: thedata.value.Data.PB_Rack,
+        pB_LocalTrays: thedata.value.Data.PB_LocalTrays,
+        createTime: thedata.value.Data.CreateTime,
+        lockType: thedata.value.Data.LockType,
+        deleted: thedata.value.Data.Deleted,
+        Id: thedata.value.Data.Id,
       })
       close()
       ElMessage.success('操作成功')
@@ -122,7 +124,6 @@ async function househuoqu(id) {
   await LocationStore.getRackDataList(id)
   rackdata.value = LocationStore.rackdata.Data
 }
-const thedata = ref()
 const id = props.id
 async function bianji(id) {
   await LocationStore.GetTheData({ id })
