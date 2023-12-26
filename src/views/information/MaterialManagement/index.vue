@@ -5,7 +5,7 @@
   import newMaterialPop from './components/newMaterialPop.vue'
 
 
-  //tore
+  //store
   const storeMaterialfunction = storeMaterialQueryData()
 
   //树形选择data
