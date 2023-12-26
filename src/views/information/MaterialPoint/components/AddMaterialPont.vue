@@ -5,6 +5,7 @@ import type { FormInstance } from 'element-plus'
 import { ElMessage } from 'element-plus'
 import useMaterialPointStore from '@/store/modules/information/MaterialPoint.ts'
 import MaterialPointApi from '@/api/modules/information/MaterialPoint.ts'
+import useUserStore from '@/store/modules/user.ts'
 
 const props = defineProps({
   openMaterialPont: {
@@ -27,6 +28,7 @@ const props = defineProps({
 
 const emit = defineEmits(['update:openMaterialPont', 'upList'])
 const MaterialPontStore = useMaterialPointStore()
+const userStore = useUserStore()
 const AddMaterialPontFormRef = ref<FormInstance>()
 
 const AddMaterialPontFormRules = ref({
@@ -75,7 +77,20 @@ function closeShow() {
 async function SaveData() {
   AddMaterialPontFormRef.value && AddMaterialPontFormRef.value?.validate(async (valid) => {
     if (valid) {
-      await MaterialPointApi.AddMaterialPointDataList(AddMaterialPontForm.value)
+      if (props.title === '新增') {
+        await MaterialPointApi.AddMaterialPointDataList(AddMaterialPontForm.value)
+      } else if (props.title === '编辑') {
+        await MaterialPointApi.AddMaterialPointDataList({
+          Code: AddMaterialPontForm.value.Code,
+          CreateTime: MaterialPontStore.MaterialPontCreateTime,
+          CreatorId: userStore.CreatorId,
+          Id: props.editId,
+          LaneId: AddMaterialPontForm.value.LaneId,
+          Name: AddMaterialPontForm.value.Name,
+          StorId: AddMaterialPontForm.value.StorId,
+          Type: AddMaterialPontForm.value.Type,
+        })
+      }
       ElMessage.success('操作成功')
       closeShow()
       emit('upList')
