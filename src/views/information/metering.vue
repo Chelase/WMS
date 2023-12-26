@@ -61,9 +61,14 @@ function xinzeng() {
   slideover.value = true
   title.value = '新增单位'
 }
-function bianji(id) {
-  slideover.value = true
+const bjdata = ref()
+async function bianji(id) {
   ide.value = id
+  await MeteringStore.GetTheData({ id })
+  bjdata.value = MeteringStore.getdata
+  ruleForm.name = bjdata.value.Data.Name
+  console.log(bjdata.value)
+  slideover.value = true
   title.value = '编辑单位'
 }
 function handleSelectionChange(value) {
@@ -76,8 +81,28 @@ function handleSelectionChange(value) {
 }
 function submitForm() {
   ruleFormRef.value && ruleFormRef.value?.validate(async (valid) => {
-    if (valid) {
-      console.log(123)
+    if (valid && title.value === '新增单位') {
+      await MeteringStore.SaveDate({
+        name: ruleForm.name,
+      })
+      slideover.value = false
+      ruleForm.name = ''
+      ElMessage.success('操作成功')
+      getdataList()
+    }
+    else {
+      await MeteringStore.SaveDate({
+        name: ruleForm.name,
+        code: bjdata.value.Data.Code,
+        CreatorId: bjdata.value.Data.CreatorId,
+        CreateTime: bjdata.value.Data.CreateTime,
+        Id: bjdata.value.Data.Id,
+        Deleted: bjdata.value.Data.Deleted,
+      })
+      slideover.value = false
+      ruleForm.name = ''
+      ElMessage.success('操作成功')
+      getdataList()
     }
   })
 }
@@ -90,6 +115,7 @@ onMounted(() => {
   <div>
     <el-dialog v-model="slideover" size="80%" :title="title">
       <el-form
+        v-if="slideover"
         ref="ruleFormRef"
         :model="ruleForm"
         :rules="rules"
