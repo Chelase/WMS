@@ -24,10 +24,6 @@ const treedata = ref('')
 function closeson() {
   emit('closeson', false)
 }
-function chuan() {
-  emit('chuan', quertlistdata.value)
-  closeson()
-}
 
 const options = [
   {
@@ -117,6 +113,18 @@ function qingchu2() {
   gongysdata.value = ''
   encodingInput.value = ''
 }
+const templateSelection = ref()
+const templateRadio = ref(null)
+const rowName = ref()
+function singleElection(row) {
+  templateSelection.value = gysdata.value.indexOf(row)
+  templateRadio.value = row.id
+  rowName.value = row.Name
+}
+function chuan() {
+  emit('chuan', rowName.value)
+  closeson()
+}
 </script>
 
 <template>
@@ -145,8 +153,15 @@ function qingchu2() {
         :data="gysdata"
         style="width: 100%;"
         border
+        @row-click="singleElection"
       >
-        <el-table-column type="radio" width="55" />
+        <el-table-column label="" width="55">
+          <template #default="scope">
+            <el-radio v-model="templateSelection" class="radio" :label="scope.$index">
+              &nbsp;
+            </el-radio>
+          </template>
+        </el-table-column>
         <el-table-column prop="Code" label="供应商编号" width="135" />
         <el-table-column prop="Name" label="供应商名称" width="290" />
         <el-table-column prop="ID" label="供应商类型" width="130" />
@@ -156,7 +171,7 @@ function qingchu2() {
       </el-table>
       <span class="dialog-footer">
         <el-button @click="closeson">取消</el-button>
-        <el-button type="primary" @click="closeson">
+        <el-button type="primary" @click="chuan()">
           选择
         </el-button>
       </span>
@@ -195,10 +210,12 @@ function qingchu2() {
         :data="querydataliste"
         border
       >
-        <el-table-column width="55">
-          <el-radio-group v-model="radio">
-            <el-radio :label="1" size="small" />
-          </el-radio-group>
+        <el-table-column label="" width="55">
+          <template #default="scope">
+            <el-radio v-model="templateSelection" class="radio" :label="scope.$index">
+              &nbsp;
+            </el-radio>
+          </template>
         </el-table-column>
         <el-table-column prop="Name" label="物料名称" width="135" />
         <el-table-column prop="Code" label="物料编码" width="290" />
@@ -213,7 +230,13 @@ function qingchu2() {
         :data="datalistae"
         border
       >
-        <el-table-column type="selection" width="55" />
+        <el-table-column label="" width="55">
+          <template #default="scope">
+            <el-radio v-model="templateSelection" class="radio" :label="scope.$index">
+              &nbsp;
+            </el-radio>
+          </template>
+        </el-table-column>
         <el-table-column prop="Code" label="货位编号" width="135" />
         <el-table-column prop="Name" label="货位名称" width="290" />
         <el-table-column prop="PB_Storage.Name" label="仓库" width="130" />
@@ -235,6 +258,6 @@ function qingchu2() {
 .dialog-footer {
   position: absolute;
   left: 850px;
-  top: 400px;
+  top: 440px;
 }
 </style>

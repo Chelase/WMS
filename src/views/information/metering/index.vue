@@ -1,18 +1,16 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
-import { ElMessage } from 'element-plus'
+import { ElMessage, ElMessageBox } from 'element-plus'
 import type { FormInstance, FormRules } from 'element-plus'
 import useMeteringStore from '@/store/modules/information/metering.ts'
 
 interface RuleForm {
   name: ''
 }
-
 const ruleFormRef = ref<FormInstance>()
 const ruleForm = reactive<RuleForm>({
   name: '',
 })
-
 const rules = reactive<FormRules<RuleForm>>({
   name: [
     { required: true, message: '请输入货位名称', trigger: 'blur' },
@@ -47,14 +45,27 @@ function chaxun() {
   getdataList(meteringlistdata.value)
 }
 async function deletedata(id) {
-  if (id.length === 1) {
-    await MeteringStore.Delete(id)
-  }
-  else {
-    await MeteringStore.Delete(selectionData.value)
-  }
-  getdataList()
-  ElMessage.success('操作成功')
+  ElMessageBox.confirm(
+    '确认删除吗?',
+    {
+      confirmButtonText: '确定',
+      cancelButtonText: '取消',
+      type: 'warning',
+    },
+  )
+    .then(async () => {
+      if (id.length === 1) {
+        await MeteringStore.Delete(id)
+      }
+      else {
+        await MeteringStore.Delete(selectionData.value)
+      }
+      ElMessage({
+        type: 'success',
+        message: '操作成功',
+      })
+      getdataList()
+    })
 }
 const ide = ref()
 function xinzeng() {
@@ -182,10 +193,10 @@ onMounted(() => {
         <el-table-column prop="Name" label="单位名称" width="350" />
         <el-table-column label="操作" width="440">
           <template #default="scope">
-            <el-button type="text" @click="bianji(scope.row.Id)">
+            <el-button type="primary" link @click="bianji(scope.row.Id)">
               编辑
             </el-button>
-            <el-button type="text" @click="deletedata([scope.row.Id])">
+            <el-button type="primary" link @click="deletedata([scope.row.Id])">
               删除
             </el-button>
           </template>

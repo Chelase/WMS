@@ -87,7 +87,7 @@ const routes: RouteRecordRaw = {
     {
       path: 'metering',
       name: 'metering',
-      component: () => import('@/views/information/metering.vue'),
+      component: () => import('@/views/information/metering/index.vue'),
       meta: {
         title: '计量单位',
         icon: 'uiw:tag-o',

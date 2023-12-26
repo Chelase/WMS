@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
-import { ElMessage } from 'element-plus'
+import { ElMessage, ElMessageBox } from 'element-plus'
 import locationdialog from './components/locationdialog.vue'
 import { QueryStorageDataAPI } from '@/api/modules/operations/Warehousing.ts'
 import useLocationStore from '@/store/modules/information/location.ts'
@@ -52,15 +52,28 @@ async function getWarehousedata() {
 function chaxun() {
   getdataList(locationlistdata.value)
 }
-async function deletedata(id) {
-  if (id.length === 1) {
-    await LocationStore.DeleteData(id)
-  }
-  else {
-    await LocationStore.DeleteData(selectionData.value)
-  }
-  getdataList()
-  ElMessage.success('操作成功')
+function deletedata(id) {
+  ElMessageBox.confirm(
+    '确认删除吗?',
+    {
+      confirmButtonText: '确定',
+      cancelButtonText: '取消',
+      type: 'warning',
+    },
+  )
+    .then(async () => {
+      if (id.length === 1) {
+        await LocationStore.DeleteData(id)
+      }
+      else {
+        await LocationStore.DeleteData(selectionData.value)
+      }
+      ElMessage({
+        type: 'success',
+        message: '操作成功',
+      })
+      getdataList()
+    })
 }
 const ide = ref()
 function xinzeng() {
@@ -173,10 +186,10 @@ onMounted(() => {
         </el-table-column>
         <el-table-column label="操作" width="150">
           <template #default="scope">
-            <el-button type="text" @click="bianji(scope.row.Id)">
+            <el-button type="primary" link @click="bianji(scope.row.Id)">
               编辑
             </el-button>
-            <el-button type="text" @click="deletedata([scope.row.Id])">
+            <el-button type="primary" link @click="deletedata([scope.row.Id])">
               删除
             </el-button>
           </template>
