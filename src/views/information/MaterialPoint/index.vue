@@ -164,7 +164,7 @@ const openShow = ref(false)
         </el-button>
       </el-row>
       <el-row style="margin: 20px 0">
-        <el-input v-model="getMaterialPointForm.Search.Keyword" placeholder="货区编号或名称" />
+        <el-input v-model="getMaterialPointForm.Search.Keyword" placeholder="名称/编码" />
         <el-select v-model="getMaterialPointForm.Search.StorId" clearable placeholder="请选择仓库">
           <el-option v-for="item in warehouseList" :key="item.Id" :label="item.Name" :value="item.Id" />
         </el-select>
