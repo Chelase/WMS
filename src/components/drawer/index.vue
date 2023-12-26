@@ -102,10 +102,6 @@ async function submitForm(formEl: FormInstance | undefined) {
 // const relevanceInput = ref('')
 const remarkInput = ref('')
 const huoweia = ref('')
-// const currentDate = new Date()
-// const year = currentDate.getFullYear()
-// const month = currentDate.getMonth()
-// const day = currentDate.getDate()
 const addDrawer = ref(false)
 const title = ref('供应商选择')
 const types = ref()
@@ -193,7 +189,7 @@ function spaceButn() {
       style="width: 100%;"
       border
     >
-      <el-table-column type="selection" width="55" />
+      <el-table-column type="select" width="55" />
       <el-table-column label="物料" width="260" />
       <el-table-column label="货位" width="260" />
       <el-table-column label="数量" width="260" />

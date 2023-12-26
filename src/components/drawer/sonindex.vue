@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
-import { GetDataList, GetTreeDataListAPI, QueryDataListAPI, QueryStorageDataAPI } from '@/api/modules/operations/Warehousing.ts'
+import { GetDataList, GetTreeDataListAPI, QueryDataListAPI, QueryDatagongListAPI, QueryStorageDataAPI } from '@/api/modules/operations/Warehousing.ts'
 
 defineProps({
   types: {
@@ -55,19 +55,20 @@ const options = [
     label: '模块',
   },
 ]
+const data = ref({
+  pageIndex: 1,
+  pageRows: 10,
+  search: {},
+  sortField: 'Id',
+  sortType: 'asc',
+})
 async function getTreedataList() {
   const res = await GetTreeDataListAPI()
   treedatalist.value = res.Data
   console.log(treedatalist)
 }
 async function querydatalist() {
-  const res = await QueryDataListAPI({
-    pageIndex: 1,
-    pageRows: 10,
-    search: {},
-    sortField: 'Id',
-    sortType: 'asc',
-  })
+  const res = await QueryDataListAPI({ data })
   console.log(res.Data, 'errs')
   querydataliste.value = res.Data
 }
@@ -91,12 +92,18 @@ async function queryStorageData() {
   console.log(res.Data, '仓库id')
   quertlist.value = res.Data
 }
-
+const gysdata = ref()
+async function QueryDatagongList() {
+  const res = await QueryDatagongListAPI({ data })
+  gysdata.value = res.Data
+  console.log(gysdata, '供应商')
+}
 onMounted(() => {
   getTreedataList()
   getdataListae()
   queryStorageData()
   querydatalist()
+  QueryDatagongList()
 })
 function qingchu() {
   encodingInput.value = ''
@@ -135,16 +142,17 @@ function qingchu2() {
         </ElButton>
       </span>
       <el-table
+        :data="gysdata"
         style="width: 100%;"
         border
       >
-        <el-table-column type="selection" width="55" />
-        <el-table-column label="供应商编号" width="135" />
-        <el-table-column label="供应商名称" width="290" />
-        <el-table-column label="供应商类型" width="130" />
-        <el-table-column label="电话" width="132" />
-        <el-table-column label="Email" width="130" />
-        <el-table-column label="联系人" width="130" />
+        <el-table-column type="radio" width="55" />
+        <el-table-column prop="Code" label="供应商编号" width="135" />
+        <el-table-column prop="Name" label="供应商名称" width="290" />
+        <el-table-column prop="ID" label="供应商类型" width="130" />
+        <el-table-column prop="Phone" label="电话" width="132" />
+        <el-table-column prop="Email" label="Email" width="130" />
+        <el-table-column prop="ContactName" label="联系人" width="130" />
       </el-table>
       <span class="dialog-footer">
         <el-button @click="closeson">取消</el-button>
@@ -164,9 +172,9 @@ function qingchu2() {
           <el-select v-model="quertlistdata" style="width: 160px;height: 32px;" class="m-2" placeholder="请选择仓库">
             <el-option
               v-for="item in quertlist"
-              :key="item.Name"
+              :key="item.ID"
               :label="item.Name"
-              :value="item.Name"
+              :value="item.ID"
             />
           </el-select>
           <ElInput v-model="encodingInput" style="width: 160px;height: 32px;" placeholder="编码\名称\巷道\货架" />

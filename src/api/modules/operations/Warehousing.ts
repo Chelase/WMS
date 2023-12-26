@@ -33,3 +33,10 @@ export function QueryDataListAPI(data) {
     data,
   })
 }
+export function QueryDatagongListAPI(data) {
+  return api({
+    url: '/PB/PB_Supplier/QueryDataList',
+    method: 'post',
+    data,
+  })
+}
