@@ -107,7 +107,7 @@ const routes: RouteRecordRaw = {
     {
       path: 'PalletManagement',
       name: 'PalletManagement',
-      component: () => import('@/views/information/PalletManagement.vue'),
+      component: () => import('@/views/information/PalletManagement/index.vue'),
       meta: {
         title: '托盘管理',
         icon: 'memory:box',

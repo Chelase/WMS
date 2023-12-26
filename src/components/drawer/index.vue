@@ -118,7 +118,10 @@ function closeson(e) {
 function chuan(e) {
   console.log(e, '213123')
   huoweia.value = e
-  ruleForm.supplier = e
+  ruleForm.supplier = e[0]
+  ruleForm.tray = e[1]
+  ruleForm.count = e[2]
+  ruleForm.region = e[3]
 }
 // function jieshou() {
 //   rowName
@@ -136,6 +139,11 @@ function spaceButn() {
   dialogVisible.value = true
   types.value = 3
   title.value = '货位选择'
+}
+function trayButn() {
+  dialogVisible.value = true
+  types.value = 4
+  title.value = '托盘选择'
 }
 </script>
 
@@ -215,7 +223,7 @@ function spaceButn() {
       v-model="dialogVisible"
       :title="title"
       width="70%"
-      style="height: 500px;"
+      style="height: 550px;"
     >
       <sonDrawer :types="types" @closeson="closeson" @chuan="chuan" />
     </el-dialog>
@@ -248,7 +256,7 @@ function spaceButn() {
         </el-form-item>
         <el-form-item label="托盘" prop="tray">
           <el-select v-model="ruleForm.tray" style="width: 210px;height: 32px;" class="m-2" />
-          <el-button type="primary" @click="spaceButn()">
+          <el-button type="primary" @click="trayButn()">
             <SvgIcon name="ep:search" />
           </el-button>
         </el-form-item>

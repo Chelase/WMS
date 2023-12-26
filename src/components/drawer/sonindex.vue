@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
-import { GetDataList, GetTreeDataListAPI, QueryDataListAPI, QueryDatagongListAPI, QueryStorageDataAPI } from '@/api/modules/operations/Warehousing.ts'
+import { GetDataList, GetTreeDataListAPI, GetTuoPanDataList, QueryDataListAPI, QueryDatagongListAPI, QueryStorageDataAPI } from '@/api/modules/operations/Warehousing.ts'
 
 defineProps({
   types: {
@@ -17,7 +17,6 @@ const encodingInput = ref('')
 const encodingInput2 = ref('')
 const value = ref('')
 const valuef = ref('')
-const radio = ref()
 const datalistae = ref([])
 const treedatalist = ref([])
 const treedata = ref('')
@@ -61,7 +60,6 @@ const data = ref({
 async function getTreedataList() {
   const res = await GetTreeDataListAPI()
   treedatalist.value = res.Data
-  console.log(treedatalist)
 }
 async function querydatalist() {
   const res = await QueryDataListAPI({ data })
@@ -71,15 +69,15 @@ async function querydatalist() {
 async function getdataListae() {
   const res = await GetDataList({
     pageIndex: 1,
-    pageRows: 10,
+    pageRows: 5,
     search: {
-      storId: '1735904478579658752',
+      storId: '',
     },
     sortField: 'Id',
     sortType: 'asc',
 
   })
-  console.log(res.Data)
+  console.log(res.Data, '货位')
   datalistae.value = res.Data
 }
 
@@ -87,6 +85,7 @@ async function queryStorageData() {
   const res = await QueryStorageDataAPI({})
   console.log(res.Data, '仓库id')
   quertlist.value = res.Data
+  console.log(quertlist.value)
 }
 const gysdata = ref()
 async function QueryDatagongList() {
@@ -94,13 +93,7 @@ async function QueryDatagongList() {
   gysdata.value = res.Data
   console.log(gysdata, '供应商')
 }
-onMounted(() => {
-  getTreedataList()
-  getdataListae()
-  queryStorageData()
-  querydatalist()
-  QueryDatagongList()
-})
+
 function qingchu() {
   encodingInput.value = ''
   encodingInput2.value = ''
@@ -114,17 +107,51 @@ function qingchu2() {
   encodingInput.value = ''
 }
 const templateSelection = ref()
+const TuopantemplateSelection = ref()
+const HuoweitemplateSelection = ref()
 const templateRadio = ref(null)
 const rowName = ref()
+const TuoPanName = ref()
+const WuliaoName = ref()
+const WuLiaotemplateSelection = ref()
+const HuoWeiName = ref()
 function singleElection(row) {
   templateSelection.value = gysdata.value.indexOf(row)
-  templateRadio.value = row.id
   rowName.value = row.Name
 }
+function TuopansingleElection(row) {
+  TuopantemplateSelection.value = gysdata.value.indexOf(row)
+  templateRadio.value = row.id
+  TuoPanName.value = row.Name
+}
+function HuoweisingleElection(row) {
+  HuoweitemplateSelection.value = gysdata.value.indexOf(row)
+  templateRadio.value = row.id
+  HuoWeiName.value = row.Name
+}
+function WuLiaosingleElection(row) {
+  WuLiaotemplateSelection.value = gysdata.value.indexOf(row)
+  templateRadio.value = row.id
+  WuliaoName.value = row.Name
+}
+const TuoPan = ref()
 function chuan() {
-  emit('chuan', rowName.value)
+  emit('chuan', [rowName.value, TuoPanName.value, HuoWeiName.value, WuliaoName.value])
   closeson()
 }
+async function TuoPanDataList() {
+  const res = await GetTuoPanDataList({ data })
+  console.log(res.Data, '托盘')
+  TuoPan.value = res.Data
+}
+onMounted(() => {
+  getTreedataList()
+  getdataListae()
+  queryStorageData()
+  querydatalist()
+  QueryDatagongList()
+  TuoPanDataList()
+})
 </script>
 
 <template>
@@ -179,21 +206,25 @@ function chuan() {
     <div v-else>
       <span>
         <span v-if="types === 2">
-          <el-tree-select v-model="treedata" :data="treedatalist" prop="treedatalist.title" style="width: 160px;height: 32px;" :render-after-expand="false" placeholder="物料类型" />
+          <el-tree-select v-model="treedata" :data="treedatalist" :props="{ label: 'title', value: 'Id' }" placeholder="物料类型" />
           <ElInput v-model="value" style="width: 160px;height: 32px;" placeholder="物料名称\编号\条码" />
           <ElInput v-model="valuef" style="width: 160px;height: 32px;" placeholder="客户\供应商名称或编码" />
         </span>
-        <span v-else>
+        <span v-else-if="types === 3">
           <el-select v-model="quertlistdata" style="width: 160px;height: 32px;" class="m-2" placeholder="请选择仓库">
             <el-option
               v-for="item in quertlist"
-              :key="item.ID"
+              :key="item.Id"
               :label="item.Name"
-              :value="item.ID"
+              :value="item.Id"
             />
           </el-select>
           <ElInput v-model="encodingInput" style="width: 160px;height: 32px;" placeholder="编码\名称\巷道\货架" />
           <ElInput v-model="encodingInput2" style="width: 160px;height: 32px;" placeholder="货区编码\名称" />
+        </span>
+        <span v-else>
+          <ElInput v-model="encodingInput2" style="width: 160px;height: 32px;" placeholder="托盘名称或编码" />
+          <ElInput v-model="encodingInput" style="width: 160px;height: 32px;" placeholder="类型名称/编码" />
         </span>
       </span>
       <span style="margin-left: 10px;">
@@ -209,10 +240,11 @@ function chuan() {
         style="width: 100%;"
         :data="querydataliste"
         border
+        @row-click="WuLiaosingleElection"
       >
         <el-table-column label="" width="55">
           <template #default="scope">
-            <el-radio v-model="templateSelection" class="radio" :label="scope.$index">
+            <el-radio v-model="WuLiaotemplateSelection" class="radio" :label="scope.$index">
               &nbsp;
             </el-radio>
           </template>
@@ -225,14 +257,15 @@ function chuan() {
         <el-table-column prop="Spec" label="物料规格" width="130" />
       </el-table>
       <el-table
-        v-else
+        v-else-if="types === 3"
         style="width: 100%;"
         :data="datalistae"
         border
+        @row-click="HuoweisingleElection"
       >
         <el-table-column label="" width="55">
           <template #default="scope">
-            <el-radio v-model="templateSelection" class="radio" :label="scope.$index">
+            <el-radio v-model="HuoweitemplateSelection" class="radio" :label="scope.$index">
               &nbsp;
             </el-radio>
           </template>
@@ -243,6 +276,37 @@ function chuan() {
         <el-table-column prop="PB_StorArea.Name" label="货区" width="132" />
         <el-table-column prop="PB_Laneway.Name" label="巷道" width="130" />
         <el-table-column prop="PB_Rack.Name" label="货架" width="130" />
+      </el-table>
+      <el-table
+        v-else
+        style="width: 100%;"
+        :data="TuoPan"
+        border
+
+        @row-click="TuopansingleElection"
+      >
+        <el-table-column label="" width="55">
+          <template #default="scope">
+            <el-radio v-model="TuopantemplateSelection" class="radio" :label="scope.$index">
+              &nbsp;
+            </el-radio>
+          </template>
+        </el-table-column>
+        <el-table-column prop="Code" label="托盘号" width="135" />
+        <el-table-column prop="Name" label="托盘名称" width="290" />
+        <el-table-column prop="PB_TrayType.Name" label="托盘类型" width="130" />
+        <el-table-column prop="PB_Location.Name" label="货位" width="132" />
+        <el-table-column prop="StartTime" label="启用日期" width="130" />
+        <el-table-column prop="Status" label="托盘状态" width="130">
+          <template #default="scope">
+            <span v-if="scope.row.Status === 1">
+              启用
+            </span>
+            <span v-else>
+              停用
+            </span>
+          </template>
+        </el-table-column>
       </el-table>
       <span class="dialog-footer">
         <el-button @click="closeson">取消</el-button>
@@ -258,6 +322,6 @@ function chuan() {
 .dialog-footer {
   position: absolute;
   left: 850px;
-  top: 440px;
+  top: 490px;
 }
 </style>

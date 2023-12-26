@@ -40,3 +40,17 @@ export function QueryDatagongListAPI(data) {
     data,
   })
 }
+export function DeleteData(data) {
+  return api({
+    url: '/TD/TD_InStorage/DeleteData',
+    method: 'post',
+    data,
+  })
+}
+export function GetTuoPanDataList(data) {
+  return api({
+    url: '/PB/PB_Tray/GetDataList',
+    method: 'post',
+    data,
+  })
+}

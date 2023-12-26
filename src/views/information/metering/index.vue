@@ -3,7 +3,9 @@ import { onMounted, ref } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import type { FormInstance, FormRules } from 'element-plus'
 import useMeteringStore from '@/store/modules/information/metering.ts'
+import importindex from '@/components/Import/index.vue'
 
+const openShow = ref(false)
 interface RuleForm {
   name: ''
 }
@@ -44,7 +46,7 @@ async function getdataList() {
 function chaxun() {
   getdataList(meteringlistdata.value)
 }
-async function deletedata(id) {
+function deletedata(id) {
   ElMessageBox.confirm(
     '确认删除吗?',
     {
@@ -124,6 +126,12 @@ onMounted(() => {
 
 <template>
   <div>
+    <importindex
+      v-model:open-show="openShow"
+      title="导入货位"
+      import-url="http://118.190.145.57/api/PB/PB_Measure/Import"
+      export-url="http://118.190.145.57/api/PB/PB_Measure/ExportToExcel"
+    />
     <el-dialog v-model="slideover" size="80%" :title="title">
       <el-form
         v-if="slideover"
@@ -168,6 +176,11 @@ onMounted(() => {
           <ElButton type="primary" @click="getdataList()">
             <SvgIcon name="ep:refresh-right" />
             刷新
+          </ElButton>
+        </span>
+        <span style="margin-left: 1000px;">
+          <ElButton type="primary" @click="openShow = true">
+            导入单位
           </ElButton>
         </span>
       </div>

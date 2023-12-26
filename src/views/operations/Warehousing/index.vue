@@ -1,9 +1,11 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
-import { getdataListAPI } from '@/api/modules/operations/Warehousing.ts'
+import { ElMessage, ElMessageBox } from 'element-plus'
+import { DeleteData, getdataListAPI } from '@/api/modules/operations/Warehousing.ts'
 import drawer from '@/components/drawer/index.vue'
 
 const radio = ref('全部')
+const selectionData = ref([])
 const input = ref('')
 const valuetimetwo = ref('')
 const value = ref('')
@@ -52,6 +54,37 @@ function tapReset() {
 }
 function close(e) {
   slideover.value = e
+}
+function handleSelectionChange(value) {
+  selectionData.value = []
+  // 遍历选中的数据，只获取数据Id
+  value.forEach((item) => {
+    selectionData.value.push(item.Id)
+  })
+  console.log(selectionData.value)
+}
+function deletedata(id) {
+  ElMessageBox.confirm(
+    '确认删除吗?',
+    {
+      confirmButtonText: '确定',
+      cancelButtonText: '取消',
+      type: 'warning',
+    },
+  )
+    .then(async () => {
+      if (id.length === 1) {
+        await DeleteData(id)
+      }
+      else {
+        await DeleteData(selectionData.value)
+      }
+      ElMessage({
+        type: 'success',
+        message: '操作成功',
+      })
+      getdataList()
+    })
 }
 </script>
 
@@ -120,6 +153,7 @@ function close(e) {
         :data="rkdata"
         border
         style="width: 100%;"
+        @selection-change="handleSelectionChange"
       >
         <el-table-column type="selection" width="50" />
         <el-table-column prop="Code" label="入库单号" width="140" />
@@ -135,7 +169,7 @@ function close(e) {
             <el-tag v-if="scope.row.Status === 1 " class="ml-2" type="success">
               审核通过
             </el-tag>
-            <el-tag v-else-if="scope.row.Status === 0" class="ml-2" type="danger">
+            <el-tag v-else-if="scope.row.Status === 2" class="ml-2" type="danger">
               审核失败
             </el-tag>
             <el-tag v-else>
@@ -155,7 +189,7 @@ function close(e) {
             <el-button type="primary" link>
               编辑
             </el-button>
-            <el-button type="primary" link>
+            <el-button type="primary" link @click="deletedata([scope.row.Id])">
               删除
             </el-button>
           </template>
