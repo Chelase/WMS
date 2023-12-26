@@ -116,7 +116,7 @@ const routes: RouteRecordRaw = {
     {
       path: 'planned',
       name: 'planned',
-      component: () => import('@/views/information/planned.vue'),
+      component: () => import('@/views/information/planned/index.vue'),
       meta: {
         title: '计划管理',
         icon: 'ant-design:carry-out-outlined',
