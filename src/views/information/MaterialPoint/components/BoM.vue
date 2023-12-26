@@ -3,23 +3,23 @@ import { onMounted, ref } from 'vue'
 import { Minus, Plus, Refresh } from '@element-plus/icons-vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { storeToRefs } from 'pinia'
-import useCargoAreaStore from '@/store/modules/information/cargoarea.ts'
-import CargoAreaApi from '@/api/modules/information/CargoArea.ts'
-import AddBoM from '@/views/information/CargoArea/components/AddBoM.vue'
+import useMaterialPointStore from "@/store/modules/information/MaterialPoint.ts";
+import MaterialPointApi from '@/api/modules/information/MaterialPoint.ts'
+import AddBoM from './AddBoM.vue'
 
 const props = defineProps({
   openBoMShow: {
     type: Boolean,
     default: false,
   },
-  areaId: {
+  pointId: {
     type: String,
     default: '',
   },
 })
 
 const emit = defineEmits(['update:openBoMShow'])
-const CargoAreaStore = useCargoAreaStore()
+const MaterialPointStore = useMaterialPointStore()
 const BoMListRef = ref('')
 
 // 关闭
@@ -29,9 +29,9 @@ function closeShow() {
 
 // 获取物料清单
 const getBoMListForm = ref({
-  AreaId: props.areaId,
   PageIndex: 1,
   PageRows: 10,
+  PointId: props.pointId,
   Search: {
     MaterialName: '',
   },
@@ -40,20 +40,15 @@ const getBoMListForm = ref({
 })
 const BoMList = ref([])
 
-// watch(() => props.areaId, (newAreaId) => {
-//   getBoMListForm.value.AreaId = newAreaId
-//   getBoMList()
-// })
-
 onMounted(() => getBoMList())
 
 // 获取物料列表
 const loading = ref(false)
 async function getBoMList() {
   loading.value = true
-  await CargoAreaStore.getBoMData(getBoMListForm.value)
-  const { BoMData } = storeToRefs(CargoAreaStore)
-  BoMList.value = BoMData.value
+  await MaterialPointStore.getMaterialPointDataBoM(getBoMListForm.value)
+  const { MaterialPontBoMData } = storeToRefs(MaterialPointStore)
+  BoMList.value = MaterialPontBoMData.value
   loading.value = false
 }
 
@@ -72,10 +67,11 @@ function handleSelectionChange(val) {
   })
 
   // 将Selection中的所有Id推入warehouseSelection，并删除重复的项
-  warehouseSelection.value = [...new Set([...warehouseSelection.value, ...Selection.value.map(item => item.MaterialId)])]
+  warehouseSelection.value = [...new Set([...warehouseSelection.value, ...Selection.value.map(item => item.MaterialId)])];
+  console.log(71, warehouseSelection.value)
 }
 
-async function delBoM(AreaId, MaterialId) {
+async function delBoM(PointId, MaterialId) {
   ElMessageBox.confirm(
     '确认删除吗?',
     {
@@ -85,11 +81,11 @@ async function delBoM(AreaId, MaterialId) {
     },
   )
     .then(async () => {
-      if (AreaId) {
-        await CargoAreaApi.delBoMDataList(AreaId, [MaterialId])
+      if (PointId) {
+        await MaterialPointApi.delMaterialPointBoMDataList(PointId, [MaterialId])
       }
       else {
-        await CargoAreaApi.delBoMDataList(props.areaId, warehouseSelection.value)
+        await MaterialPointApi.delMaterialPointBoMDataList(props.pointId, warehouseSelection.value)
       }
       await getBoMList()
       ElMessage.success('操作成功')
@@ -98,7 +94,7 @@ async function delBoM(AreaId, MaterialId) {
 }
 
 // 分页
-const { BoMTotal } = storeToRefs(CargoAreaStore)
+const { MaterialPontBoMDataTotal } = storeToRefs(MaterialPointStore)
 async function Page(currentPage) {
   getBoMListForm.value.PageIndex = currentPage
   await getBoMList()
@@ -147,7 +143,7 @@ function OpenAddBoMShow() {
       <el-table-column property="PB_Material.Spec" label="物料规格" />
       <el-table-column label="操作">
         <template #default="scope">
-          <el-button type="primary" link @click="delBoM(scope.row.AreaId, scope.row.MaterialId)">
+          <el-button type="primary" link @click="delBoM(scope.row.PointId, scope.row.MaterialId)">
             删除
           </el-button>
         </template>
@@ -161,12 +157,12 @@ function OpenAddBoMShow() {
       :page-size="10"
       layout="total, prev, pager, next"
       :current-page="getBoMListForm.PageIndex"
-      :total="BoMTotal"
+      :total="MaterialPontBoMDataTotal"
       @current-change="Page"
     />
     <AddBoM
       v-model:open-add-bo-m="openAddBoM"
-      :area-id="props.areaId"
+      :point-id="pointId"
       @up-list="getBoMList"
     />
   </el-drawer>

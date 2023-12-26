@@ -3,14 +3,15 @@ import { onMounted, ref } from 'vue'
 import { storeToRefs } from 'pinia'
 import { ElMessage } from 'element-plus'
 import useCargoAreaStore from '@/store/modules/information/cargoarea.ts'
-import CargoareaApi from '@/api/modules/information/CargoArea.ts'
+import MaterialPointApi from '@/api/modules/information/MaterialPoint.ts'
+import useMaterialPointStore from "@/store/modules/information/MaterialPoint.ts";
 
 const props = defineProps({
   openAddBoM: {
     type: Boolean,
     default: false,
   },
-  areaId: {
+  pointId: {
     type: String,
     default: '',
   },
@@ -19,6 +20,7 @@ const props = defineProps({
 const emit = defineEmits(['update:openAddBoM', 'upList'])
 
 const CargoAreaStore = useCargoAreaStore()
+const MaterialPointStore = useMaterialPointStore()
 
 onMounted(() => {
   getBoMTree()
@@ -72,7 +74,7 @@ function closeShow() {
 }
 
 async function SaveData() {
-  await CargoareaApi.AddBoMQuerySaveData({ id: props.areaId, keys: warehouseSelection.value })
+  await MaterialPointApi.AddMaterialPointBoMDataList({ id: props.pointId, keys: warehouseSelection.value })
   ElMessage.success('操作成功')
   closeShow()
   emit('upList')

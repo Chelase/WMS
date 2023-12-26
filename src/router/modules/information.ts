@@ -71,9 +71,10 @@ const routes: RouteRecordRaw = {
     {
       path: 'MaterialPoint',
       name: 'MaterialPoint',
-      component: () => import('@/views/information/MaterialPoint.vue'),
+      component: () => import('@/views/information/MaterialPoint/index.vue'),
       meta: {
         title: '上下料点',
+        icon: 'memory:align-vertical-distribute',
       },
     },
     {
@@ -82,6 +83,7 @@ const routes: RouteRecordRaw = {
       component: () => import('@/views/information/MaterialManagement/index.vue'),
       meta: {
         title: '物料管理',
+        icon: 'memory:box',
       },
     },
     {
@@ -96,9 +98,10 @@ const routes: RouteRecordRaw = {
     {
       path: 'TrayType',
       name: 'TrayType',
-      component: () => import('@/views/information/TrayType.vue'),
+      component: () => import('@/views/information/TrayType/index.vue'),
       meta: {
         title: '托盘类型',
+        icon: 'uiw:tags-o',
       },
     },
     {
@@ -107,6 +110,7 @@ const routes: RouteRecordRaw = {
       component: () => import('@/views/information/PalletManagement.vue'),
       meta: {
         title: '托盘管理',
+        icon: 'memory:box',
       },
     },
     {
@@ -115,6 +119,7 @@ const routes: RouteRecordRaw = {
       component: () => import('@/views/information/planned.vue'),
       meta: {
         title: '计划管理',
+        icon: 'ant-design:carry-out-outlined',
       },
     },
   ],

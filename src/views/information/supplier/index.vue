@@ -9,6 +9,7 @@ import supplierApi from '@/api/modules/information/supplier.ts'
 import useSupplierStore from '@/store/modules/information/supplier.ts'
 import AddSupplier from '@/views/information/supplier/components/AddSupplier.vue'
 import Address from '@/views/information/supplier/components/Address.vue'
+import Import from '@/components/Import/index.vue'
 
 const SupplierStore = useSupplierStore()
 
@@ -115,12 +116,7 @@ function OpenAddressShow(id, name) {
 }
 
 // 导入
-const importSuppliers = ref(false)
-const fileListRef = ref<UploadInstance>()
-
-function submitUpload() {
-  fileListRef.value!.submit()
-}
+const openShow = ref(false)
 </script>
 
 <template>
@@ -136,7 +132,7 @@ function submitUpload() {
         <el-button type="primary" :icon="Refresh" @click="getSupplierList">
           刷新
         </el-button>
-        <el-button type="primary" style="position: absolute;right: 25px" @click="importSuppliers = true">
+        <el-button type="primary" style="position: absolute;right: 25px" @click="openShow = true">
           导入供应商
         </el-button>
       </el-row>
@@ -231,33 +227,12 @@ function submitUpload() {
         :name="names"
         :sup-id="supId"
       />
-      <el-dialog
-        v-model="importSuppliers"
+      <Import
+        v-model:open-show="openShow"
         title="导入供应商信息"
-        width="30%"
-        @close="importSuppliers = false"
-      >
-        <el-row justify="center">
-          <el-col :span="10">
-            <el-upload
-              ref="fileListRef"
-              class="upload-demo"
-              action="http://118.190.145.57/api/PB/PB_Supplier/Import"
-              :auto-upload="false"
-              @change="submitUpload"
-            >
-              <el-button :icon="Upload" type="primary">
-                上传数据
-              </el-button>
-            </el-upload>
-          </el-col>
-          <el-col :span="10">
-            <el-button :icon="Download" tag="a" href="http://118.190.145.57/api/PB/PB_Supplier/ExportToExcel">
-              下载模板表
-            </el-button>
-          </el-col>
-        </el-row>
-      </el-dialog>
+        import-url="http://118.190.145.57/api/PB/PB_Supplier/Import"
+        export-url="http://118.190.145.57/api/PB/PB_Supplier/ExportToExcel"
+      />
     </PageMain>
   </div>
 </template>

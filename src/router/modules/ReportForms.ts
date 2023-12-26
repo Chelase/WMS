@@ -11,7 +11,7 @@ const routes: RouteRecordRaw = {
   name: 'ReportForms',
   meta: {
     title: '报表管理',
-    icon: 'ep:data-line',
+    icon: 'ant-design:area-chart-outlined',
   },
   children: [
     {
