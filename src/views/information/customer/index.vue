@@ -190,7 +190,6 @@
 <template>
   <div>
     <PageMain>
-      客户管理
       <el-row style="width: 100%;">
         <el-button type="primary" @click="createdata">+ 新建</el-button>
         <el-button type="info" plain disabled v-if="!selectionData.length">- 删除</el-button>
