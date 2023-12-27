@@ -17,14 +17,14 @@
   const deletefun = (value) => {
     // console.log('父组件', value)
     // delDictionaryList.value = value
+    delDictionaryList.value = []
     value.forEach(item => {
-      // console.log(item.IsSystem)
       if (!item.IsSystem) {
         delDictionaryList.value.push(item)
-        console.log(item)
+        // console.log(item)
       }
     });
-      console.log('delDictionaryList', delDictionaryList.value)
+    // console.log('delDictionaryList', delDictionaryList.value)
     // console.log(delDictionaryList.value.length)
   }
 

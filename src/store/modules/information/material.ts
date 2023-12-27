@@ -17,6 +17,7 @@ const useMaterialStore = defineStore('material', () => {
   const getMaterialTreeData = async (data: NonNullable<unknown>) => {
     const { Data } = await materialApi.getMaterialTreeDataList(data)
     MaterialTreeData.value = Data
+    // console.log(MaterialTreeData.value)
   }
 
   // 获取物料类型编辑详情

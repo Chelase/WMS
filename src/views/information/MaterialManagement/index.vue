@@ -1,41 +1,34 @@
 <script setup lang="ts">
   import { ref, onMounted, provide } from 'vue'
   import { RefreshRight, Plus, Minus } from '@element-plus/icons-vue'
+  import { ElMessage, ElMessageBox } from 'element-plus'
   import storeMaterialQueryData from '@/store/modules/information/materialManage.ts'
+  import useMaterialStore from '@/store/modules/information/material.ts'
   import newMaterialPop from './components/newMaterialPop.vue'
 
 
   //store
   const storeMaterialfunction = storeMaterialQueryData()
+  //物料类型store
+  const useMaterialStoredata = useMaterialStore()
 
-  //树形选择data
-  const data = ref([
-    {
-      value: '1',
-      label: 'Level one 1',
-      children: [
-        {
-          value: '1-1',
-          label: 'Level two 1-1',
-          children: [
-            {
-              value: '1-1-1',
-              label: 'Level three 1-1-1',
-            },
-          ],
-        },
-      ],
-    },
-  ])
   const value = ref()
 
   //表格data
   const materialManageData = ref([])
+  const materialManageTotal = ref(0)
+  //物料类型list
+  const materialTypesData = ref([])
+
   //获取表格数据条件
   const getMaterialCondition = ref({
     PageIndex: 1,
     PageRows: 10,
-    Search: {},
+    Search: {
+      ContactName: '',
+      Keyword: '',
+      TypeId: ''
+    },
     SortField: "Id",
     SortType: "asc"
   })
@@ -44,6 +37,11 @@
     await storeMaterialfunction.getMaterialList(getMaterialCondition.value)
     // console.log(storeMaterialfunction.MaterialDataList.Data)
     materialManageData.value = storeMaterialfunction.MaterialDataList
+    materialManageTotal.value = storeMaterialfunction.MaterialDataList.Total
+    //获取 物料类型
+    await useMaterialStoredata.getMaterialTreeData(getMaterialCondition)
+    // console.log('物料类型', useMaterialStoredata.MaterialTreeData)
+    materialTypesData.value = useMaterialStoredata.MaterialTreeData
   }
   onMounted(() => {
     getMaterialList()
@@ -56,15 +54,97 @@
   }
   //控制弹框显示隐藏
   const isShow = ref(false)
+  //子组件form表单
+  const formobj = ref({
+    BarCode: '',
+    CusId: '',
+    MaterialTypeId: '',
+    Max: '',
+    MeasureId: '',
+    Min: '',
+    Name: '',
+    Price: '',
+    Remarks: '',
+    SimpleName: '',
+    Spec: '',
+    StorId: '',
+    SupId: '',
+  })
   //组件传值
   provide('isShow', isShow)
+  provide('formobj', formobj)
 
-  //查询输入框
-  const input2 = ref()
-
+  //存储多选选中的data
+  const selectiondata = ref([])
   //监听多选框选中
   const selectionMaterial = (value) => {
-    console.log(value);
+    selectiondata.value = []
+    value.forEach(item => {
+      selectiondata.value.push(item.Id)
+    });
+    // console.log(selectiondata.value)
+  }
+  //删除按钮
+  const deleteMaterialList = async (value) => {
+    if (value.length === 1) {
+      // console.log(value)
+      await storeMaterialfunction.delMaterialList(value)
+      getMaterialList()
+    } else {
+      await storeMaterialfunction.delMaterialList(selectiondata.value)
+      getMaterialList()
+    }
+  }
+  const deleteMaterial = (value) => {
+    ElMessageBox.confirm(
+      '确定删除此条数据吗?',
+      {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning',
+      }
+    )
+      .then(() => {
+        deleteMaterialList(value)
+        ElMessage({
+          type: 'success',
+          message: '删除成功!',
+        })
+      })
+      .catch(() => {
+      })
+  }
+
+  //查询按钮
+  const queryMaterial = async () => {
+    // console.log(queryCondition.value)
+    // console.log('前', storeMaterialfunction.MaterialDataList)
+    await storeMaterialfunction.getMaterialList(getMaterialCondition.value)
+    materialManageData.value = storeMaterialfunction.MaterialDataList
+    // console.log('后', storeMaterialfunction.MaterialDataList)
+  }
+
+  //重置按钮
+  const resetting = () => {
+    getMaterialCondition.value.Search = {
+      ContactName: '',
+      Keyword: '',
+      TypeId: ''
+    }
+  }
+
+  //编辑按钮
+  const editMaterial = async (row) => {
+    await storeMaterialfunction.MaterialManageTheList({ Id: row.Id })
+    formobj.value = storeMaterialfunction.MaterialManageTheData
+    isShow.value = true
+    // console.log(row.Id)
+  }
+
+  //换页
+  const PageChange = (value) => {
+    getMaterialCondition.value.PageIndex = value
+    getMaterialList()
   }
 </script>
 
@@ -73,19 +153,21 @@
     <PageMain>
       <el-row class="martop">
         <el-button type="primary" :icon="Plus" @click="addPop"> 新建 </el-button>
-        <el-button type="info" :icon="Minus" plain disabled> 删除 </el-button>
-        <el-button type="primary" :icon="Minus"> 删除 </el-button>
-        <el-button type="primary" :icon="RefreshRight"> 刷新 </el-button>
+        <el-button type="info" :icon="Minus" plain disabled v-if="!selectiondata.length"> 删除 </el-button>
+        <el-button type="primary" :icon="Minus" v-else @click="deleteMaterial"> 删除 </el-button>
+        <el-button type="primary" :icon="RefreshRight" @click="getMaterialList"> 刷新 </el-button>
         <div style="position: absolute; right: 200px;">
           <el-button type="primary"> 导入物料 </el-button>
         </div>
       </el-row>
       <el-row class="martop">
-        <el-tree-select class="martop" v-model="value" :data="data" :render-after-expand="false" placeholder="物料类型" />
-        <el-input v-model="input2" class="w-50 m-2" placeholder="物料名称/编号/条码" />
-        <el-input v-model="input2" class="w-50 m-2" placeholder="客户/供应商名称或编码" />
-        <el-button type="primary" class="martop"> 查询 </el-button>
-        <el-button class="martop"> 重置 </el-button>
+        <el-tree-select class="martop" v-model="getMaterialCondition.Search.TypeId" :data="materialTypesData"
+          :render-after-expand="false" placeholder="物料类型" :label="materialTypesData.title"
+          :props="{ vlaue: 'Id', label: 'title' }" />
+        <el-input v-model="getMaterialCondition.Search.Keyword" class="w-50 m-2" placeholder="物料名称/编号/条码" />
+        <el-input v-model="getMaterialCondition.Search.ContactName" class="w-50 m-2" placeholder="客户/供应商名称或编码" />
+        <el-button type="primary" class="martop" @click="queryMaterial"> 查询 </el-button>
+        <el-button class="martop" @click="resetting"> 重置 </el-button>
       </el-row>
       <el-row>
         <el-table :data="materialManageData.Data" border style="width: 100%" @selection-change="selectionMaterial">
@@ -97,23 +179,23 @@
           <el-table-column prop="BarCode" label="条码" />
           <el-table-column prop="Price" label="物料规格" />
           <el-table-column prop="Measure.Name" label="单位" />
-          <el-table-column prop="max" label="上线数量" />
-          <el-table-column prop="min" label="下限数量" />
+          <el-table-column prop="Max" label="上线数量" />
+          <el-table-column prop="Min" label="下限数量" />
           <el-table-column prop="address" label="操作">
             <template #default="{row}">
               <el-row style="color: rgb(0, 162, 255);">
-                <span>编辑</span>
-                <span style="margin-left: 15px;">删除</span>
+                <span style="cursor: pointer;" @click="editMaterial(row)">编辑</span>
+                <span style="margin-left: 15px;cursor: pointer;" @click="deleteMaterial([row.Id])">删除</span>
               </el-row>
             </template>
           </el-table-column>
         </el-table>
       </el-row>
-      <el-row>
-        <!-- <el-pagination layout="prev, pager, next, total " :total="" /> -->
+      <el-row style="float: right;">
+        <el-pagination layout="total, prev, pager, next" :total="materialManageTotal" @current-change="PageChange" />
       </el-row>
     </PageMain>
-    <newMaterialPop></newMaterialPop>
+    <newMaterialPop @refresh="getMaterialList" v-if="isShow"></newMaterialPop>
   </div>
 </template>
 
