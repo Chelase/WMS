@@ -1,58 +1,45 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import locationdialog from './components/locationdialog.vue'
-import { QueryStorageDataAPI } from '@/api/modules/operations/Warehousing.ts'
-import useLocationStore from '@/store/modules/information/location.ts'
+import PalleManagementdialog from './components/PalleManagementdialog.vue'
 import importindex from '@/components/Import/index.vue'
+import usePalletManagementStore from '@/store/modules/information/PalletManagement'
 
-const LocationStore = useLocationStore()
-const title = ref('新增货位')
+const PalletManagementStore = usePalletManagementStore()
+const title = ref('新增')
 const slideover = ref(false)
 const selectionData = ref([])
-const options = ref([])
 const openShow = ref(false)
-const locationlistdata = ref({
+const PalletManagementlistdata = ref({
   pageIndex: 1,
   pageRows: 10,
   search: {
     storId: '',
-    keyword: '',
-    areaName: '',
+    Keyword: '',
+    TypeName: '',
   },
   sortField: 'Id',
   sortType: 'asc',
 })
-async function QueryStorageData() {
-  const res = await QueryStorageDataAPI()
-  options.value = res.Data
-}
 
 onMounted(() => {
-  QueryStorageData()
+  getdataList()
 })
 function tapReset() {
-  locationlistdata.value.search.storId = ''
-  locationlistdata.value.search.areaName = ''
-  locationlistdata.value.search.keyword = ''
+  PalletManagementlistdata.value.search.TypeName = ''
+  PalletManagementlistdata.value.search.Keyword = ''
 }
 function close(e) {
   slideover.value = e
 }
-const locationlist = ref()
+const palletlist = ref()
 async function getdataList() {
-  await LocationStore.getdataList(locationlistdata.value)
-  locationlist.value = LocationStore.datalist.Data
-  console.log(locationlist)
-}
-const housedata = ref()
-async function getWarehousedata() {
-  await LocationStore.getstoredataList()
-  housedata.value = LocationStore.storage.Data
-  console.log(housedata)
+  await PalletManagementStore.getdataList(PalletManagementlistdata.value)
+  palletlist.value = PalletManagementStore.datalist.Data
+  console.log(palletlist)
 }
 function chaxun() {
-  getdataList(locationlistdata.value)
+  getdataList(PalletManagementlistdata.value)
 }
 function deletedata(id) {
   ElMessageBox.confirm(
@@ -65,10 +52,10 @@ function deletedata(id) {
   )
     .then(async () => {
       if (id.length === 1) {
-        await LocationStore.DeleteData(id)
+        await PalletManagementStore.DeleteData(id)
       }
       else {
-        await LocationStore.DeleteData(selectionData.value)
+        await PalletManagementStore.DeleteData(selectionData.value)
       }
       ElMessage({
         type: 'success',
@@ -80,12 +67,28 @@ function deletedata(id) {
 const ide = ref()
 function xinzeng() {
   slideover.value = true
-  title.value = '新增货位'
+  title.value = '新增'
+}
+async function tyhuo(id) {
+  await PalletManagementStore.DisableTheData({ id })
+  ElMessage({
+    type: 'success',
+    message: '操作成功',
+  })
+  getdataList()
+}
+async function qyhuo(id) {
+  await PalletManagementStore.EnableTheData({ id })
+  ElMessage({
+    type: 'success',
+    message: '操作成功',
+  })
+  getdataList()
 }
 function bianji(id) {
   slideover.value = true
   ide.value = id
-  title.value = '编辑货位'
+  title.value = '编辑'
 }
 function handleSelectionChange(value) {
   selectionData.value = []
@@ -95,10 +98,6 @@ function handleSelectionChange(value) {
   })
   console.log(selectionData.value)
 }
-onMounted(() => {
-  getdataList()
-  getWarehousedata()
-})
 </script>
 
 <template>
@@ -110,7 +109,7 @@ onMounted(() => {
       export-url="http://118.190.145.57/api/PB/PB_Location/ExportToExcel"
     />
     <el-dialog v-model="slideover" size="80%" :title="title">
-      <locationdialog v-if="slideover" :id="ide" :title="title" @shaxin="getdataList()" @close="close" />
+      <PalleManagementdialog v-if="slideover" :id="ide" :title="title" @shaxin="getdataList()" @close="close" />
     </el-dialog>
     <PageMain>
       <div class="button-top">
@@ -140,21 +139,10 @@ onMounted(() => {
       </div>
       <div>
         <span style="margin: 10px;">
-          <el-select v-model="locationlistdata.search.storId" style="width: 180px;" class="m-2" placeholder="请选择仓库">
-            <el-option
-              v-for="item in housedata"
-              :key="item.Id"
-              :label="item.Name"
-              :value="item.Id"
-            />
-          </el-select>
+          <ElInput v-model="PalletManagementlistdata.search.Keyword" style="width: 180px;height: 32px;" placeholder="托盘名称/编码" />
         </span>
         <span style="margin: 10px;">
-          <ElInput v-model="locationlistdata.search.keyword" style="width: 180px;height: 32px;" placeholder="货位/巷道/货架" />
-        </span>
-        <span />
-        <span style="margin: 10px;">
-          <ElInput v-model="locationlistdata.search.areaName" style="width: 180px;height: 32px;" placeholder="货区编码/名称" />
+          <ElInput v-model="PalletManagementlistdata.search.TypeName" style="width: 180px;height: 32px;" placeholder="类型名称/编码" />
         </span>
         <ElButton type="primary" @click="chaxun">
           查询
@@ -164,41 +152,31 @@ onMounted(() => {
         </ElButton>
       </div>
       <el-table
-        :data="locationlist"
+        :data="palletlist"
         border
         style="width: 100%;"
         @selection-change="handleSelectionChange"
       >
         <el-table-column type="selection" width="55" />
-        <el-table-column prop="Code" label="货位编号" width="100" />
-        <el-table-column prop="Name" label="货位名称" width="100" />
-        <el-table-column prop="PB_Storage.Name" label="仓库" width="90" />
-        <el-table-column prop="PB_StorArea.Name" label="货区" width="100" />
-        <el-table-column prop="PB_Laneway.Name" label="巷道" width="100" />
-        <el-table-column prop="PB_Rack.Name" label="货架" width="140" />
-        <el-table-column prop="OverVol" label="余量" />
-        <el-table-column prop="IsForbid" label="状态">
+        <el-table-column prop="Code" label="托盘号" width="130" />
+        <el-table-column prop="Name" label="托盘名称" width="120" />
+        <el-table-column prop="PB_TrayType.Name" label="托盘类型" width="160" />
+        <el-table-column prop="PB_Location.Name" label="货位" width="120" />
+        <el-table-column prop="StartTime" label="启用日期" width="220" />
+        <el-table-column prop="Status" label="托盘状态" width="140">
           <template #default="scope">
-            <el-tag v-if="scope.row.IsForbid === true " class="ml-2" type="success">
+            <span v-if="scope.row.Status === 1">启用</span>
+            <span v-else>停用</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="操作" width="250">
+          <template #default="scope">
+            <el-button v-if="scope.row.Status === 1" type="primary" link @click="tyhuo(scope.row.Id)">
+              停用
+            </el-button>
+            <el-button v-else type="primary" link @click="qyhuo(scope.row.Id)">
               启用
-            </el-tag>
-            <el-tag v-else class="ml-2" type="danger">
-              禁用
-            </el-tag>
-          </template>
-        </el-table-column>
-        <el-table-column prop="IsDefault" label="默认">
-          <template #default="scope">
-            <el-tag v-if="scope.row.IsDefault === true " class="ml-2" type="success">
-              是
-            </el-tag>
-            <el-tag v-else class="ml-2" type="danger">
-              否
-            </el-tag>
-          </template>
-        </el-table-column>
-        <el-table-column label="操作" width="150">
-          <template #default="scope">
+            </el-button>
             <el-button type="primary" link @click="bianji(scope.row.Id)">
               编辑
             </el-button>

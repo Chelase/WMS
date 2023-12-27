@@ -7,6 +7,7 @@ const emit = defineEmits(['close'])
 const dialogVisible = ref(false)
 const guanlian = ref('')
 const quantityInput = ref('')
+const quantityeInput = ref('')
 const Pinput = ref('')
 const Tinput = ref('')
 const optionss = [
@@ -31,6 +32,7 @@ interface RuleForm {
   type: string
   supplier: string
   date: string
+  tray: string
 }
 
 const ruleFormRef = ref<FormInstance>()
@@ -43,6 +45,7 @@ const ruleForm = reactive<RuleForm>({
   type: '',
   supplier: '',
   date: '',
+  tray: '',
 })
 
 const rules = reactive<FormRules<RuleForm>>({
@@ -102,10 +105,6 @@ async function submitForm(formEl: FormInstance | undefined) {
 // const relevanceInput = ref('')
 const remarkInput = ref('')
 const huoweia = ref('')
-// const currentDate = new Date()
-// const year = currentDate.getFullYear()
-// const month = currentDate.getMonth()
-// const day = currentDate.getDate()
 const addDrawer = ref(false)
 const title = ref('供应商选择')
 const types = ref()
@@ -117,8 +116,16 @@ function closeson(e) {
   dialogVisible.value = e
 }
 function chuan(e) {
+  console.log(e, '213123')
   huoweia.value = e
+  ruleForm.supplier = e[0]
+  ruleForm.tray = e[1]
+  ruleForm.count = e[2]
+  ruleForm.region = e[3]
 }
+// function jieshou() {
+//   rowName
+// }
 function danchu() {
   dialogVisible.value = true
   title.value = '物料选择'
@@ -132,6 +139,11 @@ function spaceButn() {
   dialogVisible.value = true
   types.value = 3
   title.value = '货位选择'
+}
+function trayButn() {
+  dialogVisible.value = true
+  types.value = 4
+  title.value = '托盘选择'
 }
 </script>
 
@@ -193,7 +205,7 @@ function spaceButn() {
       style="width: 100%;"
       border
     >
-      <el-table-column type="selection" width="55" />
+      <el-table-column type="select" width="55" />
       <el-table-column label="物料" width="260" />
       <el-table-column label="货位" width="260" />
       <el-table-column label="数量" width="260" />
@@ -211,7 +223,7 @@ function spaceButn() {
       v-model="dialogVisible"
       :title="title"
       width="70%"
-      style="height: 500px;"
+      style="height: 550px;"
     >
       <sonDrawer :types="types" @closeson="closeson" @chuan="chuan" />
     </el-dialog>
@@ -219,7 +231,7 @@ function spaceButn() {
       v-model="addDrawer"
       title="入库"
       width="50%"
-      style="height: 480px;"
+      style="height: 600px;"
     >
       <el-form
         ref="ruleFormReftwo"
@@ -242,6 +254,15 @@ function spaceButn() {
             <SvgIcon name="ep:search" />
           </el-button>
         </el-form-item>
+        <el-form-item label="托盘" prop="tray">
+          <el-select v-model="ruleForm.tray" style="width: 210px;height: 32px;" class="m-2" />
+          <el-button type="primary" @click="trayButn()">
+            <SvgIcon name="ep:search" />
+          </el-button>
+        </el-form-item>
+        <el-form-item label="托盘分区" prop="tray">
+          <el-input v-model="quantityeInput" style="width: 260px;height: 32px;" />
+        </el-form-item>
         <el-form-item label="批次号">
           <el-input v-model="quantityInput" style="width: 260px;height: 32px;" />
         </el-form-item>
@@ -255,7 +276,7 @@ function spaceButn() {
           <el-input v-model="ruleForm.name" style="width: 260px;height: 32px;" />
         </el-form-item>
       </el-form>
-      <div style="position: absolute; left: 300px; top: 420px;">
+      <div style="position: absolute; left: 280px; top: 540px;">
         <ElButton @click="addDrawer = false">
           取消
         </ElButton>

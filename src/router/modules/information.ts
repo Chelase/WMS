@@ -89,7 +89,7 @@ const routes: RouteRecordRaw = {
     {
       path: 'metering',
       name: 'metering',
-      component: () => import('@/views/information/metering.vue'),
+      component: () => import('@/views/information/metering/index.vue'),
       meta: {
         title: '计量单位',
         icon: 'uiw:tag-o',
@@ -107,7 +107,7 @@ const routes: RouteRecordRaw = {
     {
       path: 'PalletManagement',
       name: 'PalletManagement',
-      component: () => import('@/views/information/PalletManagement.vue'),
+      component: () => import('@/views/information/PalletManagement/index.vue'),
       meta: {
         title: '托盘管理',
         icon: 'memory:box',

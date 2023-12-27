@@ -1,9 +1,11 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
-import { getdataListAPI } from '@/api/modules/operations/Warehousing.ts'
+import { ElMessage, ElMessageBox } from 'element-plus'
+import { DeleteData, getdataListAPI } from '@/api/modules/operations/Warehousing.ts'
 import drawer from '@/components/drawer/index.vue'
 
 const radio = ref('全部')
+const selectionData = ref([])
 const input = ref('')
 const valuetimetwo = ref('')
 const value = ref('')
@@ -13,6 +15,15 @@ const month = currentDate.getMonth()
 const day = currentDate.getDate()
 const slideover = ref(false)
 
+const data = ref({
+  pageIndex: 1,
+  pageRows: 10,
+  search: {
+    status: null,
+  },
+  sortField: 'CreateTime',
+  sortType: 'desc',
+})
 const options = [
   {
     value: '生产产品入库',
@@ -27,17 +38,11 @@ const options = [
     label: '退货入库',
   },
 ]
+const rkdata = ref()
 async function getdataList() {
-  const res = await getdataListAPI({
-    pageIndex: 1,
-    pageRows: 10,
-    search: {
-      status: null,
-    },
-    sortType: 'desc',
-    sortField: 'CreateTime',
-  })
-  console.log(res)
+  const res = await getdataListAPI({ data })
+  console.log(res.Data)
+  rkdata.value = res.Data
 }
 onMounted(() => {
   getdataList()
@@ -49,6 +54,37 @@ function tapReset() {
 }
 function close(e) {
   slideover.value = e
+}
+function handleSelectionChange(value) {
+  selectionData.value = []
+  // 遍历选中的数据，只获取数据Id
+  value.forEach((item) => {
+    selectionData.value.push(item.Id)
+  })
+  console.log(selectionData.value)
+}
+function deletedata(id) {
+  ElMessageBox.confirm(
+    '确认删除吗?',
+    {
+      confirmButtonText: '确定',
+      cancelButtonText: '取消',
+      type: 'warning',
+    },
+  )
+    .then(async () => {
+      if (id.length === 1) {
+        await DeleteData(id)
+      }
+      else {
+        await DeleteData(selectionData.value)
+      }
+      ElMessage({
+        type: 'success',
+        message: '操作成功',
+      })
+      getdataList()
+    })
 }
 </script>
 
@@ -114,20 +150,50 @@ function close(e) {
         </ElButton>
       </div>
       <el-table
+        :data="rkdata"
         border
         style="width: 100%;"
+        @selection-change="handleSelectionChange"
       >
-        <el-table-column type="selection" width="55" />
-        <el-table-column label="入库单号" width="120" />
+        <el-table-column type="selection" width="50" />
+        <el-table-column prop="Code" label="入库单号" width="140" />
         <el-table-column label="入库类型" width="120" />
-        <el-table-column label="入库时间" />
-        <el-table-column label="关联单号" />
-        <el-table-column label="状态" />
-        <el-table-column label="供应商" />
-        <el-table-column label="入库数量" />
-        <el-table-column label="制单人" />
+        <el-table-column prop="CreateTime" label="入库时间" width="110">
+          <template #default="scope">
+            {{ scope.row.CreateTime.split(' ')[0] }}
+          </template>
+        </el-table-column>
+        <el-table-column prop="RefCode" label="关联单号" width="90" />
+        <el-table-column prop="Status" label="状态">
+          <template #default="scope">
+            <el-tag v-if="scope.row.Status === 1 " class="ml-2" type="success">
+              审核通过
+            </el-tag>
+            <el-tag v-else-if="scope.row.Status === 2" class="ml-2" type="danger">
+              审核失败
+            </el-tag>
+            <el-tag v-else>
+              待审核
+            </el-tag>
+          </template>
+        </el-table-column>
+        <el-table-column prop="Supplier.Name" label="供应商" width="100" />
+        <el-table-column prop="TotalNum" label="入库数量" width="100" />
+        <el-table-column prop="CreateUser.RealName" label="制单人" />
         <el-table-column label="审核人" />
-        <el-table-column label="操作" />
+        <el-table-column label="操作" width="200">
+          <template #default="scope">
+            <el-button type="primary" link>
+              查看
+            </el-button>
+            <el-button type="primary" link>
+              编辑
+            </el-button>
+            <el-button type="primary" link @click="deletedata([scope.row.Id])">
+              删除
+            </el-button>
+          </template>
+        </el-table-column>
       </el-table>
     </PageMain>
   </div>

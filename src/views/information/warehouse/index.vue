@@ -3,12 +3,12 @@ import { computed, onMounted, ref } from 'vue'
 import { storeToRefs } from 'pinia'
 import Message from 'vue-m-message'
 import { ElMessageBox } from 'element-plus'
+import { Minus, Plus, Refresh } from '@element-plus/icons-vue'
 import WarehouseDialog from './components/WarehouseDialog.vue'
 import useWarehouseStore from '@/store/modules/information/warehouse.ts'
 import RoadwaySlideover from '@/views/information/warehouse/components/RoadwaySlideover.vue'
 import GoodsShelves from '@/views/information/warehouse/components/GoodsShelves.vue'
 import EditConfig from '@/views/information/warehouse/components/EditConfig.vue'
-import {Minus, Plus, Refresh} from '@element-plus/icons-vue'
 
 const WarehouseStore = useWarehouseStore()
 const { Warehouse_Totals } = storeToRefs(WarehouseStore)
@@ -147,18 +147,20 @@ function OpenEditConfig(row) {
           刷新
         </el-button>
       </el-row>
-      <el-row style="margin: 20px 0">
+      <el-row style="margin: 20px 0;">
         <el-input v-model="getTabList.search.keyword" placeholder="仓库编号或名称" />
         <el-button type="primary" @click="GetWarehouseList">
           查询
         </el-button>
-        <el-button @click="getTabList.search.keyword = ''">重置</el-button>
+        <el-button @click="getTabList.search.keyword = ''">
+          重置
+        </el-button>
       </el-row>
       <el-table
         v-loading="loading"
         border
         :data="tableData"
-        style="width: 100%"
+        style="width: 100%;"
         @selection-change="handleSelectionChange"
       >
         <el-table-column type="selection" width="55" />
@@ -235,7 +237,7 @@ function OpenEditConfig(row) {
         </template>
       </el-table>
       <el-pagination
-        style="float: right;margin-right: 30px"
+        style="float: right;margin-right: 30px;"
         :page-size="10"
         layout="total, prev, pager, next"
         :current-page="getTabList.pageIndex"
@@ -267,31 +269,35 @@ function OpenEditConfig(row) {
 </template>
 
 <style scoped lang="scss">
-.el-input{
+.el-input {
   width: 200px;
   margin-right: 10px;
 }
-.success{
+
+.success {
   width: 40px;
   height: 25px;
   background: #f6ffed;
   color: #52c41a;
   border: #b7eb8f 1px solid;
   border-radius: 5px;
-  p{
+
+  p {
     text-align: center;
     margin-top: 0;
     font-size: 13px;
   }
 }
-.danger{
+
+.danger {
   width: 40px;
   height: 25px;
   background: #fff1f0;
   color: #f5222d;
   border: #ffa39e 1px solid;
   border-radius: 5px;
-  p{
+
+  p {
     text-align: center;
     margin-top: 0;
     font-size: 13px;

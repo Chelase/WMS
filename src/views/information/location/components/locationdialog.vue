@@ -21,8 +21,8 @@ interface RuleForm {
   name: ''
   stash: ''
   area: ''
-  racks: ''
-  region: ''
+  racks: null
+  region: null
   desc: ''
   rlsc: ''
   delivery: false
@@ -32,10 +32,10 @@ interface RuleForm {
 const ruleFormRef = ref<FormInstance>()
 const ruleForm = reactive<RuleForm>({
   name: '',
-  region: '',
+  region: null,
   area: '',
   stash: '',
-  racks: '',
+  racks: null,
   rlsc: '',
 })
 const thedata = ref()
@@ -48,6 +48,20 @@ const rules = reactive<FormRules<RuleForm>>({
     {
       required: true,
       message: '请选择货区',
+      trigger: 'change',
+    },
+  ],
+  delivery: [
+    {
+      required: true,
+      message: '请选择禁用状态',
+      trigger: 'change',
+    },
+  ],
+  mrli: [
+    {
+      required: true,
+      message: '请选择默认状态',
       trigger: 'change',
     },
   ],
@@ -222,7 +236,7 @@ onMounted(() => {
     <el-form-item label="是否禁用" prop="delivery">
       <el-switch v-model="ruleForm.delivery" />
     </el-form-item>
-    <el-form-item label="是否默认" prop="delivery">
+    <el-form-item label="是否默认" prop="mrli">
       <el-switch v-model="ruleForm.mrli" />
     </el-form-item>
     <el-form-item label="剩余容量">

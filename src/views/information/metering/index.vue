@@ -1,18 +1,18 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
-import { ElMessage } from 'element-plus'
+import { ElMessage, ElMessageBox } from 'element-plus'
 import type { FormInstance, FormRules } from 'element-plus'
 import useMeteringStore from '@/store/modules/information/metering.ts'
+import importindex from '@/components/Import/index.vue'
 
+const openShow = ref(false)
 interface RuleForm {
   name: ''
 }
-
 const ruleFormRef = ref<FormInstance>()
 const ruleForm = reactive<RuleForm>({
   name: '',
 })
-
 const rules = reactive<FormRules<RuleForm>>({
   name: [
     { required: true, message: '请输入货位名称', trigger: 'blur' },
@@ -46,15 +46,28 @@ async function getdataList() {
 function chaxun() {
   getdataList(meteringlistdata.value)
 }
-async function deletedata(id) {
-  if (id.length === 1) {
-    await MeteringStore.Delete(id)
-  }
-  else {
-    await MeteringStore.Delete(selectionData.value)
-  }
-  getdataList()
-  ElMessage.success('操作成功')
+function deletedata(id) {
+  ElMessageBox.confirm(
+    '确认删除吗?',
+    {
+      confirmButtonText: '确定',
+      cancelButtonText: '取消',
+      type: 'warning',
+    },
+  )
+    .then(async () => {
+      if (id.length === 1) {
+        await MeteringStore.Delete(id)
+      }
+      else {
+        await MeteringStore.Delete(selectionData.value)
+      }
+      ElMessage({
+        type: 'success',
+        message: '操作成功',
+      })
+      getdataList()
+    })
 }
 const ide = ref()
 function xinzeng() {
@@ -113,6 +126,12 @@ onMounted(() => {
 
 <template>
   <div>
+    <importindex
+      v-model:open-show="openShow"
+      title="导入货位"
+      import-url="http://118.190.145.57/api/PB/PB_Measure/Import"
+      export-url="http://118.190.145.57/api/PB/PB_Measure/ExportToExcel"
+    />
     <el-dialog v-model="slideover" size="80%" :title="title">
       <el-form
         v-if="slideover"
@@ -159,6 +178,11 @@ onMounted(() => {
             刷新
           </ElButton>
         </span>
+        <span style="margin-left: 1000px;">
+          <ElButton type="primary" @click="openShow = true">
+            导入单位
+          </ElButton>
+        </span>
       </div>
       <div style="margin: 10px;">
         <span style="margin: 10px;">
@@ -182,10 +206,10 @@ onMounted(() => {
         <el-table-column prop="Name" label="单位名称" width="350" />
         <el-table-column label="操作" width="440">
           <template #default="scope">
-            <el-button type="text" @click="bianji(scope.row.Id)">
+            <el-button type="primary" link @click="bianji(scope.row.Id)">
               编辑
             </el-button>
-            <el-button type="text" @click="deletedata([scope.row.Id])">
+            <el-button type="primary" link @click="deletedata([scope.row.Id])">
               删除
             </el-button>
           </template>
