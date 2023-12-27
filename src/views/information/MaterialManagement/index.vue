@@ -1,6 +1,6 @@
 <script setup lang="ts">
   import { ref, onMounted, provide } from 'vue'
-  import { RefreshRight, Plus, Minus } from '@element-plus/icons-vue'
+  import { RefreshRight, Plus, Minus, Upload, Download } from '@element-plus/icons-vue'
   import { ElMessage, ElMessageBox } from 'element-plus'
   import storeMaterialQueryData from '@/store/modules/information/materialManage.ts'
   import useMaterialStore from '@/store/modules/information/material.ts'
@@ -146,6 +146,9 @@
     getMaterialCondition.value.PageIndex = value
     getMaterialList()
   }
+
+  //导入导出模板
+  const imexportIsshow = ref(false)
 </script>
 
 <template>
@@ -157,7 +160,7 @@
         <el-button type="primary" :icon="Minus" v-else @click="deleteMaterial"> 删除 </el-button>
         <el-button type="primary" :icon="RefreshRight" @click="getMaterialList"> 刷新 </el-button>
         <div style="position: absolute; right: 200px;">
-          <el-button type="primary"> 导入物料 </el-button>
+          <el-button type="primary" @click="imexportIsshow = true"> 导入物料 </el-button>
         </div>
       </el-row>
       <el-row class="martop">
@@ -196,6 +199,24 @@
       </el-row>
     </PageMain>
     <newMaterialPop @refresh="getMaterialList" v-if="isShow"></newMaterialPop>
+    
+    <el-dialog v-model="imexportIsshow" title="导入导出" width="30%">
+      <el-row justify="center">
+        <el-col :span="10">
+          <el-upload ref="fileListRef" class="upload-demo" action="http://118.190.145.57/api/PB/PB_Material/Import"
+            :auto-upload="false">
+            <el-button :icon="Upload" type="primary">
+              上传数据
+            </el-button>
+          </el-upload>
+        </el-col>
+        <el-col :span="10">
+          <el-button :icon="Download" tag="a" href="http://118.190.145.57/api/PB/PB_Material/ExportToExcel">
+            下载模板表
+          </el-button>
+        </el-col>
+      </el-row>
+    </el-dialog>
   </div>
 </template>
 
