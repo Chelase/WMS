@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import {Minus, Plus, Refresh} from "@element-plus/icons-vue";
-import usePlannedStore from "@/store/modules/information/planned.ts";
-import { storeToRefs } from "pinia";
-import AddPlanned from "@/views/information/planned/components/AddPlanned.vue";
-import plannedApi from "@/api/modules/information/planned.ts";
-import Message from "vue-m-message";
-import {ElMessageBox} from "element-plus";
+import { Minus, Plus, Refresh } from '@element-plus/icons-vue'
+import { storeToRefs } from 'pinia'
+import Message from 'vue-m-message'
+import { ElMessageBox } from 'element-plus'
+import usePlannedStore from '@/store/modules/information/planned.ts'
+import AddPlanned from '@/views/information/planned/components/AddPlanned.vue'
+import plannedApi from '@/api/modules/information/planned.ts'
 
 const PlannedStore = usePlannedStore()
 
@@ -23,11 +23,14 @@ const getPlannedListForm = ref({
   SortField: 'Id',
   SortType: 'asc',
 })
+const loading = ref(false)
 
 async function getPlannedList() {
+  loading.value = true
   await PlannedStore.getPlannedData(getPlannedListForm.value)
   const { PlannedData } = storeToRefs(PlannedStore)
   PlannedList.value = PlannedData.value
+  loading.value = false
 }
 
 // 分页
@@ -124,20 +127,21 @@ async function IsStatus(id, Status) {
         <el-button :icon="Minus" :disabled="disabled" :type="disabled ? '' : 'primary'" @click="delPlanned(null)">
           删除
         </el-button>
-        <el-button type="primary" :icon="Refresh">
+        <el-button type="primary" :icon="Refresh" @click="getPlannedList">
           刷新
         </el-button>
       </el-row>
       <el-row style="margin: 20px 0">
-        <el-input placeholder="仓库编号或名称" />
-        <el-button type="primary">
+        <el-input v-model="getPlannedListForm.Search.Keyword" placeholder="仓库编号或名称" />
+        <el-button type="primary" @click="getPlannedList">
           查询
         </el-button>
-        <el-button>
+        <el-button @click="getPlannedListForm.Search.Keyword = ''">
           重置
         </el-button>
       </el-row>
       <el-table
+        v-loading="loading"
         border
         :data="PlannedList"
         @selection-change="handleSelectionChange"
@@ -152,19 +156,27 @@ async function IsStatus(id, Status) {
         <el-table-column property="Status" label="状态" width="100">
           <template #default="scope">
             <div :class="scope.row.Status ? 'success' : 'error'">
-              <p>{{scope.row.Status ? '已完成' : '未完成'}}</p>
+              <p>{{ scope.row.Status ? '已完成' : '未完成' }}</p>
             </div>
           </template>
         </el-table-column>
         <el-table-column label="操作">
           <template #default="scope">
             <el-row v-if="scope.row.Status">
-              <el-button type="primary" link @click="IsStatus(scope.row.Id, 0)">未完成</el-button>
+              <el-button type="primary" link @click="IsStatus(scope.row.Id, 0)">
+                未完成
+              </el-button>
             </el-row>
             <el-row v-else>
-              <el-button type="primary" link @click="OpenAddPlanned('edit', scope.row.Id)">编辑</el-button>
-              <el-button type="primary" link @click="delPlanned(scope.row.Id)">删除</el-button>
-              <el-button type="primary" link @click="IsStatus(scope.row.Id, 1)">已完成</el-button>
+              <el-button type="primary" link @click="OpenAddPlanned('edit', scope.row.Id)">
+                编辑
+              </el-button>
+              <el-button type="primary" link @click="delPlanned(scope.row.Id)">
+                删除
+              </el-button>
+              <el-button type="primary" link @click="IsStatus(scope.row.Id, 1)">
+                已完成
+              </el-button>
             </el-row>
           </template>
         </el-table-column>

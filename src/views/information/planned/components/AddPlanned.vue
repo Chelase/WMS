@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {Search} from "@element-plus/icons-vue";
+import { Search } from '@element-plus/icons-vue'
 
 const props = defineProps({
   openAddPlanned: {
@@ -21,7 +21,6 @@ const emit = defineEmits(['update:openAddPlanned', 'upList'])
 function closeShow() {
   emit('update:openAddPlanned', false)
 }
-
 </script>
 
 <template>
@@ -43,7 +42,7 @@ function closeShow() {
       </el-form-item>
       <el-form-item label="物料：">
         <el-row>
-          <el-select style="width: 160px"></el-select>
+          <el-select style="width: 160px" />
           <el-button type="primary" :icon="Search" />
         </el-row>
       </el-form-item>
@@ -79,8 +78,12 @@ function closeShow() {
       </el-form-item>
     </el-form>
     <template #footer>
-      <el-button @click="closeShow">取消</el-button>
-      <el-button type="primary">确定</el-button>
+      <el-button @click="closeShow">
+        取消
+      </el-button>
+      <el-button type="primary">
+        确定
+      </el-button>
     </template>
   </el-dialog>
 </template>
