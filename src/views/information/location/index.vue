@@ -43,13 +43,11 @@ const locationlist = ref()
 async function getdataList() {
   await LocationStore.getdataList(locationlistdata.value)
   locationlist.value = LocationStore.datalist.Data
-  console.log(locationlist)
 }
 const housedata = ref()
 async function getWarehousedata() {
   await LocationStore.getstoredataList()
   housedata.value = LocationStore.storage.Data
-  console.log(housedata)
 }
 function chaxun() {
   getdataList(locationlistdata.value)

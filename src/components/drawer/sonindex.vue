@@ -117,6 +117,7 @@ const WuLiaotemplateSelection = ref()
 const HuoWeiName = ref()
 function singleElection(row) {
   templateSelection.value = gysdata.value.indexOf(row)
+  templateRadio.value = row.id
   rowName.value = row.Name
 }
 function TuopansingleElection(row) {
