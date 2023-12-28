@@ -89,7 +89,7 @@ const routes: RouteRecordRaw = {
     {
       path: 'metering',
       name: 'metering',
-      component: () => import('@/views/information/metering.vue'),
+      component: () => import('@/views/information/metering/index.vue'),
       meta: {
         title: '计量单位',
         icon: 'uiw:tag-o',
@@ -98,7 +98,7 @@ const routes: RouteRecordRaw = {
     {
       path: 'TrayType',
       name: 'TrayType',
-      component: () => import('@/views/information/TrayType.vue'),
+      component: () => import('@/views/information/TrayType/index.vue'),
       meta: {
         title: '托盘类型',
         icon: 'uiw:tags-o',
@@ -107,7 +107,7 @@ const routes: RouteRecordRaw = {
     {
       path: 'PalletManagement',
       name: 'PalletManagement',
-      component: () => import('@/views/information/PalletManagement.vue'),
+      component: () => import('@/views/information/PalletManagement/index.vue'),
       meta: {
         title: '托盘管理',
         icon: 'memory:box',
@@ -116,7 +116,7 @@ const routes: RouteRecordRaw = {
     {
       path: 'planned',
       name: 'planned',
-      component: () => import('@/views/information/planned.vue'),
+      component: () => import('@/views/information/planned/index.vue'),
       meta: {
         title: '计划管理',
         icon: 'ant-design:carry-out-outlined',

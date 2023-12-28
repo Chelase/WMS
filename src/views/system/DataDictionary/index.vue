@@ -78,7 +78,6 @@
 <template>
   <div>
     <PageMain>
-      数据字典
       <el-row>
         <el-button type="primary" @click="newlogShow = true">+ &nbsp;新建</el-button>
         <el-button type="info" plain disabled v-if="delDictionaryList.length === 0">- &nbsp;删除</el-button>

@@ -1,6 +1,6 @@
 <script setup lang="ts">
   import { ref, onMounted, provide } from 'vue'
-  import { RefreshRight } from '@element-plus/icons-vue'
+  import { RefreshRight, Upload, Download } from '@element-plus/icons-vue'
   import { ElMessage, ElMessageBox } from 'element-plus'
   //添加框
   import addCustom from './components/newAddCustom.vue'
@@ -190,7 +190,6 @@
 <template>
   <div>
     <PageMain>
-      客户管理
       <el-row style="width: 100%;">
         <el-button type="primary" @click="createdata">+ 新建</el-button>
         <el-button type="info" plain disabled v-if="!selectionData.length">- 删除</el-button>
@@ -256,7 +255,7 @@
       <el-row justify="center">
         <el-col :span="10">
           <el-upload ref="fileListRef" class="upload-demo" action="http://118.190.145.57/api/PB/PB_Customer/Import"
-            :auto-upload="false" @change="submitUpload">
+            :auto-upload="false">
             <el-button :icon="Upload" type="primary">
               上传数据
             </el-button>

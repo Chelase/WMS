@@ -6,6 +6,7 @@ import { ElMessage } from 'element-plus'
 import { storeToRefs } from 'pinia'
 import supplierApi from '@/api/modules/information/supplier.ts'
 import useSupplierStore from '@/store/modules/information/supplier.ts'
+import useUserStore from '@/store/modules/user.ts'
 
 const props = defineProps({
   openAddAddress: {
@@ -28,6 +29,7 @@ const props = defineProps({
 
 const emit = defineEmits(['update:openAddAddress', 'upList'])
 const SupplierStore = useSupplierStore()
+const userStore = useUserStore()
 const AddressFormRef = ref<FormInstance>()
 
 const AddressForm = ref({
@@ -57,7 +59,23 @@ function closeShow() {
 function SaveData() {
   AddressFormRef.value && AddressFormRef.value?.validate(async (valid) => {
     if (valid) {
-      await supplierApi.AddAddressDataList(AddressForm.value)
+      if (props.title === '新增') {
+        await supplierApi.AddAddressDataList(AddressForm.value)
+      }
+      else if (props.title === '编辑') {
+        await supplierApi.AddAddressDataList({
+          Address: AddressForm.value.Address,
+          Code: AddressForm.value.Code,
+          CreateTime: SupplierStore.AddressEditForm.CreateTime,
+          CreatorId: userStore.CreatorId,
+          Id: props.addressId,
+          IsDefault: SupplierStore.AddressEditForm.IsDefault,
+          IsEnable: SupplierStore.AddressEditForm.IsEnable,
+          Name: AddressForm.value.Name,
+          Remarks: AddressForm.value.Remarks,
+          SupId: AddressForm.value.SupId,
+        })
+      }
       ElMessage.success('操作成功')
       closeShow()
       emit('upList')
