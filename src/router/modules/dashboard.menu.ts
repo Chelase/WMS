@@ -22,7 +22,15 @@ const routes: RouteRecordRaw = {
         title: '仓库统计',
         icon: 'gridicons:info-outline',
       },
-    },
+    }, {
+      path: 'DtDisply',
+      name: 'DtDisply',
+      component: () => import('@/views/dashboard/DataDisplay.vue'),
+      meta: {
+        title: '仓库统计2',
+        icon: 'uiw:home',
+      },
+    }
   ],
 }
 
