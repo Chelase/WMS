@@ -14,7 +14,7 @@
                 message: '输入值不能为空',
                 type: 'error',
             })
-            return  
+            return
         }
         console.log(newDialoginputdata.value)
         // console.log(storeCallInterfaces.DictionaryAdd)
@@ -38,26 +38,25 @@
     //对话框表单验证
     const newfromverify = ref({
         verifyCode: [{
-            required: true, trigger: 'blur', message: '请输入编号'
+            required: true, trigger: 'blur', message: '不能为空'
         }]
     })
 </script>
 <template>
     <el-dialog v-model="outerVisible" title="Outer Dialog">
-        <el-col :span="16" class="colauto">
-            <el-row class="rowtop">
-                <span>编号:</span>
+        <el-form ref="ruleFormRef" :model="ruleForm" status-icon :rules="newfromverify" label-width="120px"
+            class="demo-ruleForm">
+            <el-form-item prop="verifyCode" label="编号:">
                 <el-input class="w-180 m-2" v-model="newDialoginputdata.Code" />
-            </el-row>
-            <el-row class="rowtop">
-                <span>名称:</span>
+            </el-form-item>
+
+            <el-form-item prop="verifyCode" label="名称">
                 <el-input class="w-180 m-2" v-model="newDialoginputdata.Name" />
-            </el-row>
-            <el-row class="rowtop">
-                <span>备注:</span>
+            </el-form-item>
+            <el-form-item prop="verifyCode" label="备注:">
                 <el-input class="w-180 m-2" v-model="newDialoginputdata.Remarks" />
-            </el-row>
-        </el-col>
+            </el-form-item>
+        </el-form>
         <template #footer>
             <div class="dialog-footer">
                 <el-button @click="outerVisible = false">取消</el-button>

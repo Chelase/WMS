@@ -125,9 +125,9 @@
         </el-row>
         <el-row style="margin-top: 20px;">
             <el-table :data="addressData" border style="width: 100%" @selection-change="handleSelectionChange">
-                <el-table-column type="selection" width="55" />
-                <el-table-column prop="Code" label="编号" width="180" />
-                <el-table-column prop="Name" label="家" width="180" />
+                <el-table-column type="selection"/>
+                <el-table-column prop="Code" label="编号"/>
+                <el-table-column prop="Name" label="家"/>
                 <el-table-column prop="Address" label="地址" />
                 <el-table-column prop="Remarks" label="备注" />
                 <el-table-column prop="IsEnable" label="状态">

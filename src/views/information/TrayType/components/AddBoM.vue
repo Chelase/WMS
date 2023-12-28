@@ -2,16 +2,16 @@
 import { onMounted, ref } from 'vue'
 import { storeToRefs } from 'pinia'
 import { ElMessage } from 'element-plus'
+import TrayTypeApi from '@/api/modules/information/TrayType.ts'
+import useTrayTypeStore from '@/store/modules/information/TrayType.ts'
 import useCargoAreaStore from '@/store/modules/information/cargoarea.ts'
-import MaterialPointApi from '@/api/modules/information/MaterialPoint.ts'
-import useMaterialPointStore from "@/store/modules/information/MaterialPoint.ts";
 
 const props = defineProps({
   openAddBoM: {
     type: Boolean,
     default: false,
   },
-  pointId: {
+  areaId: {
     type: String,
     default: '',
   },
@@ -19,6 +19,7 @@ const props = defineProps({
 
 const emit = defineEmits(['update:openAddBoM', 'upList'])
 
+const TrayTypeStore = useTrayTypeStore()
 const CargoAreaStore = useCargoAreaStore()
 
 onMounted(() => {
@@ -73,7 +74,7 @@ function closeShow() {
 }
 
 async function SaveData() {
-  await MaterialPointApi.AddMaterialPointBoMDataList({ id: props.pointId, keys: warehouseSelection.value })
+  await TrayTypeApi.AddTrayTypeBoMList({ id: props.areaId, keys: warehouseSelection.value })
   ElMessage.success('操作成功')
   closeShow()
   emit('upList')

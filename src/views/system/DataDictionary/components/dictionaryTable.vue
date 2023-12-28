@@ -1,17 +1,24 @@
 <script setup lang="ts">
     import { ref, inject, defineEmits } from 'vue'
-    const emit = defineEmits(['showpop','showdele'])
+    const emit = defineEmits(['showpop', 'showdele'])
+
+    interface User {
+        date: string
+        name: string
+        address: string
+    }
+    const multipleTableRef = ref<InstanceType<typeof ElTable>>()
     //表格数据
     //接收父级数据
-    const tableDatas = inject('tableDatas')
+    const tableDatas: User[] = inject('tableDatas')
     //存储表格多选选中数据
     const multipleSelection = ref < User[] > ([])
     // 监听选择多选
     const handleSelectionChange = (val: User[]) => {
         multipleSelection.value = val
-        // console.log(multipleSelection.value)
+        console.log(multipleSelection.value)
         // 如果multipleSelection有值就让删除按钮可点
-            emit('showdele', val)
+        emit('showdele', val)
     }
     //'字典值'点击显示侧边弹窗，传递点击的字典值
     const dictionarys = (value, rows) => {
@@ -21,7 +28,7 @@
     }
 </script>
 <template>
-    <el-table :data="tableDatas" border style="width: 100%" @selection-change="handleSelectionChange">
+    <el-table ref="multipleTableRef" :data="tableDatas" border style="width: 100%" @selection-change="handleSelectionChange">
         <el-table-column prop="" type="selection">
             <template #default="{row}"> 
                 <el-checkbox :disabled="row.IsSystem"></el-checkbox>
